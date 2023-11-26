@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{addde1a0-25f0-4057-9504-0098bd06bb96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{19142558-f1bf-41b8-942c-fb4719f1eeb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{85c13383-a9b8-4001-a6ea-08382e2469c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene">
+      <UniqueIdentifier>{8e1c0618-8de9-424e-b8f5-3bcd87cfb607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneBase">
+      <UniqueIdentifier>{59813b31-fa87-4ab4-9b54-f4f591028617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneManager">
+      <UniqueIdentifier>{33784467-afc2-4ca0-920b-a8ea4601ff63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneChanger">
+      <UniqueIdentifier>{8216672e-bf56-4225-acfb-d45a75cd1fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Common">
+      <UniqueIdentifier>{4a9d4812-4718-45e3-bca4-348d5a476889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\FPSController">
+      <UniqueIdentifier>{94503290-5d32-47ab-8bd7-51fb72f1f48c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType">
+      <UniqueIdentifier>{00ea8f6d-b32c-4e0a-af20-a413e4c67d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\GameScene">
+      <UniqueIdentifier>{3b9abb5a-368d-4ea5-a638-6b608896dd67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\OpeningScene">
+      <UniqueIdentifier>{ffc90c3e-fc19-41c5-83b5-d4a285eabc10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\TitleScene">
+      <UniqueIdentifier>{8e36ab04-8876-4c83-a73b-8db495e7b151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Load">
+      <UniqueIdentifier>{3762fb5b-10cf-415c-b9d7-76fabe33d816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\GameOverScene">
+      <UniqueIdentifier>{a98c6e34-1252-4b54-8e4e-546e149610d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\GameClearScene">
+      <UniqueIdentifier>{a2bf0325-88cc-4404-9616-377c1047212a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene">
+      <UniqueIdentifier>{26b2d921-0896-47e6-949a-d154d95fbeb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\GameOver">
+      <UniqueIdentifier>{f42ca86b-13e5-4733-bb98-9b681d1c287b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\GameClear">
+      <UniqueIdentifier>{2cc3095b-4677-4eed-9291-629acc2f646c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Opening">
+      <UniqueIdentifier>{7304b243-2c8f-4803-9dd0-13813e06bc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Title">
+      <UniqueIdentifier>{748e3e59-5c85-40d1-a40e-414426c9cb98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game">
+      <UniqueIdentifier>{3995f382-d15d-4cc2-aeed-3ef3fe9309c3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneBase.cpp">
+      <Filter>System\Scene\SceneBase</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>System\Scene\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneChanger.cpp">
+      <Filter>System\Scene\SceneChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>System\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSController.cpp">
+      <Filter>System\FPSController</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>System\Scene\SceneType\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="OpeningScene.cpp">
+      <Filter>System\Scene\SceneType\OpeningScene</Filter>
+    </ClCompile>
+    <ClCompile Include="TItleScene.cpp">
+      <Filter>System\Scene\SceneType\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Load.cpp">
+      <Filter>System\Load</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClearScene.cpp">
+      <Filter>System\Scene\SceneType\GameClearScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
+      <Filter>System\Scene\SceneType\GameOverScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Object\Scene\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClear.cpp">
+      <Filter>Object\Scene\GameClear</Filter>
+    </ClCompile>
+    <ClCompile Include="Opening.cpp">
+      <Filter>Object\Scene\Opening</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Object\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Object\Scene\Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SceneBase.h">
+      <Filter>System\Scene\SceneBase</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>System\Scene\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneChanger.h">
+      <Filter>System\Scene\SceneChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>System\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSController.h">
+      <Filter>System\FPSController</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>System\Scene\SceneType\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="OpeningScene.h">
+      <Filter>System\Scene\SceneType\OpeningScene</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>System\Scene\SceneType\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Load.h">
+      <Filter>System\Load</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClearScene.h">
+      <Filter>System\Scene\SceneType\GameClearScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.h">
+      <Filter>System\Scene\SceneType\GameOverScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Object\Scene\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClear.h">
+      <Filter>Object\Scene\GameClear</Filter>
+    </ClInclude>
+    <ClInclude Include="Opening.h">
+      <Filter>Object\Scene\Opening</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Object\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Object\Scene\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
