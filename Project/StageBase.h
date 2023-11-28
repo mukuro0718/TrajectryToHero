@@ -1,13 +1,13 @@
 //===========================================================================
-//@brief ステージベースクラス / 基底
+//@brief ステージベースクラス
 //===========================================================================
 #pragma once
 #include "DxLib.h"
 class StageBase
 {
 public:
-	StageBase();						// コンストラクタ
-	StageBase(int modelHandle);			// 引数ありコンストラクタ
+	StageBase(){}						// コンストラクタ
+	StageBase(int _modelHandle);			// 引数ありコンストラクタ
 	virtual ~StageBase();				// デストラクタ
 
 	void Draw();						//描画

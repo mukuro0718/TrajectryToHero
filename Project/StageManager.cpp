@@ -10,23 +10,23 @@
 /// </summary>
 StageManager::StageManager()
 {
-	ground = nullptr;
+	ground = NULL;
 	//モデルのロード
 	auto& load = Load::GetInstance();
 	load.GetStageData(&model);
-	CreateStage();
+	Create();
 }
 /// <summary>
 /// デストラクタ
 /// </summary>
 StageManager::~StageManager()
 {
-	DestroyStage();
+	Delete();
 }
 /// <summary>
 /// 生成
 /// </summary>
-void StageManager::CreateStage()
+void StageManager::Create()
 {
 	//インスタンスの生成
 	ground = new Ground(model);
@@ -48,7 +48,7 @@ void StageManager::Draw()
 /// <summary>
 /// 削除
 /// </summary>
-void StageManager::DestroyStage()
+void StageManager::Delete()
 {
 	delete(ground);//地面の削除
 }

@@ -9,7 +9,7 @@
 class Ground :public StageBase
 {
 public:
-    Ground() {};                // コンストラクタ
+    Ground() {}                // コンストラクタ
     Ground(int modelHandle);    //引数ありコンストラクタ
     ~Ground();                  //デストラクタ
 };
