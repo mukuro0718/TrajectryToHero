@@ -1,6 +1,7 @@
 #include"Game.h"
 #include"Camera.h"
 #include"PlayerManager.h"
+#include"Skydome.h"
 
 /// <summary>
 /// コンストラクタ
@@ -25,6 +26,7 @@ void Game::Create()
 {
     playerManager = new PlayerManager();
     camera = new Camera();
+    skydome = new Skydome();
     Init();
 }
 void Game::Init()
@@ -46,6 +48,12 @@ void Game::Delete()
         delete(playerManager);
         playerManager = NULL;
     }
+    //プレイヤーの開放
+    if (skydome)
+    {
+        delete(skydome);
+        skydome = NULL;
+    }
 }
 /// <summary>
 /// 更新
@@ -54,6 +62,7 @@ void Game::Update()
 {
     camera->Update(playerManager->GetPos());
     playerManager->Update(camera->GetCameraToPlayer());
+
 }
 /// <summary>
 /// 描画
@@ -61,4 +70,5 @@ void Game::Update()
 void Game::Draw()
 {
     playerManager->Draw();
+    skydome->Draw();
 }

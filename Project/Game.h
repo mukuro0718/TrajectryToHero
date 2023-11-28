@@ -6,6 +6,7 @@
 #include"DxLib.h"
 class Camera;
 class PlayerManager;
+class Skydome;
 
 using namespace std;
 
@@ -25,7 +26,8 @@ private:
     void Init();                                //初期化
 	/*メンバ変数*/
 	bool isEndGame;//ゲームが終了したか
-	Camera* camera;
-	PlayerManager* playerManager;
+	Camera* camera;//カメラ
+	PlayerManager* playerManager;//プレイヤー
+	Skydome* skydome;//スカイドーム
 };
 

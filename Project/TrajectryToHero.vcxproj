@@ -168,6 +168,7 @@
     <ClCompile Include="SceneChanger.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shadow.cpp" />
+    <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="SpreadEffect.cpp" />
     <ClCompile Include="StageBase.cpp" />
     <ClCompile Include="StageChanger.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="SceneChanger.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shadow.h" />
+    <ClInclude Include="Skydome.h" />
     <ClInclude Include="SpreadEffect.h" />
     <ClInclude Include="StageBase.h" />
     <ClInclude Include="StageChanger.h" />

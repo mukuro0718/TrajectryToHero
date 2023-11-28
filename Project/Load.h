@@ -43,6 +43,7 @@ public:
 	void GetStageData		 (int* _model);	//ステージデータのgetter
 	void GetStatusManagerData(int* _image);	//メニューデータのgetter
 	void GetShadowData		 (int* _image);	//シャドウデータのgetter
+	void GetSkydomeData		 (int* _skydomeModel);	//スカイドームデータのgetter
 
 	void GetGameClearData	 (int* _image);//ゲームクリアデータのgetter
 	void GetGameOverData	 (int* _image);//ゲームクリアデータのgetter
@@ -79,6 +80,7 @@ private:
 	int stageModel;					//ステージモデルハンドル
 	int statusManagerImage;			//ステータスマネージャー画像
 	int shadowImage;				//影画像
+	int skydomeModel;//スカイドーム
 
 	/// <summary>
 	/// ゲームクリア

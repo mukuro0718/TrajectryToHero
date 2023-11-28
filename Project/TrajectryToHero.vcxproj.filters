@@ -130,6 +130,9 @@
     <Filter Include="Object\Scene\Game\Timer">
       <UniqueIdentifier>{1fe96ad6-b40c-415e-a416-cbfad0469f1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Skydome">
+      <UniqueIdentifier>{61d2ed56-3ef2-422d-97b7-ca2f71c8bb9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -252,6 +255,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Object\Scene\Game\Timer</Filter>
     </ClCompile>
+    <ClCompile Include="Skydome.cpp">
+      <Filter>Object\Scene\Game\Skydome</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -370,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Object\Scene\Game\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Skydome.h">
+      <Filter>Object\Scene\Game\Skydome</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

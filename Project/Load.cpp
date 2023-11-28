@@ -52,6 +52,8 @@ void Load::LoadingData()
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/Mutant.mv1"));
 	//ステージモデル
 	stageModel = MV1LoadModel("Data/Model/Map/stage.mv1");
+	//スカイドームモデル
+	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
 	//メニュー画像
 	statusManagerImage = LoadGraph("Data/Img/Game/Menu/backGround.png");
 	//ステージチェンジ画像
@@ -132,6 +134,14 @@ void Load::GetStageChangeData(vector<int>* _image)
 void Load::GetStatusManagerData(int* _image)
 {
 	*_image = statusManagerImage;
+}
+/// <summary>
+/// スカイドームデータのgetter
+/// </summary>
+/// <param name="skydomeModel"></param>
+void Load::GetSkydomeData(int* _skydomeModel)
+{
+	*_skydomeModel = skydomeModel;
 }
 /// <summary>
 /// 影データのgetter
