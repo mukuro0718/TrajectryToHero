@@ -67,6 +67,69 @@
     <Filter Include="Object\Scene\Game">
       <UniqueIdentifier>{3995f382-d15d-4cc2-aeed-3ef3fe9309c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Character">
+      <UniqueIdentifier>{3eb0e4b2-9a6f-4822-8128-275ef73b9039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy">
+      <UniqueIdentifier>{038d9c94-ae4b-4db9-baad-5fc2ffa89ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Player">
+      <UniqueIdentifier>{3849006c-dec0-4744-9ee3-bb80565da764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Camera">
+      <UniqueIdentifier>{22a780ec-3061-4ee9-a145-8906c6f1befb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Collision">
+      <UniqueIdentifier>{81794503-8605-4977-a70d-f8cebd2ed49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Effect">
+      <UniqueIdentifier>{b87444f0-9897-4ed7-845f-b31c98743dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Shadow">
+      <UniqueIdentifier>{9ff3fc56-5979-4ea3-a78e-3a6c77cc5e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage">
+      <UniqueIdentifier>{9c37692c-7908-463e-a34a-e2eaf5cdd45d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\CharacterBase">
+      <UniqueIdentifier>{b1710920-8543-40b4-ae06-00f88ae792db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Player\PlayerBase">
+      <UniqueIdentifier>{66eba19b-aef9-4677-81e7-9053640ccdf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Player\PlayerType">
+      <UniqueIdentifier>{d9208e84-aa31-4d58-834e-be00912bc440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\Base">
+      <UniqueIdentifier>{a9ab5e82-56d5-415f-9b5f-2ab8da7833e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\EnemyType">
+      <UniqueIdentifier>{53442b7f-bfed-4d36-aadd-6b5575d01448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\EnemyType\Boss">
+      <UniqueIdentifier>{f4d4c588-7687-455f-a142-e95930c5238f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\EnemyType\StrongEnemy">
+      <UniqueIdentifier>{624f97ba-d5ca-43d6-9c1e-8910fa7e2656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\EnemyType\WeakEnemy">
+      <UniqueIdentifier>{09e2dd88-d654-43a3-8f91-4f0f32513fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\Enemy\EnemyManager">
+      <UniqueIdentifier>{1f510927-2086-44fd-9073-2c2b0e32264d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Character\CharacterStatus">
+      <UniqueIdentifier>{1b5995f9-fcfe-4d0c-8b67-39039679d2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Animation">
+      <UniqueIdentifier>{ef9121d6-d113-4e46-9c06-b91df429b5cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\StatusManager">
+      <UniqueIdentifier>{9ed03698-16e3-49ef-93c7-5e12180f52bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Timer">
+      <UniqueIdentifier>{1fe96ad6-b40c-415e-a416-cbfad0469f1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -120,6 +183,75 @@
     <ClCompile Include="Game.cpp">
       <Filter>Object\Scene\Game</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Object\Scene\Game\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Object\Scene\Game\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Object\Scene\Game\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectBase.cpp">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Shadow.cpp">
+      <Filter>Object\Scene\Game\Character\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadEffect.cpp">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="StageBase.cpp">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="StageChanger.cpp">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="StageManager.cpp">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBase.cpp">
+      <Filter>Object\Scene\Game\Character\Player\PlayerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordGirl.cpp">
+      <Filter>Object\Scene\Game\Character\Player\PlayerType</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBase.cpp">
+      <Filter>Object\Scene\Game\Character\Enemy\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="StrongEnemy.cpp">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\StrongEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="WeakEnemy.cpp">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\WeakEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterStatus.cpp">
+      <Filter>Object\Scene\Game\Character\CharacterStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Object\Scene\Game\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusManager.cpp">
+      <Filter>Object\Scene\Game\StatusManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Object\Scene\Game\Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -169,6 +301,75 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Object\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Object\Scene\Game\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Object\Scene\Game\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Object\Scene\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectBase.h">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Shadow.h">
+      <Filter>Object\Scene\Game\Character\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadEffect.h">
+      <Filter>Object\Scene\Game\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="StageBase.h">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StageChanger.h">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StageManager.h">
+      <Filter>Object\Scene\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBase.h">
+      <Filter>Object\Scene\Game\Character\Player\PlayerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordGirl.h">
+      <Filter>Object\Scene\Game\Character\Player\PlayerType</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBase.h">
+      <Filter>Object\Scene\Game\Character\Enemy\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="StrongEnemy.h">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\StrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="WeakEnemy.h">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyType\WeakEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Object\Scene\Game\Character\Enemy\EnemyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterStatus.h">
+      <Filter>Object\Scene\Game\Character\CharacterStatus</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Object\Scene\Game\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusManager.h">
+      <Filter>Object\Scene\Game\StatusManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Object\Scene\Game\Timer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

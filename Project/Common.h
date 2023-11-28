@@ -11,34 +11,30 @@ static constexpr int    WINDOW_HEIGHT = 1080;                   //ウィンドウ縦サ
 static constexpr int    COLOR_BIT     = 16;                     //カラービット
 static const     VECTOR ORIGIN_POS    = VGet(0.0f, 0.0f, 0.0f); //０座標
 
+//カプセルの作成（描画）に必要な情報
+struct CapsuleInfo
+{
+    VECTOR topPos   = ORIGIN_POS;//カプセル上部座標
+    VECTOR underPos = ORIGIN_POS;//カプセル下部座標
+    float radius    = 0.0f      ;//半径
+    int divNum      = 8         ;//カプセル分割数
+    int difColor    = 0         ;//ディフューズカラー
+    int spcColor    = 0         ;//スペキュラカラー
+    int fillFlag    = false     ;//描画する球を塗りつぶすかどうか
+};
+struct FontInfo//フォントの描画に必要な情報
+{
+    int size = 0;//フォントの大きさ
+    int thick = 0;//フォントの太さ
+    int type = 0;//フォントタイプ
+};
 
-//キャラクターの共通ステータス
-struct CharacterStatus
+struct InputAnalogStick//アナログスティック入力変数
 {
-    float  HP           = 0.0f;         //体力
-    float  ATK          = 0.0f;         //攻撃力
-    float  DEF          = 0.0f;         //防御力
-    float  AGI          = 0.0f;         //素早さ
-    float  LV           = 0.0f;         //レベル
-    float  EXP_TO_GIVE  = 0.0f;         //与える経験値
-    float  EXP          = 0.0f;         //経験値
-    bool   isHit        = false;		//当たったか
-    bool   isInvincible = false;        //無敵状態
+    int XBuf = 0;//左右の入力状態を格納
+    int YBuf = 0;//上下の入力状態を格納
 };
-//キャラクター共通ベース
-struct CharacterBase
-{
-    VECTOR pos         = ORIGIN_POS;    //座標
-    VECTOR rotate      = ORIGIN_POS;    //回転率
-    VECTOR scale       = ORIGIN_POS;    //拡大率
-    float  radius      = 0.0f;          //半径
-    int    modelHandle = 0;			    //モデルハンドル
-    bool   isSelectAttack = false;      //攻撃を選択しているか
-    bool   isAttack    = false;		    //攻撃中か
-    bool   isDeath     = false;			//死亡アニメーションを描画し終わったか
-    bool   isHit       = false;         //半径がヒットしたか
-    VECTOR  correctionValue = ORIGIN_POS;      //補正値
-};
+
 struct VEC2D//２Dベクトル構造体
 {
     int x = 0;

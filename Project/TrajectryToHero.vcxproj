@@ -139,7 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CharacterBase.cpp" />
+    <ClCompile Include="CharacterStatus.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="EffectBase.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="FPSController.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameClear.cpp" />
@@ -147,18 +157,41 @@
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Opening.cpp" />
     <ClCompile Include="OpeningScene.cpp" />
+    <ClCompile Include="PlayerBase.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneChanger.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Shadow.cpp" />
+    <ClCompile Include="SpreadEffect.cpp" />
+    <ClCompile Include="StageBase.cpp" />
+    <ClCompile Include="StageChanger.cpp" />
+    <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="StatusManager.cpp" />
+    <ClCompile Include="StrongEnemy.cpp" />
+    <ClCompile Include="SwordGirl.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TItleScene.cpp" />
+    <ClCompile Include="WeakEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CharacterBase.h" />
+    <ClInclude Include="CharacterStatus.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="EffectBase.h" />
+    <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="FPSController.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameClear.h" />
@@ -166,14 +199,27 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Ground.h" />
     <ClInclude Include="Load.h" />
     <ClInclude Include="Opening.h" />
     <ClInclude Include="OpeningScene.h" />
+    <ClInclude Include="PlayerBase.h" />
+    <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneChanger.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Shadow.h" />
+    <ClInclude Include="SpreadEffect.h" />
+    <ClInclude Include="StageBase.h" />
+    <ClInclude Include="StageChanger.h" />
+    <ClInclude Include="StageManager.h" />
+    <ClInclude Include="StatusManager.h" />
+    <ClInclude Include="StrongEnemy.h" />
+    <ClInclude Include="SwordGirl.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="WeakEnemy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
