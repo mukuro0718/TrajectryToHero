@@ -2,6 +2,8 @@
 #include"Camera.h"
 #include"PlayerManager.h"
 #include"Skydome.h"
+#include"StageManager.h"
+#include"StageChanger.h"
 
 /// <summary>
 /// コンストラクタ
@@ -9,7 +11,6 @@
 Game::Game()
 {
     Create();
-
 }
 /// <summary>
 /// デストラクタ
@@ -27,12 +28,15 @@ void Game::Create()
     playerManager = new PlayerManager();
     camera = new Camera();
     skydome = new Skydome();
+    stageManager = new StageManager();
+    stageChanger = new StageChanger();
     Init();
 }
 void Game::Init()
 {
     playerManager->Init();
     camera->Init(playerManager->GetPos());
+    stageManager->Update();
 }
 void Game::Delete()
 {
@@ -62,13 +66,14 @@ void Game::Update()
 {
     camera->Update(playerManager->GetPos());
     playerManager->Update(camera->GetCameraToPlayer());
-
+    stageChanger->DrawImageWhenSwitchingStage();
 }
 /// <summary>
 /// 描画
 /// </summary>
 void Game::Draw()
 {
-    playerManager->Draw();
     skydome->Draw();
+    stageManager->Draw();
+    playerManager->Draw();
 }

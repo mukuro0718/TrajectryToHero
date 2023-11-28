@@ -7,6 +7,8 @@
 class Camera;
 class PlayerManager;
 class Skydome;
+class StageManager;
+class StageChanger;
 
 using namespace std;
 
@@ -29,5 +31,7 @@ private:
 	Camera* camera;//カメラ
 	PlayerManager* playerManager;//プレイヤー
 	Skydome* skydome;//スカイドーム
+	StageManager* stageManager;//ステージ
+	StageChanger* stageChanger;//ステージ切り替え
 };
 

@@ -133,6 +133,18 @@
     <Filter Include="Object\Scene\Game\Skydome">
       <UniqueIdentifier>{61d2ed56-3ef2-422d-97b7-ca2f71c8bb9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageBase">
+      <UniqueIdentifier>{e424f208-105a-4c83-9b14-9326118598a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\Ground">
+      <UniqueIdentifier>{70590f87-e87a-4af5-b315-a1f8138ce58e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageManager">
+      <UniqueIdentifier>{abdcd726-d910-45f6-b6da-4f5a11302090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageChanger">
+      <UniqueIdentifier>{b723fa97-e68c-4fa9-b4a1-e00f601401f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -204,20 +216,8 @@
     <ClCompile Include="Shadow.cpp">
       <Filter>Object\Scene\Game\Character\Shadow</Filter>
     </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="SpreadEffect.cpp">
       <Filter>Object\Scene\Game\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="StageBase.cpp">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="StageChanger.cpp">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="StageManager.cpp">
-      <Filter>Object\Scene\Game\Stage</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -257,6 +257,18 @@
     </ClCompile>
     <ClCompile Include="Skydome.cpp">
       <Filter>Object\Scene\Game\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="StageBase.cpp">
+      <Filter>Object\Scene\Game\Stage\StageBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Object\Scene\Game\Stage\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="StageManager.cpp">
+      <Filter>Object\Scene\Game\Stage\StageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="StageChanger.cpp">
+      <Filter>Object\Scene\Game\Stage\StageChanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -326,20 +338,8 @@
     <ClInclude Include="Shadow.h">
       <Filter>Object\Scene\Game\Character\Shadow</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClInclude>
     <ClInclude Include="SpreadEffect.h">
       <Filter>Object\Scene\Game\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="StageBase.h">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="StageChanger.h">
-      <Filter>Object\Scene\Game\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="StageManager.h">
-      <Filter>Object\Scene\Game\Stage</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -379,6 +379,18 @@
     </ClInclude>
     <ClInclude Include="Skydome.h">
       <Filter>Object\Scene\Game\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="StageBase.h">
+      <Filter>Object\Scene\Game\Stage\StageBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Object\Scene\Game\Stage\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="StageManager.h">
+      <Filter>Object\Scene\Game\Stage\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="StageChanger.h">
+      <Filter>Object\Scene\Game\Stage\StageChanger</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

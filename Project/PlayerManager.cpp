@@ -35,6 +35,7 @@ void PlayerManager::Update(const VECTOR _cameraToPlayer)
 	player->Attack();
 	player->Move(_cameraToPlayer);
 	player->Update();
+	player->AnimChange();
 }
 /// <summary>
 /// •`‰æ

@@ -29,10 +29,10 @@ SwordGirl::SwordGirl(const int _modelHandle)
 	//コリジョン情報を構築
 	MV1SetupCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex, PLAYER_COLL_INFO.xDivNum, PLAYER_COLL_INFO.yDivNum, PLAYER_COLL_INFO.zDivNum);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/Player_RunAnim.mv1"), 0);			//走りアニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Player_StrongAttackAnim.mv1"), 0);	//攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Player_StayIdleAnim.mv1"), 0);		//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/1_DeathAnim_public.mv1"), 0);		//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/RunAnim.mv1"), 0);			//走りアニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/AttackAnim.mv1"), 0);	//攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/IdleAnim.mv1"), 0);		//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/DeathAnim.mv1"), 0);		//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
@@ -152,10 +152,6 @@ void SwordGirl::Attack()
 		{
 			anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
 			isAttack = true;
-		}
-		else
-		{
-			isMove = false;
 		}
 	}
 	//攻撃アニメーションが終了したらフラグを下す
