@@ -75,7 +75,7 @@ void CharacterStatus::InitPlayerStatus()
 	agi		 = 1.5f;	//素早さのセット
 	expToGive = 0.0f;	//倒されたとき与える経験値のセット
 	exp		 = 0.0f;	//経験値のセット
-	needExp = 0.0f;
+	needExp = 10.0f;
 	maxHp = hp;
 }
 
@@ -85,4 +85,24 @@ void CharacterStatus::InitPlayerStatus()
 void CharacterStatus::CalcHP(const float _atk)
 {
 	hp -= atk * def * 0.05f;
+}
+
+/// <summary>
+/// HP計算
+/// </summary>
+void CharacterStatus::CalcExp(const float _expToGive)
+{
+	//経験値を足す
+	exp += _expToGive;
+	//もし経験値量がレベルアップに必要な経験値量を超えていたら
+	if (exp > needExp)
+	{
+		//レベルアップ
+		++lv;
+		//経験値量の初期化
+		exp = 0.0f;
+		//次に必要な経験値量を設定
+		needExp = lv * 10;
+	}
+
 }

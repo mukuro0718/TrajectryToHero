@@ -28,11 +28,13 @@ public:
 	const VECTOR& GetPos() const { return pos; }
 	////当たり判定のsetter
 	const bool GetIsDeath()const { return isDeath; }
+	const bool GetIsAttack()const { return isAttack; }
 	//半径のsetter
 	const float GetRadius()const { return RADIUS; }
 	const int GetModelHandle()const { return modelHandle; }
 
-	const float GetHp() { return status->GetHp(); }
+	const float GetHp()const { return status->GetHp(); }
+	const float GetAtk()const { return status->GetAtk(); }
 protected:
 	enum class RandomSign
 	{
@@ -50,7 +52,6 @@ protected:
 	CharacterStatus* status;
 	float maxHP;						//最大体力
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
-	bool isDeath;
 private:
 	/*定数*/
 	static constexpr int RANDOM_X_RANGE = 300;		//ｘ座標

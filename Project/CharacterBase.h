@@ -17,11 +17,19 @@ public:
 	void SetUpSphere(const VECTOR _pos, const float _radius, const int _color, const int _flag);//デバッグ用スフィアの位置設定
 	void DrawCapsule(const CapsuleInfo _capsuleInfo);//デバッグ用カプセルの描画
 	void DrawSphere(const SphereInfo _sphereInfo);//デバッグ用カプセルの描画
+
 	//ポジションのgetter/setter
 	const VECTOR& GetPos() const { return pos; }
 	//モデルハンドルのgetter
 	const int GetModelHandle()const { return modelHandle; }
-
+	//無敵フラグのgetter
+	const bool GetIsInvincible()const { return isInvincible; }
+	//カプセル情報のgetter
+	const CapsuleInfo GetCapsuleInfo()const { return capsuleInfo; }
+	//球情報のgetter
+	const SphereInfo GetSphereInfo()const { return sphereInfo; }
+	//死亡フラグのgetter
+	const bool GetIsDeath()const { return isDeath; }
 protected:
 	/*静的定数*/
 	static constexpr int INIT_MODELHANDLE = 0;
@@ -36,6 +44,8 @@ protected:
 	bool			isInvincible;   //無敵状態
 	bool			isMove;			//移動したか
 	bool			isAttack;		//攻撃したか
+	bool			isDeath;
+
 private:
 	void Init();
 };

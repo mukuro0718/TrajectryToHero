@@ -38,6 +38,7 @@ void PlayerBase::Draw()
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR,false);
 	DrawCapsule(capsuleInfo);
 	VECTOR swordPos = MV1GetFramePosition(modelHandle, 47);
+	MV1GetFrame
 	swordPos.y += 5.0f;
 	swordPos.x += -sinf(rotate.y) * 18.0f;
 	swordPos.z += -cosf(rotate.y) * 18.0f;
@@ -71,18 +72,24 @@ void PlayerBase::Delete()
 /// <summary>
 /// HP計算
 /// </summary>
-void PlayerBase::CalcHP(const bool _onDamage, const float _atk)
+void PlayerBase::CalcHP( const float _atk)
 {
-	//もしダメージを受けていたら
-	if (_onDamage)
-	{
-		//HP計算
-		status->CalcHP(_atk);
-	}
+	//HP計算
+	status->CalcHP(_atk);
+	isInvincible = true;
 }
 /// <summary>
 /// レベルアップ処理
 /// </summary>
 void PlayerBase::CalcExp(const float _expToGive)
 {
+	status->CalcExp(_expToGive);
+}
+const float PlayerBase::GetAtk()
+{
+	return status->GetAtk();
+}
+const float PlayerBase::GetHp()
+{
+	return status->GetHp();
 }

@@ -4,10 +4,10 @@
 
 #include"DxLib.h"
 #include<vector>
+#include"Boss.h"
+#include"StrongEnemy.h"
+#include"WeakEnemy.h"
 
-class WeakEnemy;
-class StrongEnemy;
-class Boss;
 using namespace std;
 class EnemyManager
 {
@@ -25,10 +25,29 @@ public:
     //エネミー配列のgetter/setter
     const int GetMaxWeakEnemy()const { return MAX_WEAK_ENEMY_NUM; }
     const int GetNowEnemyIndex()const { return nowEnemyIndex; }
-
     const bool GetIsStrongEnemy()const { return isStrongEnemy; }
-
     const bool GetIsBossEnemy()const { return isBossEnemy; }
+    //死亡フラグのgetter
+    const bool GetIsDeathWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsDeath(); }
+    const bool GetIsDeathStrongEnemy()const { return strongEnemy->GetIsDeath(); }
+    const bool GetIsDeathBossEnemy()const { return bossEnemy->GetIsDeath(); }
+    //カプセル情報のgetter
+    const CapsuleInfo GetCapsuleInfoWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetCapsuleInfo(); }
+    const CapsuleInfo GetCapsuleInfoStrongEnemy()const { return strongEnemy->GetCapsuleInfo(); }
+    const CapsuleInfo GetCapsuleInfoBossEnemy()const { return bossEnemy->GetCapsuleInfo(); }
+    //球情報のgetter
+    const SphereInfo GetSphereInfoWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetSphereInfo(); }
+    const SphereInfo GetSphereInfoStrongEnemy()const { return strongEnemy->GetSphereInfo(); }
+    const SphereInfo GetSphereInfoBossEnemy()const { return bossEnemy->GetSphereInfo(); }
+    //攻撃力のgetter
+    const float GetAtkWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetAtk(); }
+    const float GetAtkStrongEnemy()const { return strongEnemy->GetAtk(); }
+    const float GetAtkBossEnemy()const { return bossEnemy->GetAtk(); }
+    //攻撃フラグのgetter
+    const float GetIsAttackWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsAttack(); }
+    const float GetIsAttackStrongEnemy()const { return strongEnemy->GetIsAttack(); }
+    const float GetIsAttackBossEnemy()const { return bossEnemy->GetIsAttack(); }
+
 private:
     /*定数*/
     enum class ModelType//モデル変数

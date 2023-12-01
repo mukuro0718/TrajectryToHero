@@ -11,6 +11,7 @@ CharacterBase::CharacterBase()
 	,isHit(false)
 	,isMove(false)
 	,isAttack(false)
+	,isDeath(false)
 {
 }
 /// <summary>

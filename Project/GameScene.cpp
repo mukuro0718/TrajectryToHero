@@ -61,12 +61,20 @@ void GameScene::ChangeNextScene()
 {
 	//インスタンスを取得
 	auto& sceneChange = SceneChanger::GetInstance();
+	bool isGameOver = game->GetIsGameOver();
+	bool isGameClear = game->GetIsGameClear();
 
 	//もしオープニングが終了していたら
-	if (game->GetIsEndgame())
+	if (isGameClear)
 	{
 		//シーンチェンジを稼働させる
 		sceneChange.SetIsSceneChanger(true);
-		sceneChange.ChangeSceneFromNowToNext(SceneType::GAME, SceneType::TITLE);
+		sceneChange.ChangeSceneFromNowToNext(SceneType::GAME, SceneType::GAMECLEAR);
+	}
+	else if(isGameOver)
+	{
+		//シーンチェンジを稼働させる
+		sceneChange.SetIsSceneChanger(true);
+		sceneChange.ChangeSceneFromNowToNext(SceneType::GAME, SceneType::GAMEOVER);
 	}
 }

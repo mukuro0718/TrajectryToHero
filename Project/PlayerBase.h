@@ -22,7 +22,10 @@ public:
 	virtual void Init() = 0;			//初期化
 
 	bool IsStoppingUpdate();
-
+	void CalcHP(const float _atk);//HP計算
+	void CalcExp(const float _expToGive);//レベルアップ処理
+	const float GetAtk();
+	const float GetHp();
 protected:
 	/*静的定数*/
 	static constexpr float WALK_SPEED = 5.0f;	//歩く速さ

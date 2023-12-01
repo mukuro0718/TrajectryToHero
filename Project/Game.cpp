@@ -5,12 +5,23 @@
 #include"StageManager.h"
 #include"StageChanger.h"
 #include"EnemyManager.h"
+#include"Collision.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
 Game::Game()
+    :isGameOver(false)
+    ,isGameClear(false)
+    ,camera(nullptr)
+    ,playerManager(nullptr)
+    ,skydome(nullptr)
+    ,stageManager(nullptr)
+    ,stageChanger(nullptr)
+    ,enemyManager(nullptr)
+    ,collision(nullptr)
 {
     Create();
+    Init();
 }
 /// <summary>
 /// デストラクタ
@@ -31,7 +42,7 @@ void Game::Create()
     stageManager = new StageManager();
     stageChanger = new StageChanger();
     enemyManager = new EnemyManager();
-    Init();
+    collision = new Collision();
 }
 void Game::Init()
 {
@@ -46,25 +57,31 @@ void Game::Delete()
     if (camera)
     {
         delete(camera);
-        camera = NULL;
+        camera = nullptr;
     }
     //プレイヤーの開放
     if (playerManager)
     {
         delete(playerManager);
-        playerManager = NULL;
+        playerManager = nullptr;
     }
     //スカイドームの開放
     if (skydome)
     {
         delete(skydome);
-        skydome = NULL;
+        skydome = nullptr;
     }
     //エネミーの開放
     if (enemyManager)
     {
         delete(enemyManager);
-        enemyManager = NULL;
+        enemyManager = nullptr;
+    }
+    //コリジョンの開放
+    if (collision)
+    {
+        delete(collision);
+        collision = nullptr;
     }
 }
 /// <summary>
@@ -72,17 +89,20 @@ void Game::Delete()
 /// </summary>
 void Game::Update()
 {
+    /*カメラのみ更新*/
     camera->Update(playerManager->GetPos());
-    //移動処理
+    /*移動処理*/
     playerManager->Move(camera->GetCameraToPlayer());
-    //攻撃処理
+    /*攻撃処理*/
     playerManager->Attack();
-    //コリジョン処理
-
-    //位置情報,ステータスなどの更新処理
+    /*コリジョン処理*/
+    OnDamage();
+    /*更新処理*/
     playerManager->Update();
     enemyManager->Update(playerManager->GetPos(),stageChanger->GetIsFarm(),stageChanger->GetIsBoss());
     stageChanger->DrawImageWhenSwitchingStage();
+
+    GameEnd(playerManager->GetIsDeath());
 }
 /// <summary>
 /// 描画
@@ -93,4 +113,37 @@ void Game::Draw()
     stageManager->Draw();
     playerManager->Draw();
     enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+}
+/// <summary>
+/// ダメージ判定
+/// </summary>
+void Game::OnDamage()
+{
+    //プレイヤーへの攻撃
+    bool isHitPlayer = false;
+    for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
+    {
+        //もしエネミーが攻撃していたら
+        if (enemyManager->GetIsAttackWeakEnemy(i))
+        {
+            //攻撃が当たっているかのチェック
+            isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoWeakEnemy(i));
+            //もし攻撃が当たっていたら
+            if (isHitPlayer)
+            {
+                //HP計算
+                playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i));
+            }
+        }
+    }
+}
+/// <summary>
+/// ゲーム終了判定
+/// </summary>
+void Game::GameEnd(const bool _playerIsDeath)
+{
+    if (_playerIsDeath)
+    {
+        isGameOver = true;
+    }
 }

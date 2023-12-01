@@ -32,6 +32,7 @@ void PlayerManager::Init()
 /// </summary>
 void PlayerManager::Update()
 {
+	player->CountInvincibleTimer();
 	player->Update();
 	player->AnimChange();
 }
@@ -72,3 +73,17 @@ void PlayerManager::Final()
 //{
 //	return player->IsStoppingUpdate();
 //}
+/// HP計算
+/// </summary>
+void PlayerManager::CalcHP(const float _atk)
+{
+	//HP計算
+	player->CalcHP(_atk);
+}
+/// <summary>
+/// レベルアップ処理
+/// </summary>
+void PlayerManager::CalcExp(const float _expToGive)
+{
+	player->CalcExp(_expToGive);
+}

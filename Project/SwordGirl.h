@@ -16,10 +16,12 @@ public:
 	~SwordGirl();						//デストラクタ
 	void Update()override;				//更新
 	void Init()override;				//初期化
-	void Move(const VECTOR cameraToPlayer);
-	void Attack();
+	void Move(const VECTOR cameraToPlayer);//移動処理
+	void Attack();//攻撃処理
+	void Death();//死亡処理
 	void AnimChange();
-	const VECTOR GetPos() { return pos; }
+	void CountInvincibleTimer();
+	const VECTOR GetPos()const { return pos; }
 private:
 	/*定数*/
 	enum class AnimationType//アニメーションの種類
@@ -49,7 +51,7 @@ private:
 	static constexpr RangeOfAction		PLAYER_RANGE_OF_ACTION		 = { 451,-450,510,-400 };//プレイヤー行動可能範囲
 	static constexpr InputAnalogStick	NONE_INPUT_VALUE			 = { 0,0 }				;//スティック入力がない
 	static constexpr int				STAY_TIMER_TARGET_TIME		 = 3000					;//待機時間
-	static constexpr int				INVINCIBLE_TIMER_TARGET_TIME = 9					;//無敵時間
+	static constexpr int				INVINCIBLE_TIMER_TARGET_TIME = 2					;//無敵時間
 	static constexpr float				ANGLE_VALUE					 = 30.0f				;//角度の増加量
 	static constexpr float				PLAYER_RADIUS				 = 8.0f					;//無敵時間
 	static constexpr float				PLAYETR_Y_POS				 = 10.0f				;//プレイヤーY座標

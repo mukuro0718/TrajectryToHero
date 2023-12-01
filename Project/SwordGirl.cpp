@@ -75,9 +75,11 @@ void SwordGirl::Init()
 /// <summary>
 /// 更新
 /// </summary>
-/// <param name="cameraToPlayer">カメラからプレイヤーの向きベクトル</param>
 void SwordGirl::Update()
 {
+	clsDx();
+	printfDx("HP:%f", status->GetHp());
+
 	//コリジョン情報を更新
 	MV1RefreshCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex);
 	//モデルの設定
@@ -86,6 +88,29 @@ void SwordGirl::Update()
 	//アニメーションの再生
 	anim->Play(&modelHandle);
 }
+/// <summary>
+/// 無敵フラグの計測
+/// </summary>
+void SwordGirl::CountInvincibleTimer()
+{
+	//無敵フラグが立っていたら
+	if (isInvincible)
+	{
+		//まだタイマーが始まっていなかったら
+		if (!invincibleTimer->getIsStartTimer())
+		{
+			invincibleTimer->StartTimer();
+		}
+		if (invincibleTimer->CountTimer())
+		{
+			isInvincible = false;
+			invincibleTimer->EndTimer();
+		}
+	}
+}
+/// <summary>
+/// 移動
+/// </summary>
 void SwordGirl::Move(const VECTOR cameraToPlayer)
 {
 	/////////////////////////////////////////////////////////
@@ -159,7 +184,10 @@ void SwordGirl::Attack()
 		isAttack = false;
 	}
 }
+void SwordGirl::Death()
+{
 
+}
 void SwordGirl::AnimChange()
 {
 	/////////////////////////////////////////////////////////
