@@ -9,6 +9,7 @@ class PlayerManager;
 class Skydome;
 class StageManager;
 class StageChanger;
+class EnemyManager;
 
 using namespace std;
 
@@ -33,5 +34,6 @@ private:
 	Skydome* skydome;//スカイドーム
 	StageManager* stageManager;//ステージ
 	StageChanger* stageChanger;//ステージ切り替え
+	EnemyManager* enemyManager;//エネミー
 };
 

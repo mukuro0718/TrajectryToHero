@@ -7,17 +7,17 @@
 #include"EnemyBase.h"
 class Timer;
 class Animation;
-class StatusInit;
 class StrongEnemy :public EnemyBase
 {
 public:
 	StrongEnemy() {};				//コンストラクタ
-	StrongEnemy(int modelHandle);	//引数ありコンストラクタ
+	StrongEnemy(const VECTOR _spawnPos,const int modelHandle);	//引数ありコンストラクタ
 	~StrongEnemy();					//デストラクタ
 
-	void Update(VECTOR playerPos)override;	//更新
+	void Update(const VECTOR playerPos)override;	//更新
 	void Init()override;	//初期化
-	VECTOR Move(VECTOR playerPos)override;	//移動
+	VECTOR Move(const VECTOR playerPos)override;	//移動
+
 private:
 	//定数
 	enum class AnimationType
@@ -35,7 +35,6 @@ private:
 	Animation* anim;								//アニメーションクラス
 	Timer* restTimeAfterAttack;						//攻撃後休憩時間
 	Timer* invincibleTimer;							//無敵時間
-	StatusInit* statusInit;							//ステータス初期化クラス
 	//内部処理関数
 	float ChangeRotate(VECTOR playerPos);			//角度の変更
 	void Final();									//最終処理

@@ -108,7 +108,7 @@ void SwordGirl::Move(const VECTOR cameraToPlayer)
 			//³‹K‰»‚·‚é
 			const VECTOR stickDirectionNormalize = VNorm(stickDirection);
 			//ƒ‚ƒfƒ‹Šp“x‚ÌŒvŽZ
-			rotate.y = (-atan2(cameraToPlayer.z, cameraToPlayer.x) - atan2(stickDirectionNormalize.z, stickDirectionNormalize.x)) - 180.0f * DX_PI_F / 180.0f;
+			rotate.y = (-atan2(cameraToPlayer.z, cameraToPlayer.x) - atan2(stickDirectionNormalize.z, stickDirectionNormalize.x)) - DX_PI_F;
 			//À•WŒvŽZ
 			pos.x += -sinf(rotate.y) * status->GetAgi();
 			pos.z += -cosf(rotate.y) * status->GetAgi();
@@ -150,7 +150,6 @@ void SwordGirl::Attack()
 		//B‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚çUŒ‚
 		if (input & PAD_INPUT_3)
 		{
-			anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
 			isAttack = true;
 		}
 	}
@@ -167,7 +166,11 @@ void SwordGirl::AnimChange()
 	// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•Ï‰»
 	/////////////////////////////////////////////////////////
 	//ˆÚ“®‚µ‚Ä‚¢‚½‚ç
-	if (isMove && !isAttack)
+	if (isAttack)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
+	}
+	else if (isMove && !isAttack)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::RUN));
 	}
@@ -181,5 +184,4 @@ void SwordGirl::AnimChange()
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
 	}
-
 }

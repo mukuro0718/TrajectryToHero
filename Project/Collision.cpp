@@ -1,78 +1,47 @@
-////===========================================================================
-////@brief 当たり判定クラス
-////===========================================================================
-//#include"Collision.h"
-///// <summary>
-///// コンストラクタ
-///// </summary>
-//Collision::Collision()
-//{
-//}
-///// <summary>
-///// デストラクタ
-///// </summary>
-//Collision::~Collision()
-//{
-//
-//}
-///// <summary>
-///// 初期化
-///// </summary>
-//void Collision::Init()
-//{
-//}
-///// <summary>
-///// 攻撃時当たり判定
-///// </summary>
-///// <param name="baseToAttack">攻撃したベース</param>
-///// <param name="baseToHit">攻撃を受けた側のベース</param>
-///// <param name="statusToHit">攻撃を受けた側のステータス</param>
-///// <param name="statusToAttack">攻撃したステータス</param>
-//void Collision::OnAttackCollision(int _frameNum, CharacterBase _baseToAttack, CharacterBase _baseToHit, CharacterStatus _statusToHit, CharacterStatus _statusToAttack)
-//{
-//	statusToHit = _statusToHit;
-//	statusToAttack = _statusToAttack;
-//	if (!statusToHit.isInvincible && !baseToHit.isDeath)
-//	{
-//		//攻撃側と受け手側の選択している行動の有利不利の判定
-//		//当たり判定構造体
-//		MV1_COLL_RESULT_POLY_DIM hitPolyDim;
-//		/*VECTOR pos = VGet(_baseToHit.pos.x, _baseToHit.pos.y + 20.0f, _baseToHit.pos.z);*/
-//		VECTOR underPos = baseToHit.pos;
-//		VECTOR topPos = VGet(_baseToHit.pos.x, _baseToHit.pos.y + 30.0f, _baseToHit.pos.z);
-//		//モデルとスフィアの当たり判定をチェック
-//		//hitPolyDim = MV1CollCheck_Sphere(_baseToAttack.modelHandle, _frameNum, pos, _baseToHit.radius);
-//		hitPolyDim = MV1CollCheck_Capsule(_baseToAttack.modelHandle, _frameNum, underPos,topPos, _baseToHit.radius);
-//		//一度でもあたっていたら処理を行う
-//		if (hitPolyDim.HitNum >= 1 && !statusToHit.isHit)
-//		{
-//			statusToHit.isInvincible = true;
-//			CalcStatus();
-//		}
-//		//後始末
-//		MV1CollResultPolyDimTerminate(hitPolyDim);
-//	}
-//}
-///// <summary>
-///// 攻撃時のステータス計算
-///// </summary>
-///// <param name="statusToHit">攻撃が当たった側のステータス</param>
-///// <param name="statusToAttack">攻撃した側のステータス</param>
-//void Collision::CalcStatus()
-//{
-//	statusToHit.isInvincible = true;
-//	//HP計算
-//	statusToHit.HP -= statusToAttack.ATK / statusToHit.DEF;
-//
-//	//HPが０だったらEXPを増やす
-//	if (statusToHit.HP < 0)
-//	{
-//		statusToAttack.EXP += statusToHit.EXP_TO_GIVE;
-//	}
-//}
-///// <summary>
-///// 球と球の当たり判定
-///// </summary>
+//===========================================================================
+//@brief 当たり判定クラス
+//===========================================================================
+#include"Collision.h"
+/// <summary>
+/// コンストラクタ
+/// </summary>
+Collision::Collision()
+{
+}
+/// <summary>
+/// デストラクタ
+/// </summary>
+Collision::~Collision()
+{
+
+}
+/// <summary>
+/// 初期化
+/// </summary>
+void Collision::Init()
+{
+}
+/// <summary>
+/// 攻撃時当たり判定
+/// ダメージ判定を行う場合はtrue,そうでなければfalseを返す
+/// </summary>
+bool Collision::OnDamage(const bool _isInvicible,const bool _isDeath,const CapsuleInfo _capsuleInfo,const SphereInfo _sphereInfo)
+{
+	if (!_isInvicible && !_isDeath)
+	{
+		//球とスフィアの当たり判定をチェック
+		bool isHit = SphereCapsuleCalc(_capsuleInfo.topPos,_capsuleInfo.underPos,_capsuleInfo.radius,_sphereInfo.centerPos,_sphereInfo.radius);
+		//あたっていたら処理を行う
+		if (isHit)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+ //<summary>
+ //球と球の当たり判定
+ //</summary>
 //void Collision::SphereToSphere(CharacterBase _base1, CharacterBase _base2)
 //{
 //	//チェック対象のベース
@@ -101,3 +70,68 @@
 //		}
 //	}
 //}
+
+/// <summary>
+/// 線分と点の最近接点を返す
+/// </summary>
+VECTOR Collision::NearestPointOfSegmentPointCalc(const VECTOR _startPos,	const VECTOR _endPos,const VECTOR _targetPos)
+{
+	VECTOR targetPos = _targetPos;//最近接点を求めたい目標点
+	VECTOR startPos = _startPos;//最近接点を求めたい線分開始点
+	VECTOR endPos = _endPos;//最近接点を求めたい線分終了点
+	VECTOR nearestPos = ORIGIN_POS;//最近接点
+	float time = 0.0f;//始点～終点までを0.0f～1.0fとした値
+	//始点から終点に伸びたベクトル
+	VECTOR segmentVecSE = VSub(_endPos, _startPos);
+	//始点からターゲットに伸びたベクトル
+	VECTOR segmentVecST = VSub(_targetPos, _startPos);
+	//タイムに始点から目標に伸びたベクトルと始点から終点に伸びたベクトルの内積を入れる
+	time = VDot(segmentVecST, segmentVecSE);
+
+	//もしタイムが０以下になったら（求めたい目標点が線分の始点の外側にある）
+	if (time <= 0.0f)
+	{
+		//タイムを０にする
+		time = 0.0f;
+		//最近接点は線分の始点になる
+		nearestPos = startPos;
+	}
+	else
+	{
+		//同じベクトルの内積を取るため、常に正になり、その値はベクトルのサイズになる
+		/*HACK:vecA・vecA = |vecA|^2*/
+		float segmentVecSESize = VDot(segmentVecSE, segmentVecSE);
+		//ベクトルのサイズがタイムよりも小さければ（求めたい目標点が始点から終点までの範囲外にある）
+		if (time >= segmentVecSESize)
+		{
+			//タイムを１にする
+			time = 1.0f;
+			//最近接点は線分の終点になる
+			nearestPos = endPos;
+		}
+		//そうでなければ（求めたい目標点が始点から終点までの範囲内にある）
+		else
+		{
+			//タイムに始点～終点と始点～目標点に伸びたベクトルの内積を始点～終点のベクトルのサイズで割る
+			time = time / segmentVecSESize;
+			//最近接点は始点～終点に伸びたベクトルにタイムをかけたベクトルと始点を足したものになる
+			nearestPos = VAdd(startPos,VScale(segmentVecSE, time));
+		}
+	}
+	return nearestPos;
+}
+bool Collision::SphereCapsuleCalc(const VECTOR _capsuleStartPos,const VECTOR _capsuleEndPos,const float _capsuleRadius,const VECTOR _spherePos,const float sphereRadius)
+{
+	VECTOR nearestPos = ORIGIN_POS;
+
+	//カプセルの線分と球の中心点もとに最近接点を出す
+	nearestPos = NearestPointOfSegmentPointCalc(_capsuleStartPos,_capsuleEndPos,_spherePos);
+	//最近接点とスフィアの中心との距離
+	VECTOR vecSphNear = VSub(_spherePos,nearestPos);
+	//最近接点と球の中心とのサイズが、カプセルの半径＋球の半径より小さかったらtrueを返す
+	if (VSize(vecSphNear) < _capsuleRadius + sphereRadius)
+	{
+		return true;
+	}
+	return false;
+}

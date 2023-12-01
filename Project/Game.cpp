@@ -4,7 +4,7 @@
 #include"Skydome.h"
 #include"StageManager.h"
 #include"StageChanger.h"
-
+#include"EnemyManager.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -30,6 +30,7 @@ void Game::Create()
     skydome = new Skydome();
     stageManager = new StageManager();
     stageChanger = new StageChanger();
+    enemyManager = new EnemyManager();
     Init();
 }
 void Game::Init()
@@ -37,6 +38,7 @@ void Game::Init()
     playerManager->Init();
     camera->Init(playerManager->GetPos());
     stageManager->Update();
+    enemyManager->Init();
 }
 void Game::Delete()
 {
@@ -52,11 +54,17 @@ void Game::Delete()
         delete(playerManager);
         playerManager = NULL;
     }
-    //プレイヤーの開放
+    //スカイドームの開放
     if (skydome)
     {
         delete(skydome);
         skydome = NULL;
+    }
+    //エネミーの開放
+    if (enemyManager)
+    {
+        delete(enemyManager);
+        enemyManager = NULL;
     }
 }
 /// <summary>
@@ -65,7 +73,15 @@ void Game::Delete()
 void Game::Update()
 {
     camera->Update(playerManager->GetPos());
-    playerManager->Update(camera->GetCameraToPlayer());
+    //移動処理
+    playerManager->Move(camera->GetCameraToPlayer());
+    //攻撃処理
+    playerManager->Attack();
+    //コリジョン処理
+
+    //位置情報,ステータスなどの更新処理
+    playerManager->Update();
+    enemyManager->Update(playerManager->GetPos(),stageChanger->GetIsFarm(),stageChanger->GetIsBoss());
     stageChanger->DrawImageWhenSwitchingStage();
 }
 /// <summary>
@@ -76,4 +92,5 @@ void Game::Draw()
     skydome->Draw();
     stageManager->Draw();
     playerManager->Draw();
+    enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
 }

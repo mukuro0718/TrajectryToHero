@@ -25,7 +25,7 @@ private:
 	static const	 VECTOR			 DISTANCE_TO_POINT;				//注視点までの距離
 	static const	 VECTOR			 UP_VECTOR_Y;					//Y軸＋が上になるようカメラを設定する用のベクトル
 	static constexpr InputRightStick NONE_INPUT_VALUE	= { 0,0 };	//スティック入力がない
-	static constexpr float			 CAMERA_NEAR		= 1.0f;		//カメラの近描画範囲
+	static constexpr float			 CAMERA_NEAR		= 0.1f;		//カメラの近描画範囲
 	static constexpr float			 CAMERA_FAR			= 2500.0f;	//カメラの遠描画範囲
 	static constexpr float			 INIT_ANGLE			= 0.0f;		//初期角度
 	static constexpr float			 ADD_ANGLE_VALUE	= 0.1f;		//角度増加量

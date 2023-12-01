@@ -30,12 +30,24 @@ void PlayerManager::Init()
 /// <summary>
 /// XV
 /// </summary>
-void PlayerManager::Update(const VECTOR _cameraToPlayer)
+void PlayerManager::Update()
 {
-	player->Attack();
-	player->Move(_cameraToPlayer);
 	player->Update();
 	player->AnimChange();
+}
+/// <summary>
+/// ˆÚ“®
+/// </summary>
+void PlayerManager::Move(const VECTOR _cameraToPlayer)
+{
+	player->Move(_cameraToPlayer);
+}
+/// <summary>
+/// UŒ‚
+/// </summary>
+void PlayerManager::Attack()
+{
+	player->Attack();
 }
 /// <summary>
 /// •`‰æ

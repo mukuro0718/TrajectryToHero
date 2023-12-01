@@ -1,31 +1,22 @@
-////===========================================================================
-////@brief 当たり判定クラス
-////===========================================================================
-//#pragma once
-//#include"DxLib.h"
-//#include"Common.h"
-//class Collision
-//{
-//public:
-//	Collision();//コンストラクタ
-//	void Init();//初期化
-//	~Collision();//デストラクタ
-//	void Delete(int modelHandle);//削除
-//	//プレイヤーとエネミーの攻撃時当たり判定
-//	void OnAttackCollision(int _frameNum, CharacterBase _baseToAttack, CharacterBase _baseToHit, CharacterStatus _statusToHit, CharacterStatus _statusToAttack);
-//	//ステータス計算
-//	void CalcStatus();
-//	//球と球の当たり判定
-//	void SphereToSphere(CharacterBase _base1, CharacterBase _base2);
-//	//当たり判定後、変更したステータスを返す
-//	const CharacterStatus GetStatusToHit()	 const { return statusToHit;	}
-//	const CharacterStatus GetStatusToAttack()const { return statusToAttack; }
-//	const CharacterBase   GetBaseToHit()	 const { return baseToHit;		}
-//	const CharacterBase   GetBaseToAttack()  const { return baseToAttack;	}
-//private:
-//	//構造体
-//	CharacterStatus statusToHit;	//攻撃を受けた側のステータス
-//	CharacterStatus statusToAttack;	//攻撃をした側のステータス
-//	CharacterBase	baseToHit;		//攻撃を受けた側のベース
-//	CharacterBase	baseToAttack;		//攻撃をした側のベース
-//};
+//===========================================================================
+//@brief 当たり判定クラス
+//===========================================================================
+#pragma once
+#include"DxLib.h"
+#include"Common.h"
+class Collision
+{
+public:
+	Collision();//コンストラクタ
+	void Init();//初期化
+	~Collision();//デストラクタ
+	void Delete(int modelHandle);//削除
+	//プレイヤーとエネミーの攻撃時当たり判定
+	bool OnDamage(const bool _isInvicible, const bool _isDeath, const CapsuleInfo _capsuleInfo, const SphereInfo _sphereInfo);
+	
+	void SphereSphereCalc();//球と球の当たり判定
+	VECTOR NearestPointOfSegmentPointCalc(const VECTOR _startPos,const VECTOR _endPos,const VECTOR _targetPos);//線分と点の最近接点
+	bool SphereCapsuleCalc(const VECTOR _capsuleStartPos, const VECTOR _capsuleEndPos, const float _capsuleRadius, const VECTOR _spherePos, const float sphereRadius);//球とカプセルの当たり判定
+private:
+	//構造体
+};

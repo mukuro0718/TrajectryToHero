@@ -3,8 +3,15 @@
 /// コンストラクタ
 /// </summary>
 CharacterBase::CharacterBase()
+	:modelHandle(INIT_MODELHANDLE)
+	, pos(ORIGIN_POS)
+	, rotate(ORIGIN_POS)
+	,scale(ORIGIN_POS)
+	,isInvincible(false)
+	,isHit(false)
+	,isMove(false)
+	,isAttack(false)
 {
-	Init();
 }
 /// <summary>
 /// デストラクタ
@@ -30,11 +37,6 @@ void CharacterBase::Init()
 /// <summary>
 /// カプセル情報の設定
 /// </summary>
-/// <param name="pos">座標</param>
-/// <param name="height">高さ</param>
-/// <param name="radius">半径</param>
-/// <param name="color">色</param>
-/// <param name="flag">フラグ</param>
 void CharacterBase::SetUpCapsule(const VECTOR _pos, const float _height, const float _radius, const int _color, const int _flag)
 {
 	capsuleInfo.topPos = _pos;
@@ -51,4 +53,22 @@ void CharacterBase::SetUpCapsule(const VECTOR _pos, const float _height, const f
 void CharacterBase::DrawCapsule(const CapsuleInfo _capsuleInfo)
 {
 	DrawCapsule3D(_capsuleInfo.topPos, _capsuleInfo.underPos, _capsuleInfo.radius, _capsuleInfo.divNum, _capsuleInfo.difColor, _capsuleInfo.spcColor, _capsuleInfo.fillFlag);
+}
+/// <summary>
+/// カプセル情報の設定
+/// </summary>
+void CharacterBase::SetUpSphere(const VECTOR _pos,const float _radius, const int _color, const int _flag)
+{
+	sphereInfo.centerPos= _pos;
+	sphereInfo.radius	= _radius;
+	sphereInfo.difColor = _color;
+	sphereInfo.spcColor = _color;
+	sphereInfo.fillFlag = _flag;
+}
+/// <summary>
+/// カプセルの描画
+/// </summary>
+void CharacterBase::DrawSphere(const SphereInfo _sphereInfo)
+{
+	DrawSphere3D(_sphereInfo.centerPos, _sphereInfo.radius, _sphereInfo.divNum, _sphereInfo.difColor, _sphereInfo.spcColor, _sphereInfo.fillFlag);
 }

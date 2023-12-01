@@ -145,6 +145,9 @@
     <Filter Include="Object\Scene\Game\Stage\StageChanger">
       <UniqueIdentifier>{b723fa97-e68c-4fa9-b4a1-e00f601401f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Character\Player\PlayerManager">
+      <UniqueIdentifier>{9979043d-44b7-429c-88e6-b0be02218471}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -197,9 +200,6 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Object\Scene\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerManager.cpp">
-      <Filter>Object\Scene\Game\Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Object\Scene\Game\Camera</Filter>
@@ -270,6 +270,9 @@
     <ClCompile Include="StageChanger.cpp">
       <Filter>Object\Scene\Game\Stage\StageChanger</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -319,9 +322,6 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Object\Scene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerManager.h">
-      <Filter>Object\Scene\Game\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Object\Scene\Game\Camera</Filter>
@@ -391,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="StageChanger.h">
       <Filter>Object\Scene\Game\Stage\StageChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

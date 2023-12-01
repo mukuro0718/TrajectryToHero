@@ -26,15 +26,15 @@ public:
 protected:
 	/*静的定数*/
 	static constexpr float WALK_SPEED = 5.0f;	//歩く速さ
-	static constexpr int INIT_MODELHANDLE = 0;
 	/*メンバ変数*/
-	VECTOR			hitCheckAttack;	//攻撃時当たり判定
 	CharacterStatus* status;			//ステータス
-
+	VECTOR cameraToPlayer;
 private:
 	/*メンバ変数*/
 	static constexpr float CAPSULE_HEIGHT = 30.0f;
 	static constexpr float CAPSULE_RADIUS = 10.0f;
 	static const	 int   CAPSULE_COLOR;
+	static constexpr float SPHERE_RADIUS = 3.0f;
+	static const int SPHERE_COLOR;
 };
 
