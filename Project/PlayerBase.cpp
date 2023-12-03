@@ -38,10 +38,9 @@ void PlayerBase::Draw()
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR,false);
 	DrawCapsule(capsuleInfo);
 	VECTOR swordPos = MV1GetFramePosition(modelHandle, 47);
-	MV1GetFrame
-	swordPos.y += 5.0f;
-	swordPos.x += -sinf(rotate.y) * 18.0f;
-	swordPos.z += -cosf(rotate.y) * 18.0f;
+	//swordPos.y += 5.0f;
+	//swordPos.x += -sinf(rotate.y) * 18.0f;
+	//swordPos.z += -cosf(rotate.y) * 18.0f;
 	SetUpSphere(swordPos , SPHERE_RADIUS, SPHERE_COLOR, false);
 	DrawSphere(sphereInfo);
 #endif // _DEBUG
