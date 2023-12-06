@@ -41,7 +41,7 @@ public:
 	
 	void GetPlayerData		 (int* _model);	//プレイヤーデータのgetter
 	void GetStageData		 (int* _model);	//ステージデータのgetter
-	void GetStatusManagerData(int* _image);	//メニューデータのgetter
+	void GetCharacterStatusData(int* _image,int* _font);	//メニューデータのgetter
 	void GetShadowData		 (int* _image);	//シャドウデータのgetter
 	void GetSkydomeData		 (int* _skydomeModel);	//スカイドームデータのgetter
 
@@ -78,7 +78,8 @@ private:
 	vector<int>stageChangeImage;	//ステージチェンジ画像
 	int playerModel;				//プレイヤーモデルハンドル
 	int stageModel;					//ステージモデルハンドル
-	int statusManagerImage;			//ステータスマネージャー画像
+	int characterStatusImage;		//キャラクターステータス画像
+	int characterStatusFont;		//キャラクターステータスフォント
 	int shadowImage;				//影画像
 	int skydomeModel;//スカイドーム
 

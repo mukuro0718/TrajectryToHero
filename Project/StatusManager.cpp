@@ -23,7 +23,6 @@
 //	//‰Šú‰»
 //	Init();
 //	load.GetStatusManagerData(&backGroundImage);
-//	
 //}
 //
 ///// <summary>

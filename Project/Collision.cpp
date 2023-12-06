@@ -40,36 +40,42 @@ bool Collision::OnDamage(const bool _isInvicible,const bool _isDeath,const Capsu
 	return false;
 }
  //<summary>
- //球と球の当たり判定
+ //カプセル同士の当たり判定（Y座標は考慮しないため、実際の判定は２Dになる）
+ // ２点間の座標と半径の合計を比べる
  //</summary>
-//void Collision::SphereToSphere(CharacterBase _base1, CharacterBase _base2)
-//{
-//	//チェック対象のベース
-//	baseToAttack = _base1;
-//	//ほかの対象のベース
-//	baseToHit = _base2;
-//	//２つのベースの座標が同じだったら処理をしない
-//	//（敵の番号を出してそれが同じだったら処理をしないようにしたほうが良いかも）
-//	if (baseToAttack.pos == baseToHit.pos || baseToAttack.isHit == true){}
-//	else
-//	{
-//		int isHit = HitCheck_Sphere_Sphere(baseToAttack.pos, baseToAttack.radius, baseToHit.pos, baseToHit.radius);
-//		if (isHit > 0)
-//		{
-//			//自分から当たり判定を行う相手へ向いたベクトルを出す
-//			VECTOR myToOther = VSub(baseToHit.pos, baseToAttack.pos);
-//			//myToOtherの逆ベクトル
-//			VECTOR otherToMy = VSub(baseToAttack.pos, baseToAttack.pos);
-//
-//			//めり込み量＝（自分の半径＋当たり判定を行う相手半径）ーベクトルABの大きさ
-//			float pushBackValue = (baseToAttack.radius + baseToHit.radius) - VSize(myToOther);
-//			//逆ベクトルを正規化する
-//			VECTOR myToOtherNorm = VNorm(otherToMy);
-//			baseToAttack.correctionValue = VScale(myToOtherNorm,pushBackValue);
-//			baseToAttack.isHit = true;
-//		}
-//	}
-//}
+VECTOR Collision::CapsuleToCapsuleCollision(const VECTOR _myMoveVec,const VECTOR _myPos,const VECTOR _otherPos,const float _myRadius,const float _otherRadius)
+{
+	//もし移動していなければ移動量0を返す
+	if (_myMoveVec == ORIGIN_POS)
+	{
+		return ORIGIN_POS;
+	}
+	VECTOR outPutVec = ORIGIN_POS;
+	VECTOR myPos = _myPos;	//自分のベクトル
+	VECTOR otherPos = _otherPos;//相手のベクトル
+	//2つの座標間のベクトルを求める
+	VECTOR myToOtherPos = VSub( otherPos,myPos);
+	//ベクトルの大きさを求める
+	float myToOtherPosSize = VSize(myToOtherPos);
+
+	float myRadius = _myRadius;		//自分の半径
+	float otherRadius = _otherRadius;	//相手の半径
+	//二つの半径の合計を求める
+	float sumRadius = myRadius + otherRadius;
+
+	//もしベクトルの大きさが半径の合計よりも小さければ当たっている
+	if (sumRadius > myToOtherPosSize)
+	{
+		//ベクトルの大きさと半径の合計の差を求める
+		float diff = sumRadius - myToOtherPosSize;
+		VECTOR otherToMyPos = VSub(myPos,otherPos);
+		//2点間のベクトルを正規化する
+		VECTOR otherTomyPosNorm = VNorm(otherToMyPos);
+		//正規化したベクトルを差でスケーリングする
+		outPutVec = VScale(otherTomyPosNorm,diff);
+	}
+	return outPutVec;
+}
 
 /// <summary>
 /// 線分と点の最近接点を返す

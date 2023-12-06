@@ -70,7 +70,7 @@ void StrongEnemy::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void StrongEnemy::Update(const VECTOR _playerPos)
+void StrongEnemy::Update()
 {
 	//無敵フラグが立っていたら
 	if (isInvincible)
@@ -102,9 +102,7 @@ void StrongEnemy::Update(const VECTOR _playerPos)
 	}
 	else
 	{
-		VECTOR playerPos = _playerPos;
-		playerPos.y = 0.0f;
-		pos = VAdd(pos, Move(playerPos));//移動
+		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
 	pos.y = 10.0f;
@@ -115,14 +113,14 @@ void StrongEnemy::Update(const VECTOR _playerPos)
 /// <summary>
 /// 移動
 /// </summary>
-VECTOR StrongEnemy::Move(VECTOR playerPos)
+void StrongEnemy::Move(VECTOR _playerPos)
 {
+	VECTOR playerPos = _playerPos;
+	playerPos.y = 0.0f;
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
 	//正規化したベクトル
 	VECTOR normalizePos = ORIGIN_POS;
-	//返り値として返す移動後座標（角度有）
-	VECTOR outPutPos = ORIGIN_POS;
 	float vectorSize = 0.0f;
 	//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
 	targetPos = VSub(pos, playerPos);
@@ -188,11 +186,10 @@ VECTOR StrongEnemy::Move(VECTOR playerPos)
 	if (anim->GetAnim() != static_cast<int>(AnimationType::IDLE))
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
-		outPutPos = VScale(normalizePos, status->GetAgi() * -1);
+		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(playerPos), 0.0f);
 	}
-	return outPutPos;
 }
 /// <summary>
 ///	角度の変更

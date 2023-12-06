@@ -17,10 +17,9 @@ public:
 	WeakEnemy(const VECTOR _spawnPos,const int _modelHandle);				//引数ありコンストラクタ
 	~WeakEnemy();							//デストラクタ
 
-	void Attack();
-	void Update(const VECTOR _playerPos)override;	//更新
+	void Update()override;	//更新
 	void Init()override;	//初期化
-	VECTOR Move(const VECTOR playerPos)override;	//移動
+	void Move(const VECTOR playerPos)override;	//移動
 
 	
 private:

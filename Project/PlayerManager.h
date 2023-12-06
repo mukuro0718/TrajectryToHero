@@ -16,7 +16,9 @@ public:
 	void Update();//更新
 	void Draw();//描画
 	void Final();//削除
-	void LvUP();
+	void StatusUpdate();//ステータス更新
+	void FixMoveVec(const VECTOR _fixVec);
+
 	//bool IsStoppingUpdate();
 	//座標のgetter
 	const VECTOR GetPos() { return player->GetPos(); }
@@ -28,11 +30,16 @@ public:
 	const CapsuleInfo GetCapsuleInfo()const { return player->GetCapsuleInfo(); }
 	//球情報のgetter
 	const SphereInfo GetSphereInfo()const { return player->GetSphereInfo(); }
+	//攻撃フラグのgetter
+	const bool GetIsAttack()const { return player->GetIsAttack(); }
 	//死亡フラグのgetter
 	const bool GetIsDeath()const { return player->GetIsDeath(); }
 	//攻撃力のgetter
 	const float GetAtk()const { return player->GetAtk(); }
 	const float GetHp()const { return player->GetHp(); }
+	const bool GetIsShowStatusMenu() { return player->GetIsShowStatusMenu(); }
+	//移動量のgetter
+	const VECTOR GetMoveVec()const { return player->GetMoveVec(); }
 	/*HACK:
 	const ~ ~()constは
 	最初のconst = 定数値を返す

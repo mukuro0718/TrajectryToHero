@@ -55,7 +55,8 @@ void Load::LoadingData()
 	//スカイドームモデル
 	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
 	//メニュー画像
-	statusManagerImage = LoadGraph("Data/Img/Game/Menu/backGround.png");
+	characterStatusImage = LoadGraph("Data/Img/Game/Menu/backGround.png");
+	characterStatusFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 128, 64, DX_FONTTYPE_NORMAL);
 	//ステージチェンジ画像
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Farm_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Boss_ロゴ.png"));
@@ -131,9 +132,10 @@ void Load::GetStageChangeData(vector<int>* _image)
 /// メニューデータのgetter
 /// </summary>
 /// <param name="image">画像ハンドルを格納するvectorのポインタ</param>
-void Load::GetStatusManagerData(int* _image)
+void Load::GetCharacterStatusData(int* _image, int* _font)
 {
-	*_image = statusManagerImage;
+	*_image = characterStatusImage;
+	*_font = characterStatusFont;
 }
 /// <summary>
 /// スカイドームデータのgetter

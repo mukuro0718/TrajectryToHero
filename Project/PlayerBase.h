@@ -8,7 +8,7 @@
 class StatusManager;
 class EffectManager;
 class CharacterStatus;
-
+class Timer;
 class PlayerBase :public CharacterBase
 {
 public:
@@ -32,12 +32,20 @@ protected:
 	/*メンバ変数*/
 	CharacterStatus* status;			//ステータス
 	VECTOR cameraToPlayer;
+
 private:
 	/*メンバ変数*/
-	static constexpr float CAPSULE_HEIGHT = 30.0f;
-	static constexpr float CAPSULE_RADIUS = 10.0f;
-	static const	 int   CAPSULE_COLOR;
-	static constexpr float SPHERE_RADIUS = 3.0f;
-	static const int SPHERE_COLOR;
+	static constexpr float CAPSULE_HEIGHT = 30.0f;//カプセルの高さ
+	static constexpr float CAPSULE_RADIUS = 10.0f;//カプセルの半径
+	static const	 int   CAPSULE_COLOR;//カプセルの色
+	static constexpr float SPHERE_RADIUS = 20.0f;//スフィアの半径
+	static const int SPHERE_COLOR;//スフィアの色
+	static const VECTOR SPHERE_POS_OFFSET;//スフィアオフセット
+	static constexpr float INIT_DEGREES = 0.0f;//初期度数
+	static constexpr float ADD_DEGREES_VALUE = 1.6f;//X度数増加量
+	static const VECTOR CENTER_POS_OFFSET;//中心座標オフセット
+	VECTOR centerPos;//中心座標
+	float degrees;//度数
+	Timer* attackLatency;//攻撃時待機時間
 };
 

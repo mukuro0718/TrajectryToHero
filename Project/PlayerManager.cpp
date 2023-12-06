@@ -56,6 +56,7 @@ void PlayerManager::Attack()
 void PlayerManager::Draw()
 {
 	player->Draw();
+	player->DrawMenu();
 }
 /// <summary>
 /// 削除
@@ -66,13 +67,13 @@ void PlayerManager::Final()
 	delete(player);
 }
 /// <summary>
-/// レベルアップメニューが表示されていたらほかの更新処理を止める
+/// 移動量補正
 /// </summary>
-/// <returns>true/false</returns>
-//bool PlayerManager::IsStoppingUpdate()
-//{
-//	return player->IsStoppingUpdate();
-//}
+void PlayerManager::FixMoveVec(const VECTOR _fixVec)
+{
+	player->FixMoveVec(_fixVec);
+}
+/// <summary>
 /// HP計算
 /// </summary>
 void PlayerManager::CalcHP(const float _atk)
@@ -86,4 +87,11 @@ void PlayerManager::CalcHP(const float _atk)
 void PlayerManager::CalcExp(const float _expToGive)
 {
 	player->CalcExp(_expToGive);
+}
+/// <summary>
+/// ステータス更新
+/// </summary>
+void PlayerManager::StatusUpdate()
+{
+	player->StatusUpdate();
 }

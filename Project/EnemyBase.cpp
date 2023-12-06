@@ -32,6 +32,15 @@ EnemyBase::~EnemyBase()
 	Final();
 }
 /// <summary>
+/// 移動量の補正
+/// </summary>
+void EnemyBase::FixMoveVec(const VECTOR _fixVec)
+{
+	//移動量を補正する
+	moveVec = VAdd(moveVec, _fixVec);
+}
+
+/// <summary>
 /// 削除
 /// </summary>
 void EnemyBase::Final()
@@ -55,6 +64,7 @@ void EnemyBase::Draw(VECTOR playerPos)
 	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle,57);
 	SetUpSphere(enemyLeftFootPos,SPHERE_RADIUS,SPHERE_COLOR,false);
 	DrawSphere(sphereInfo);
+	printfDx("HP%f", status->GetHp());
 #endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
@@ -62,4 +72,14 @@ void EnemyBase::Draw(VECTOR playerPos)
 	//effectManager->SpreadEffectManager(pos, isInvincible);
 	MV1DrawModel(modelHandle);
 	//printfDx("X:%f Y:%f Z:%f\n", MV1GetPosition(modelHandle).x, MV1GetPosition(modelHandle).y, MV1GetPosition(modelHandle).z);
+}
+float EnemyBase::CalcHP(const float _atk)
+{
+	isInvincible = true;
+	//HP計算
+	return status->CalcHP(_atk);
+}
+void EnemyBase::InitExpToGive()
+{
+	status->InitExpToGive();
 }

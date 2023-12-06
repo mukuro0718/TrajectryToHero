@@ -14,9 +14,9 @@ public:
 	Boss(const VECTOR _spawnPos,const int _modelHandle);//引数ありコンストラクタ
 	~Boss();				//デストラクタ
 
-	void   Update(const VECTOR _playerPos)override;		//更新
+	void   Update()override;		//更新
 	void   Init  ()override;	//初期化
-	VECTOR Move  (const VECTOR _playerPos)override;		//移動
+	void Move  (const VECTOR _playerPos)override;		//移動
 
 
 private:

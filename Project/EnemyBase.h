@@ -18,11 +18,12 @@ public:
 
 	void Draw(VECTOR _playerPos);	//描画
 	void Final();					//削除
+	void FixMoveVec(const VECTOR _fixVec);
 
 	//仮想関数（継承先で実装）
-	virtual void Update(const VECTOR _playerPos) = 0;	//更新
+	virtual void Update() = 0;	//更新
 	virtual void Init() = 0;					//初期化
-	virtual VECTOR Move(const VECTOR _playerPos) = 0;	//移動
+	virtual void Move(const VECTOR _playerPos) = 0;	//移動
 
 	//ポジションのgetter/setter
 	const VECTOR& GetPos() const { return pos; }
@@ -35,6 +36,8 @@ public:
 
 	const float GetHp()const { return status->GetHp(); }
 	const float GetAtk()const { return status->GetAtk(); }
+	float CalcHP(const float _atk);//HP計算
+	void InitExpToGive();
 protected:
 	enum class RandomSign
 	{

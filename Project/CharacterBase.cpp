@@ -4,8 +4,9 @@
 /// </summary>
 CharacterBase::CharacterBase()
 	:modelHandle(INIT_MODELHANDLE)
-	, pos(ORIGIN_POS)
-	, rotate(ORIGIN_POS)
+	,pos(ORIGIN_POS)
+	,rotate(ORIGIN_POS)
+	,moveVec(ORIGIN_POS)
 	,scale(ORIGIN_POS)
 	,isInvincible(false)
 	,isHit(false)

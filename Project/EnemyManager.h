@@ -15,14 +15,25 @@ public:
     EnemyManager();                                         //コンストラクタ
     ~EnemyManager();                                        //デストラクタ
     void Init();                           //初期化
-    void Draw(VECTOR playerPos, const bool isFarm, const bool isBoss);                            //描画
-    void Update(const VECTOR playerPos, const bool isFarm,const bool isBoss);       //更新
+    void Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss);                            //描画
+    void Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss);//移動
+    void Update(const VECTOR _playerPos, const bool _isFarm,const bool _isBoss);       //更新
     void CreateAndInit();                                          //生成
     void AllDestroy();//すべての削除
-    void PushBack();    //当たり判定
     bool CountDestroyEnemy();
-
-    //エネミー配列のgetter/setter
+    //移動量補正
+    void FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec);
+    void FixMoveVecStrongEnemy(const VECTOR _fixVec);
+    void FixMoveVecBossEnemy(const VECTOR _fixVec);
+    //座標のgetter
+    const VECTOR GetPosWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetPos(); }
+    const VECTOR GetPosStrongEnemy()const { return strongEnemy->GetPos(); }
+    const VECTOR GetPosBossEnemy()const { return bossEnemy->GetPos(); }
+    //移動量のgetter
+    const VECTOR GetMoveVecWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetMoveVec(); }
+    const VECTOR GetMoveVecStrongEnemy()const { return strongEnemy->GetMoveVec(); }
+    const VECTOR GetMoveVecBossEnemy()const { return bossEnemy->GetMoveVec(); }
+    //エネミー配列のgetter
     const int GetMaxWeakEnemy()const { return MAX_WEAK_ENEMY_NUM; }
     const int GetNowEnemyIndex()const { return nowEnemyIndex; }
     const bool GetIsStrongEnemy()const { return isStrongEnemy; }
@@ -47,7 +58,12 @@ public:
     const float GetIsAttackWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsAttack(); }
     const float GetIsAttackStrongEnemy()const { return strongEnemy->GetIsAttack(); }
     const float GetIsAttackBossEnemy()const { return bossEnemy->GetIsAttack(); }
-
+    //無敵フラグのgetter
+    const bool GetIsInvincible(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
+    //HP計算
+    float CalcHPWeakEnemy(const int _enemyNum,const float _atk);
+    //与える経験値の初期化
+    void InitExpToGive(const int _enemyNum);
 private:
     /*定数*/
     enum class ModelType//モデル変数

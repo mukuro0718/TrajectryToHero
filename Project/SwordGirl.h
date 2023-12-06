@@ -19,9 +19,14 @@ public:
 	void Move(const VECTOR cameraToPlayer);//移動処理
 	void Attack();//攻撃処理
 	void Death();//死亡処理
-	void AnimChange();
-	void CountInvincibleTimer();
-	const VECTOR GetPos()const { return pos; }
+	void AnimChange();//アニメーションの変更
+	void CountInvincibleTimer();//無敵時間の計測
+	const VECTOR GetPos()const { return pos; }//座標のgetter
+	const bool GetIsAttack()const { return isAttack; }//攻撃フラグのgetter
+	void DrawMenu();//ステータスメニューの表示
+	const bool GetIsShowStatusMenu();//ステータスクラスのisShowMenuを返す
+	void StatusUpdate();//ステータスの更新
+	void FixMoveVec(const VECTOR _fixVec);
 private:
 	/*定数*/
 	enum class AnimationType//アニメーションの種類
@@ -59,7 +64,7 @@ private:
 	static constexpr float				FIRST_ANIM_PLAY_TIME		 = 0.0f					;//アニメーション初期再生時間
 	static const VECTOR FIRST_POS;//プレイヤー初期化座標
 	/*内部処理関数*/
-	void Create();							//生成
+	void Create();	//生成
 	/*メンバ変数*/
 	Animation*		anim;			//アニメーションクラス
 	Timer*			stayTimer;		//待ち時間クラス

@@ -25,6 +25,7 @@ public:
 	void Update();//更新
 	void Draw();//描画
 	void OnDamage();//ダメージ判定
+	void FixMoveVec();//移動量補正
 	void GameEnd(const bool _playerIsDeath/*,const float _bossHP*/);//ゲーム終了処理
 	const bool GetIsGameOver()const { return isGameOver; }//ゲーム終了フラグのgetter
 	const bool GetIsGameClear()const { return isGameClear; }

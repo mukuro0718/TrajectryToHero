@@ -14,9 +14,9 @@ public:
 	StrongEnemy(const VECTOR _spawnPos,const int modelHandle);	//引数ありコンストラクタ
 	~StrongEnemy();					//デストラクタ
 
-	void Update(const VECTOR playerPos)override;	//更新
+	void Update()override;	//更新
 	void Init()override;	//初期化
-	VECTOR Move(const VECTOR playerPos)override;	//移動
+	void Move(const VECTOR playerPos)override;	//移動
 
 private:
 	//定数

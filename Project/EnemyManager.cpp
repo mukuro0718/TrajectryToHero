@@ -74,16 +74,16 @@ void EnemyManager::CreateAndInit()
 /// 更新
 /// </summary>
 /// <param name="isDrawImg">画像を描画していたら処理を止める</param>
-void EnemyManager::Update(const VECTOR playerPos,const bool isFarm, const bool isBoss)
+void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool _isBoss)
 {
-	if (isFarm && !isBoss)
+	if (_isFarm && !_isBoss)
 	{
 		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
-		{
+		{			
 			//もし死亡フラグが立っていなかったらUpdate処理を行う
 			if (!weakEnemy[i]->GetIsDeath())
 			{
-				weakEnemy[i]->Update(playerPos);
+				weakEnemy[i]->Update();
 			}
 			//死亡していたら
 			else
@@ -96,19 +96,24 @@ void EnemyManager::Update(const VECTOR playerPos,const bool isFarm, const bool i
 						//中ボスをスポーンさせる
 						isStrongEnemy = true;
 						//初期化
-						//SpawnInfo spawnInfo = NewRandomPos();
 						strongEnemy->Init();
 					}
 					else
 					{
-						//SpawnInfo spawnInfo = NewRandomPos();
-						weakEnemy[i]->Init();
+						float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
+						if (playerToSpawnPoint >= 200.0f)
+						{
+							weakEnemy[i]->Init();
+						}
 					}
 				}
 				else
 				{
-					//SpawnInfo spawnInfo = NewRandomPos();
-					weakEnemy[i]->Init();
+					float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
+					if (playerToSpawnPoint >= 100.0f)
+					{
+						weakEnemy[i]->Init();
+					}
 				}
 			}
 			//もしプレイヤーが攻撃していなかったら
@@ -118,7 +123,7 @@ void EnemyManager::Update(const VECTOR playerPos,const bool isFarm, const bool i
 			//もし死亡フラグが立っていなかったらUpdate処理を行う
 			if (!strongEnemy->GetIsDeath())
 			{
-				strongEnemy->Update(playerPos);
+				strongEnemy->Update();
 			}
 			//もし死亡フラグが立っていたら
 			else
@@ -131,29 +136,29 @@ void EnemyManager::Update(const VECTOR playerPos,const bool isFarm, const bool i
 	{
 		if (!bossEnemy->GetIsDeath())
 		{
-			bossEnemy->Update(playerPos);
+			bossEnemy->Update();
 		}
 	}
 }
 /// <summary>
-/// 描画
+/// 移動
 /// </summary>
-void EnemyManager::Draw(VECTOR playerPos, const bool isFarm, const bool isBoss)
+void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
 {
-	if (isFarm && !isBoss)
+	if (_isFarm && !_isBoss)
 	{
 		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
 		{
 			if (!weakEnemy[i]->GetIsDeath())
 			{
-				weakEnemy[i]->Draw(playerPos);
+				weakEnemy[i]->Move(_playerPos);
 			}
 		}
 		if (isStrongEnemy)
 		{
 			if (!strongEnemy->GetIsDeath())
 			{
-				strongEnemy->Draw(playerPos);
+				strongEnemy->Move(_playerPos);
 			}
 		}
 	}
@@ -161,7 +166,43 @@ void EnemyManager::Draw(VECTOR playerPos, const bool isFarm, const bool isBoss)
 	{
 		if (!bossEnemy->GetIsDeath())
 		{
-			bossEnemy->Draw(playerPos);
+			bossEnemy->Move(_playerPos);
+			VECTOR framePos = MV1GetFramePosition(bossEnemy->GetModelHandle(), 6);
+			framePos.y += 30.0f;
+			VECTOR screenPos = ConvWorldPosToScreenPos(framePos);
+
+			DrawFormatStringToHandle(screenPos.x, screenPos.y, FONT_COLOR_GREEN, hpFontHandle, "HP:%d\n", static_cast<int>(bossEnemy->GetHp()) + 1);
+		}
+	}
+
+}
+/// <summary>
+/// 描画
+/// </summary>
+void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
+{
+	if (_isFarm && !_isBoss)
+	{
+		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		{
+			if (!weakEnemy[i]->GetIsDeath())
+			{
+				weakEnemy[i]->Draw(_playerPos);
+			}
+		}
+		if (isStrongEnemy)
+		{
+			if (!strongEnemy->GetIsDeath())
+			{
+				strongEnemy->Draw(_playerPos);
+			}
+		}
+	}
+	else
+	{
+		if (!bossEnemy->GetIsDeath())
+		{
+			bossEnemy->Draw(_playerPos);
 			VECTOR framePos = MV1GetFramePosition(bossEnemy->GetModelHandle(), 6);
 			framePos.y += 30.0f;
 			VECTOR screenPos = ConvWorldPosToScreenPos(framePos);
@@ -193,26 +234,33 @@ bool EnemyManager::CountDestroyEnemy()
 	return false;
 }
 
-///// <summary>
-///// ランダムで生成した新しい座標を返す
-///// </summary>
-///// <returns>新しい座標</returns>
-//EnemyManager::SpawnInfo EnemyManager::NewRandomPos()
-//{
-//	SpawnInfo spawn;
-//	//ダブりチェック
-//	while (1)
-//	{
-//		//新しいスポーン場所を決める
-//		spawn.num = GetRand(RANDOM_RANGE);
-//		//まだ誰もその場所にスポーンしていなかったら
-//		if (isAlreadySpawn[spawn.num] == false)
-//		{
-//			isAlreadySpawn[spawn.num] = true;
-//			break;
-//		}
-//	}
-//	spawn.pos = SPAWN_POINT [spawn.num];
-//	/*HACK:マップの範囲は中心0,0,0の半径500*/
-//	return spawn;
-//}
+///<summary>
+/// HP計算
+/// </summary>
+float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk)
+{
+	//HP計算
+	return weakEnemy[_enemyNum]->CalcHP(_atk);
+}
+/// <summary>
+/// 必要な経験値の初期化
+/// </summary>
+void EnemyManager::InitExpToGive(const int _enemyNum)
+{
+	weakEnemy[_enemyNum]->InitExpToGive();
+}
+/// <summary>
+/// 移動量補正
+/// </summary>
+void EnemyManager::FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec)
+{
+	weakEnemy[_enemyNum]->FixMoveVec(_fixVec);
+}
+void EnemyManager::FixMoveVecStrongEnemy(const VECTOR _fixVec)
+{
+	strongEnemy->FixMoveVec(_fixVec);
+}
+void EnemyManager::FixMoveVecBossEnemy(const VECTOR _fixVec)
+{
+	bossEnemy->FixMoveVec(_fixVec);
+}

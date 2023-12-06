@@ -30,12 +30,15 @@ public:
 	const SphereInfo GetSphereInfo()const { return sphereInfo; }
 	//死亡フラグのgetter
 	const bool GetIsDeath()const { return isDeath; }
+	//移動量のgetter
+	const VECTOR GetMoveVec()const { return moveVec; }
 protected:
 	/*静的定数*/
 	static constexpr int INIT_MODELHANDLE = 0;
 	/*メンバ変数*/
 	int				modelHandle;	//モデルハンドル
 	VECTOR			pos;			//座標
+	VECTOR			moveVec;		//移動量
 	VECTOR			rotate;			//回転率
 	VECTOR			scale;			//スケール
 	CapsuleInfo		capsuleInfo;	//カプセル情報

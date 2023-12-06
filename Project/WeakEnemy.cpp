@@ -80,7 +80,7 @@ void WeakEnemy::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void WeakEnemy::Update(VECTOR playerPos)
+void WeakEnemy::Update()
 {
 	//無敵フラグが立っていたら
 	if (isInvincible)
@@ -95,7 +95,7 @@ void WeakEnemy::Update(VECTOR playerPos)
 	}
 	
 	//もしHPをつけてHPが０になったら
-	if (status->GetHp() <0)
+	if (status->GetHp() <= 0)
 	{
 		//現在のアニメーションをやられたアニメーションにする
 		if(anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
@@ -106,7 +106,7 @@ void WeakEnemy::Update(VECTOR playerPos)
 	}
 	else
 	{
-		pos = VAdd(pos, Move(playerPos));//移動
+		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
 	ChangeAnim();
@@ -118,8 +118,9 @@ void WeakEnemy::Update(VECTOR playerPos)
 /// <summary>
 /// 移動
 /// </summary>
-VECTOR WeakEnemy::Move(VECTOR playerPos)
+void WeakEnemy::Move(VECTOR playerPos)
 {
+	moveVec = ORIGIN_POS;
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
 	//正規化したベクトル
@@ -195,11 +196,10 @@ VECTOR WeakEnemy::Move(VECTOR playerPos)
 	if (isMove && vectorSize >= 20 || isAttack && vectorSize >=20)
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
-		outPutPos = VScale(normalizePos, status->GetAgi() * -1);
+		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(playerPos), 0.0f);
 	}
-	return outPutPos;
 }
 /// <summary>
 ///	角度の変更(モデルが向いている初期方向がz＝０)
@@ -231,8 +231,8 @@ void WeakEnemy::ChangeAnim()
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::RUN));
 	}
-	//もし休憩中だったら
-	else if (status->GetHp() < 0)
+	//もしHPが0以下になったら
+	if (status->GetHp() <= 0)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
 	}

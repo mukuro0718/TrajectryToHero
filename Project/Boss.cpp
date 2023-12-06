@@ -108,7 +108,7 @@ void Boss::Final()
 /// <summary>
 /// 更新
 /// </summary>
-void Boss::Update(const VECTOR _playerPos)
+void Boss::Update()
 {
 
 	//無敵フラグが立っていたら
@@ -141,9 +141,7 @@ void Boss::Update(const VECTOR _playerPos)
 	}
 	else
 	{
-		VECTOR playerPos = _playerPos;
-		playerPos.y = 0.0f;
-		pos = VAdd(pos, Move(playerPos));//移動
+		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
 	pos = VGet(pos.x, 0.0f, pos.z);
@@ -154,14 +152,12 @@ void Boss::Update(const VECTOR _playerPos)
 /// <summary>
 /// 移動
 /// </summary>
-VECTOR Boss::Move(const VECTOR _playerPos)
+void Boss::Move(const VECTOR _playerPos)
 {
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
 	//正規化したベクトル
 	VECTOR normalizePos = ORIGIN_POS;
-	//返り値として返す移動後座標（角度有）
-	VECTOR outPutPos = ORIGIN_POS;
 	float vectorSize = 0.0f;
 	//もし攻撃中ではなかったら攻撃をする
 	if (!isAttack)
@@ -241,7 +237,7 @@ VECTOR Boss::Move(const VECTOR _playerPos)
 					//目標までのベクトルを正規化する
 					normalizePos = VNorm(targetPos);
 					// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
-					outPutPos = VScale(normalizePos, status->GetAgi() * -3);
+					moveVec = VScale(normalizePos, status->GetAgi() * -3);
 					//角度を変える
 					rotate = VGet(0.0f, (float)ChangeRotate(jumpAttackTargetPos), 0.0f);
 				}
@@ -288,7 +284,7 @@ VECTOR Boss::Move(const VECTOR _playerPos)
 				vectorSize = VSize(targetPos);
 				//目標までのベクトルを正規化する
 				normalizePos = VNorm(targetPos);
-				outPutPos = VScale(normalizePos, status->GetAgi() * -1);
+				moveVec = VScale(normalizePos, status->GetAgi() * -1);
 			}
 			//もし通常攻撃中かつアニメーション変更フラグがたったら
 			if (attackType == static_cast<int>(AnimationType::NORMAL_ATTACK) && anim->GetIsChangeAnim())
@@ -328,8 +324,6 @@ VECTOR Boss::Move(const VECTOR _playerPos)
 			restTimeAfterAttack->EndTimer();
 		}
 	}
-
-	return outPutPos;
 }
 /// <summary>
 ///	角度の変更

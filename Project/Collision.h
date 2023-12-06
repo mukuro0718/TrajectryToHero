@@ -14,7 +14,7 @@ public:
 	//プレイヤーとエネミーの攻撃時当たり判定
 	bool OnDamage(const bool _isInvicible, const bool _isDeath, const CapsuleInfo _capsuleInfo, const SphereInfo _sphereInfo);
 	
-	void SphereSphereCalc();//球と球の当たり判定
+	VECTOR CapsuleToCapsuleCollision(const VECTOR _myMoveVec, const VECTOR _myVec, const VECTOR _otherVec, const float _myRadius, const float _otherRadius);//カプセル同士の当たり判定
 	VECTOR NearestPointOfSegmentPointCalc(const VECTOR _startPos,const VECTOR _endPos,const VECTOR _targetPos);//線分と点の最近接点
 	bool SphereCapsuleCalc(const VECTOR _capsuleStartPos, const VECTOR _capsuleEndPos, const float _capsuleRadius, const VECTOR _spherePos, const float sphereRadius);//球とカプセルの当たり判定
 private:

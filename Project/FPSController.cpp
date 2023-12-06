@@ -11,8 +11,10 @@ using namespace std;
 /// コンストラクタ
 /// </summary>
 FPSController::FPSController()
+	:fps(0.0f)
+	,startTime(0)
+	,count(0)
 {
-	Init();
 }
 /// <summary>
 /// デストラクタ
@@ -26,7 +28,7 @@ FPSController::~FPSController()
 /// </summary>
 void FPSController::Init()
 {
-	fps = 0.0;
+	fps = 0.0f;
 	startTime = 0;
 	count = 0;
 }

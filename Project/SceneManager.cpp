@@ -76,16 +76,16 @@ void SceneManager::ChangeScene()
 		scene = new GameScene();//新しいシーンの取得（NULLで初期化）
 		scene->Create();//シーンの生成
 		break;
-	//case SceneType::GAMECLEAR:
-	//	scene->Final();//前に使ったシーンの開放
-	//	scene = new GameClearScene();//新しいシーンの取得（NULLで初期化）
-	//	scene->Create();//シーンの生成
-	//	break;
-	//case SceneType::GAMEOVER:
-	//	scene->Final();//前に使ったシーンの開放
-	//	scene = new GameOverScene();//新しいシーンの取得（NULLで初期化）
-	//	scene->Create();//シーンの生成
-	//	break;
+	case SceneType::GAMECLEAR:
+		scene->Final();//前に使ったシーンの開放
+		scene = new GameClearScene();//新しいシーンの取得（NULLで初期化）
+		scene->Create();//シーンの生成
+		break;
+	case SceneType::GAMEOVER:
+		scene->Final();//前に使ったシーンの開放
+		scene = new GameOverScene();//新しいシーンの取得（NULLで初期化）
+		scene->Create();//シーンの生成
+		break;
 	default:
 		break;
 	}
