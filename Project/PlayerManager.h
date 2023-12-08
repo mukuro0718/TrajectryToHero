@@ -4,6 +4,8 @@
 #pragma once
 #include"DxLib.h"
 #include"SwordGirl.h"
+class BlurScreen;
+
 class PlayerManager
 {
 public:
@@ -18,7 +20,7 @@ public:
 	void Final();//削除
 	void StatusUpdate();//ステータス更新
 	void FixMoveVec(const VECTOR _fixVec);
-
+	void DrawShadow(const int _stageModelHandle);
 	//bool IsStoppingUpdate();
 	//座標のgetter
 	const VECTOR GetPos() { return player->GetPos(); }
@@ -50,9 +52,12 @@ public:
 	//レベルアップ処理
 	void CalcExp(const float _expToGive);
 private:
+	static constexpr float SHADOW_SIZE = 20.0f;
+	static constexpr float SHADOW_HEIGHT = 1000.0f;
 	int model;
-
 	SwordGirl* player;
+	BlurScreen* blur;//ブラークラス
+
 	bool isDrawImg;
 };
 

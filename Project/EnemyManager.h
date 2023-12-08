@@ -21,6 +21,8 @@ public:
     void CreateAndInit();                                          //生成
     void AllDestroy();//すべての削除
     bool CountDestroyEnemy();
+    void DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss);
+
     //移動量補正
     void FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec);
     void FixMoveVecStrongEnemy(const VECTOR _fixVec);
@@ -76,7 +78,10 @@ private:
     static constexpr float  weakEnemyRadius = 5.0f;         //雑魚敵の当たり判定用スフィア半径
     static constexpr float  strongEnemyRadius = 5.0f;       //中ボスの当たり判定用スフィア半径
     static constexpr float  bossEnemyRadius = 5.0f;         //ボスの当たり判定用スフィア半径
-    
+    static constexpr float  NORMAL_ENEMY_SHADOW_HEIGHT = 1000.0f;   //通常の敵の影の高さ
+    static constexpr float  NORMAL_ENEMY_SHADOW_SIZE   = 20.0f;     //通常の敵の影のサイズ
+    static constexpr float  BOSS_ENEMY_SHADOW_HEIGHT   = 1000.0f;   //ボスの影の高さ
+    static constexpr float  BOSS_ENEMY_SHADOW_SIZE     = 30.0f;     //ボスの影のサイズ
     /*メンバ変数*/
     WeakEnemy* weakEnemy[MAX_WEAK_ENEMY_NUM];
     StrongEnemy* strongEnemy;

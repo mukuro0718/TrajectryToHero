@@ -7,7 +7,6 @@
 #include"PlayerBase.h"
 class Animation;
 class Timer;
-
 class SwordGirl :public PlayerBase
 {
 public:

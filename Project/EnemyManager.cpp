@@ -264,3 +264,25 @@ void EnemyManager::FixMoveVecBossEnemy(const VECTOR _fixVec)
 {
 	bossEnemy->FixMoveVec(_fixVec);
 }
+void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss)
+{
+	if (_isFarm && !_isBoss)
+	{
+		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		{
+			weakEnemy[i]->DrawShadow(_stageModelHandle, weakEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+		}
+		if (isStrongEnemy)
+		{
+			strongEnemy->DrawShadow(_stageModelHandle, strongEnemy->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+		}
+	}
+	else
+	{
+		if (!bossEnemy->GetIsDeath())
+		{
+			bossEnemy->DrawShadow(_stageModelHandle, bossEnemy->GetPos(), BOSS_ENEMY_SHADOW_HEIGHT, BOSS_ENEMY_SHADOW_SIZE);
+		}
+	}
+
+}

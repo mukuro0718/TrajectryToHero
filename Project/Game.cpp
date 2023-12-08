@@ -119,6 +119,8 @@ void Game::Draw()
     stageManager->Draw();
     playerManager->Draw();
     enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+    playerManager->DrawShadow(stageManager->GetModelHandle());
+    enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
 }
 /// <summary>
 /// ˆÚ“®—Ê•â³

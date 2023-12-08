@@ -1,4 +1,5 @@
 #include "CharacterBase.h"
+#include"Shadow.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -13,7 +14,9 @@ CharacterBase::CharacterBase()
 	,isMove(false)
 	,isAttack(false)
 	,isDeath(false)
+	,shadow(nullptr)
 {
+	shadow = new Shadow();
 }
 /// <summary>
 /// デストラクタ
@@ -73,4 +76,8 @@ void CharacterBase::SetUpSphere(const VECTOR _pos,const float _radius, const int
 void CharacterBase::DrawSphere(const SphereInfo _sphereInfo)
 {
 	DrawSphere3D(_sphereInfo.centerPos, _sphereInfo.radius, _sphereInfo.divNum, _sphereInfo.difColor, _sphereInfo.spcColor, _sphereInfo.fillFlag);
+}
+void CharacterBase::DrawShadow(const int _stageModelHandle, const VECTOR _targetPos, const float _shadowHeight, const float _shadowSize)
+{
+	shadow->Draw(_stageModelHandle, pos, _shadowHeight, _shadowSize);
 }

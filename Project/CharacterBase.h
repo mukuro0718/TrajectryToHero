@@ -7,6 +7,7 @@
 #include<DxLib.h>
 #include"Common.h"
 
+class Shadow;
 
 class CharacterBase
 {
@@ -17,7 +18,7 @@ public:
 	void SetUpSphere(const VECTOR _pos, const float _radius, const int _color, const int _flag);//デバッグ用スフィアの位置設定
 	void DrawCapsule(const CapsuleInfo _capsuleInfo);//デバッグ用カプセルの描画
 	void DrawSphere(const SphereInfo _sphereInfo);//デバッグ用カプセルの描画
-
+	void DrawShadow(const int _stageModelHandle, const VECTOR _targetPos, const float _shadowHeight, const float _shadowSize);//影の描画
 	//ポジションのgetter/setter
 	const VECTOR& GetPos() const { return pos; }
 	//モデルハンドルのgetter
@@ -48,7 +49,7 @@ protected:
 	bool			isMove;			//移動したか
 	bool			isAttack;		//攻撃したか
 	bool			isDeath;
-
+	Shadow* shadow;
 private:
 	void Init();
 };

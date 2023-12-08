@@ -176,6 +176,7 @@
     <ClCompile Include="StatusManager.cpp" />
     <ClCompile Include="StrongEnemy.cpp" />
     <ClCompile Include="SwordGirl.cpp" />
+    <ClCompile Include="BlurScreen.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TItleScene.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="StatusManager.h" />
     <ClInclude Include="StrongEnemy.h" />
     <ClInclude Include="SwordGirl.h" />
+    <ClInclude Include="BlurScreen.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleScene.h" />

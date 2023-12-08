@@ -73,7 +73,7 @@ void WeakEnemy::Init()
 	isHit		= false;
 	isRestTime	= false;
 	//最大HPの設定
-	pos.y = 10.0f;
+	//pos.y = 10.0f;
 	status->InitWeakEnemyStatus();
 	maxHP = status->GetHp();
 }
@@ -110,7 +110,7 @@ void WeakEnemy::Update()
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
 	ChangeAnim();
-	pos.y = 10.0f;
+	//pos.y = 10.0f;
 	MV1SetPosition(modelHandle, pos);//位置の設定
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle);

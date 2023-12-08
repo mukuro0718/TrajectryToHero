@@ -5,6 +5,7 @@
 /// コンストラクタ
 /// </summary>
 Shadow::Shadow()
+	:shadowHandle(0)
 {
 	auto& load = Load::GetInstance();
 	load.GetShadowData(&shadowHandle);

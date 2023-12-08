@@ -148,6 +148,9 @@
     <Filter Include="Object\Scene\Game\Character\Player\PlayerManager">
       <UniqueIdentifier>{9979043d-44b7-429c-88e6-b0be02218471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Character\Player\SwordTrail">
+      <UniqueIdentifier>{b9455fae-9e36-41f9-a749-af24d2fa2c66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -273,6 +276,9 @@
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClCompile>
+    <ClCompile Include="BlurScreen.cpp">
+      <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -394,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="PlayerManager.h">
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurScreen.h">
+      <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

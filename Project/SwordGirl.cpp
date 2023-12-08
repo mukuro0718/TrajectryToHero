@@ -7,6 +7,7 @@
 #include"Animation.h"
 #include"StatusManager.h"
 #include"CharacterStatus.h"
+#include"BlurScreen.h"
 #include<math.h>
 const VECTOR SwordGirl::FIRST_MODEL_SCALE	= VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
 const VECTOR SwordGirl::FIRST_POS = VGet(-50.0f, 0.0f, 0.0f);
@@ -67,7 +68,6 @@ void SwordGirl::Init()
 	invincibleTimer->Init(INVINCIBLE_TIMER_TARGET_TIME);
 	status->InitPlayerStatus();
 	prevLv = static_cast<int>(status->GetLv());
-
 }
 /// <summary>
 /// 移動量の補正
@@ -85,7 +85,7 @@ void SwordGirl::Update()
 	//移動量を座標に足す
 	pos = VAdd(pos, moveVec);
 	//ステージの範囲をもとに位置を補正する
-	pos.y = PLAYETR_Y_POS;
+	/*pos.y = PLAYETR_Y_POS;*/
 	if (pos.x >= PLAYER_RANGE_OF_ACTION.LX)
 	{
 		pos.x = PLAYER_RANGE_OF_ACTION.LX;
