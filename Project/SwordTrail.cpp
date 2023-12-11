@@ -1,9 +1,9 @@
-#include "BlurScreen.h"
+#include "SwordTrail.h"
 #include"Common.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BlurScreen::BlurScreen()
+SwordTrail::SwordTrail()
 	: screen{0,0}
 	, current(0)
 	, alpha(0)
@@ -20,14 +20,14 @@ BlurScreen::BlurScreen()
 /// <summary>
 /// デストラクタ
 /// </summary>
-BlurScreen::~BlurScreen()
+SwordTrail::~SwordTrail()
 {
 	//処理なし
 }
 /// <summary>
 /// 初期化
 /// </summary>
-void BlurScreen::Init(const int _alpha,const int _offsetX1,const int _offsetY1,const int _offsetX2,const int _offsetY2)
+void SwordTrail::Init(const int _alpha,const int _offsetX1,const int _offsetY1,const int _offsetX2,const int _offsetY2)
 {
 	screenWidth = WINDOW_HEIGHT;
 	screenHeight = WINDOW_WIDTH;
@@ -52,7 +52,7 @@ void BlurScreen::Init(const int _alpha,const int _offsetX1,const int _offsetY1,c
 /// <summary>
 /// 初期化もれチェック
 /// </summary>
-void BlurScreen::ReplayInit()
+void SwordTrail::ReplayInit()
 {
 	for (int i = 0; i < 2; ++i)
 	{
@@ -74,7 +74,7 @@ void BlurScreen::ReplayInit()
 /// <summary>
 /// 削除
 /// </summary>
-void BlurScreen::Delete()
+void SwordTrail::Delete()
 {
 	for (int i = 0; i < 2; ++i)
 	{
@@ -89,7 +89,7 @@ void BlurScreen::Delete()
 /// <summary>
 /// スクリーンの設定とスクリーンの掃除
 /// </summary>
-void BlurScreen::PreRenderBlurScreen()
+void SwordTrail::PreRenderSwordTrail()
 {
 	SetDrawScreen(screen[current]);
 	ClearDrawScreen();
@@ -97,7 +97,7 @@ void BlurScreen::PreRenderBlurScreen()
 
 
 
-void BlurScreen::PostRenderBlurScreen()
+void SwordTrail::PostRenderSwordTrail()
 {
 	//描画モードの取得
 	int drawMode = GetDrawMode();

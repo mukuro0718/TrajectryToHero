@@ -34,10 +34,10 @@ SwordGirl::SwordGirl(const int _modelHandle)
 	//コリジョン情報を構築
 	MV1SetupCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex, PLAYER_COLL_INFO.xDivNum, PLAYER_COLL_INFO.yDivNum, PLAYER_COLL_INFO.zDivNum);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/Player/RunAnim.mv1"), 0);			//走りアニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Player/AttackAnim.mv1"), 0);	//攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Player/IdleAnim.mv1"), 0);		//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Player/DeathAnim.mv1"), 0);		//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/RunAnim.mv1"), 3);			//走りアニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/AttackAnim.mv1"), 3);	//攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/IdleAnim.mv1"), 3);		//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Player/DeathAnim.mv1"), 3);		//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ

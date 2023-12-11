@@ -56,7 +56,6 @@ private:
 	static constexpr float SHADOW_HEIGHT = 1000.0f;
 	int model;
 	SwordGirl* player;
-	BlurScreen* blur;//ブラークラス
 
 	bool isDrawImg;
 };

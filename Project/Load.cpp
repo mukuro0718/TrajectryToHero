@@ -45,7 +45,8 @@ void Load::LoadingData()
 	titleImage.push_back(LoadGraph("Data/Img/Title/1.png"));
 	/*ゲーム*/
 	//プレイヤーモデル
-	playerModel = MV1LoadModel("Data/Model/Player/Player.mv1");
+	//playerModel = MV1LoadModel("Data/Model/Player/Player.mv1");
+	playerModel = MV1LoadModel("Data/Model/Player/Player_test2.mv1");
 	//エネミーモデル
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/StrongEnemy.mv1"));

@@ -276,7 +276,7 @@
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClCompile>
-    <ClCompile Include="BlurScreen.cpp">
+    <ClCompile Include="SwordTrail.cpp">
       <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
     </ClCompile>
   </ItemGroup>
@@ -401,7 +401,7 @@
     <ClInclude Include="PlayerManager.h">
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClInclude>
-    <ClInclude Include="BlurScreen.h">
+    <ClInclude Include="SwordTrail.h">
       <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
     </ClInclude>
   </ItemGroup>

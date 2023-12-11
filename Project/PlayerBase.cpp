@@ -47,8 +47,9 @@ void PlayerBase::Draw()
 #ifdef _DEBUG
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR,false);
 	DrawCapsule(capsuleInfo);
-
-	
+	//VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 69);
+	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
+	DrawSphere3D(swordTopPos, 2.0f, 16, SPHERE_COLOR, SPHERE_COLOR, false);
 	//攻撃中であれば当たり判定用スフィアを描画する
 	if (isAttack)
 	{

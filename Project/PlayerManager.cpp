@@ -5,19 +5,14 @@
 #include"SwordGirl.h"
 #include"Common.h"
 #include"Load.h"
-#include"BlurScreen.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
 PlayerManager::PlayerManager()
-: blur(nullptr)
-
 {
 	auto& load = Load::GetInstance();
 	load.GetPlayerData(&model);
 	player = new SwordGirl(model);
-	blur = new BlurScreen();
-	blur->Init(240, -2, -2, -2, -2);
 }
 /// <summary>
 /// デストラクタ
@@ -59,17 +54,8 @@ void PlayerManager::Attack()
 /// </summary>
 void PlayerManager::Draw()
 {
-	if (player->GetIsAttack())
-	{
-		blur->PreRenderBlurScreen();
-	}
 	player->Draw();
 	player->DrawMenu();
-	if (player->GetIsAttack())
-	{
-		blur->PostRenderBlurScreen();
-	}
-
 }
 /// <summary>
 /// 削除
