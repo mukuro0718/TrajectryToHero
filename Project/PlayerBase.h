@@ -9,6 +9,8 @@ class StatusManager;
 class EffectManager;
 class CharacterStatus;
 class Timer;
+class SwordTrail;
+
 class PlayerBase :public CharacterBase
 {
 public:
@@ -46,6 +48,7 @@ private:
 	static const VECTOR CENTER_POS_OFFSET;//中心座標オフセット
 	VECTOR centerPos;//中心座標
 	float degrees;//度数
+	SwordTrail* swordTrail;//剣の軌跡
 	Timer* attackLatency;//攻撃時待機時間
 };
 

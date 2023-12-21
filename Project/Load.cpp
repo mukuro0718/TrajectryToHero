@@ -62,6 +62,11 @@ void Load::LoadingData()
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Farm_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Boss_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/警告.png"));
+	//UI画像
+	hpBarGraph = LoadGraph("Data/Img/Game/UI/RectArea.png");
+	expBarGraph = LoadGraph("Data/Img/Game/UI/EXPBar.png");
+	prevBarGraph = LoadGraph("Data/Img/Game/UI/PrevBar.png");
+	barFrameGraph = LoadGraph("Data/Img/Game/UI/UIBar.png");
 	//影画像
 	shadowImage = LoadGraph("Data/Img/Game/Shadow/Shadow.tga");
 	//ゲームクリア画像
@@ -95,9 +100,12 @@ void Load::GetTitleData(vector<int>* _image)
 /// プレイヤーデータのgetter
 /// </summary>
 /// <param name="model">モデルハンドルを格納するvectorのポインタ</param>
-void Load::GetPlayerData(int* _model)
+void Load::GetPlayerData(int* _model, int* _frameImage, int* _hpImage, int* _expImage)
 {
 	*_model = playerModel;
+	*_frameImage = barFrameGraph;
+	*_hpImage = hpBarGraph;
+	*_expImage = expBarGraph;
 }
 /// <summary>
 /// エネミーデータのgetter
@@ -167,3 +175,4 @@ void Load::GetGameOverData(int* _image)
 {
 	*_image = gameOverImage;	
 }
+

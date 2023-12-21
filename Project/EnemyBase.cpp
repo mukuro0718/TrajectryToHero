@@ -4,9 +4,14 @@
 #include"EnemyBase.h"
 #include"Common.h"
 //#include"EffectManager.h"
-const VECTOR EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
-const int EnemyBase::CAPSULE_COLOR = GetColor(0,255,0);
-const int EnemyBase::SPHERE_COLOR = GetColor(0, 200, 0);
+const VECTOR  EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
+const int     EnemyBase::CAPSULE_COLOR = GetColor(0,255,0);
+const int	  EnemyBase::SPHERE_COLOR = GetColor(0, 200, 0);
+const COLOR_F EnemyBase::CHANGE_DIF_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
+const COLOR_F EnemyBase::CHANGE_SPC_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
+const COLOR_F EnemyBase::CHANGE_EMI_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//エミッシブカラー
+const COLOR_F EnemyBase::CHANGE_AMB_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//アンビエントカラー
+
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -82,4 +87,58 @@ float EnemyBase::CalcHP(const float _atk)
 void EnemyBase::InitExpToGive()
 {
 	status->InitExpToGive();
+}
+/// <summary>
+/// 色の変更
+/// </summary>
+void EnemyBase::ChangeColor()
+{
+	if (isInvincible)
+	{
+		if (!isChangeColor)
+		{
+			//マテリアルの数を取得
+			materialNum = MV1GetMaterialNum(modelHandle);
+			//既存のマテリアルを保存しておく
+			for (int i = 0; i < materialNum; i++)
+			{
+				difColorInfo.push_back(MV1GetMaterialDifColor(modelHandle, i));
+				spcColorInfo.push_back(MV1GetMaterialSpcColor(modelHandle, i));
+				emiColorInfo.push_back(MV1GetMaterialEmiColor(modelHandle, i));
+				ambColorInfo.push_back(MV1GetMaterialAmbColor(modelHandle, i));
+			}
+			//赤色になるようにマテリアルの色をいじる
+			for (int i = 0; i < materialNum; i++)
+			{
+				MV1SetMaterialDifColor(modelHandle, i, CHANGE_DIF_COLOR);
+				MV1SetMaterialSpcColor(modelHandle, i, CHANGE_SPC_COLOR);
+				MV1SetMaterialEmiColor(modelHandle, i, CHANGE_EMI_COLOR);
+				MV1SetMaterialAmbColor(modelHandle, i, CHANGE_AMB_COLOR);
+			}
+			//色変更フラグを立てる
+			isChangeColor = true;
+		}
+	}
+	else
+	{
+		//色を変更していたら
+		if (isChangeColor)
+		{
+			//マテリアルの色をもとに戻す
+			for (int i = 0; i < materialNum; i++)
+			{
+				MV1SetMaterialDifColor(modelHandle, i, difColorInfo[i]);
+				MV1SetMaterialSpcColor(modelHandle, i, spcColorInfo[i]);
+				MV1SetMaterialEmiColor(modelHandle, i, emiColorInfo[i]);
+				MV1SetMaterialAmbColor(modelHandle, i, ambColorInfo[i]);
+			}
+			//ベクターの要素を０にする
+			difColorInfo.clear();
+			spcColorInfo.clear();
+			emiColorInfo.clear();
+			ambColorInfo.clear();
+			//フラグを下す
+			isChangeColor = false;
+		}
+	}
 }

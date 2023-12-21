@@ -112,6 +112,8 @@ void WeakEnemy::Update()
 	ChangeAnim();
 	//pos.y = 10.0f;
 	MV1SetPosition(modelHandle, pos);//位置の設定
+	//色の変更
+	ChangeColor();
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle);
 }

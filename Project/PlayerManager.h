@@ -55,6 +55,9 @@ private:
 	static constexpr float SHADOW_SIZE = 20.0f;
 	static constexpr float SHADOW_HEIGHT = 1000.0f;
 	int model;
+	int frameImage;
+	int hpImage;
+	int expImage;
 	SwordGirl* player;
 
 	bool isDrawImg;

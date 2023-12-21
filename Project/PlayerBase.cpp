@@ -5,6 +5,8 @@
 #include"CharacterStatus.h"
 #include"math.h"
 #include"Timer.h"
+#include"SwordTrail.h"
+
 const int PlayerBase::CAPSULE_COLOR = GetColor(255, 0, 0);
 const int PlayerBase::SPHERE_COLOR = GetColor(200, 0, 0);
 const VECTOR PlayerBase::SPHERE_POS_OFFSET = VGet(-10.0f,30.0f,0.0f);
@@ -16,12 +18,14 @@ const VECTOR PlayerBase::CENTER_POS_OFFSET = VGet(0.0f, 20.0f, 0.0f);
 PlayerBase::PlayerBase(const int _modelHandle)
 	:status(nullptr)
 	,attackLatency(nullptr)
+	, swordTrail(nullptr)
 	, cameraToPlayer(ORIGIN_POS)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
 {
 	status = new CharacterStatus();
 	attackLatency = new Timer();
+	swordTrail = new SwordTrail();
 	attackLatency->Init(5);
 	//モデルのロード
 	modelHandle = MV1DuplicateModel(_modelHandle);
@@ -53,6 +57,10 @@ void PlayerBase::Draw()
 	//攻撃中であれば当たり判定用スフィアを描画する
 	if (isAttack)
 	{
+		if (!swordTrail->GetIsStartTimer())
+		{
+			swordTrail->StartTimer();
+		}
 		if (!attackLatency->getIsStartTimer())
 		{
 			attackLatency->StartTimer();
@@ -74,6 +82,8 @@ void PlayerBase::Draw()
 	{
 		attackLatency->EndTimer();
 	}
+		swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
+		swordTrail->Draw();
 #endif // _DEBUG
 
 	

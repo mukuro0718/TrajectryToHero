@@ -7,21 +7,29 @@
 #include"Animation.h"
 #include"StatusManager.h"
 #include"CharacterStatus.h"
-#include"BlurScreen.h"
 #include<math.h>
-const VECTOR SwordGirl::FIRST_MODEL_SCALE	= VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
-const VECTOR SwordGirl::FIRST_POS = VGet(-50.0f, 0.0f, 0.0f);
-
+const VECTOR  SwordGirl::FIRST_MODEL_SCALE	= VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
+const VECTOR  SwordGirl::FIRST_POS			= VGet(-50.0f, 0.0f, 0.0f);
+const COLOR_F SwordGirl::CHANGE_DIF_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
+const COLOR_F SwordGirl::CHANGE_SPC_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
+const COLOR_F SwordGirl::CHANGE_EMI_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//エミッシブカラー
+const COLOR_F SwordGirl::CHANGE_AMB_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//アンビエントカラー
 /// <summary>
 /// 引数ありコンストラクタ
 /// </summary>
 /// <param name="modelHandle">モデルハンドル</param>
-SwordGirl::SwordGirl(const int _modelHandle)
+SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _hpImage, const int _expImage)
 	: PlayerBase(_modelHandle)
 	, anim(nullptr)
 	, stayTimer(nullptr)
 	, invincibleTimer(nullptr)
 	, isMove(false)
+	, isChangeColor(false)
+	, prevLv(0)
+	, frameImage(_frameImage)
+	, hpImage(_hpImage)
+	, expImage(_expImage)
+	,materialNum(0)
 {
 	//生成
 	Create();
@@ -110,6 +118,7 @@ void SwordGirl::Update()
 	//モデルの設定
 	MV1SetRotationXYZ(modelHandle, rotate);
 	MV1SetPosition(modelHandle, pos);
+	ChangeColor();//モデルの色を変える
 	//アニメーションの再生
 	anim->Play(&modelHandle);
 }
@@ -138,6 +147,60 @@ void SwordGirl::CountInvincibleTimer()
 		{
 			isInvincible = false;
 			invincibleTimer->EndTimer();
+		}
+	}
+}
+/// <summary>
+/// 色の変更
+/// </summary>
+void SwordGirl::ChangeColor()
+{
+	if (isInvincible)
+	{
+		if (!isChangeColor)
+		{
+			//マテリアルの数を取得
+			materialNum = MV1GetMaterialNum(modelHandle);
+			//既存のマテリアルを保存しておく
+			for (int i = 0; i < materialNum; i++)
+			{
+				difColorInfo.push_back(MV1GetMaterialDifColor(modelHandle, i));
+				spcColorInfo.push_back(MV1GetMaterialSpcColor(modelHandle, i));
+				emiColorInfo.push_back(MV1GetMaterialEmiColor(modelHandle, i));
+				ambColorInfo.push_back(MV1GetMaterialAmbColor(modelHandle, i));
+			}
+			//赤色になるようにマテリアルの色をいじる
+			for (int i = 0; i < materialNum; i++)
+			{
+				MV1SetMaterialDifColor(modelHandle, i, CHANGE_DIF_COLOR);
+				MV1SetMaterialSpcColor(modelHandle, i, CHANGE_SPC_COLOR);
+				MV1SetMaterialEmiColor(modelHandle, i, CHANGE_EMI_COLOR);
+				MV1SetMaterialAmbColor(modelHandle, i, CHANGE_AMB_COLOR);
+			}
+			//色変更フラグを立てる
+			isChangeColor = true;
+		}
+	}
+	else
+	{
+		//色を変更していたら
+		if (isChangeColor)
+		{
+			//マテリアルの色をもとに戻す
+			for (int i = 0; i < materialNum; i++)
+			{
+				MV1SetMaterialDifColor(modelHandle, i, difColorInfo[i]);
+				MV1SetMaterialSpcColor(modelHandle, i, spcColorInfo[i]);
+				MV1SetMaterialEmiColor(modelHandle, i, emiColorInfo[i]);
+				MV1SetMaterialAmbColor(modelHandle, i, ambColorInfo[i]);
+			}
+			//ベクターの要素を０にする
+			difColorInfo.clear();
+			spcColorInfo.clear();
+			emiColorInfo.clear();
+			ambColorInfo.clear();
+			//フラグを下す
+			isChangeColor = false;
 		}
 	}
 }
@@ -258,4 +321,18 @@ void SwordGirl::DrawMenu()
 const bool SwordGirl::GetIsShowStatusMenu()
 {
 	return status->GetIsShowMenu();
+}
+/// <summary>
+/// UIの描画
+/// </summary>
+void SwordGirl::DrawUI()
+{
+	////フレームの描画
+	//DrawGraph(HP_FRAME_POS.x, HP_FRAME_POS.y, frameImage, TRUE);
+	//DrawGraph(EXP_FRAME_POS.x, EXP_FRAME_POS.y, frameImage, TRUE);
+	////前のHPバーの表示
+	////HPが減少した際は徐々に現在のHPまで画像を縮める
+	//DrawExtendGraph(prevPos.lx, prevPos.rx, prevPos.ly, prevPos.ry, prevBarGraph, TRUE);
+	////HPバーの表示
+	//DrawExtendGraph(hpPos.lx, hpPos.rx, hpPos.ly, hpPos.ry, hpBarGraph, TRUE);
 }

@@ -5,7 +5,6 @@
 #include"CharacterBase.h"
 #include"CharacterStatus.h"
 #include"Common.h"
-
 //class EffectManager;
 //class CharacterStatus;
 
@@ -38,6 +37,7 @@ public:
 	const float GetAtk()const { return status->GetAtk(); }
 	float CalcHP(const float _atk);//HP計算
 	void InitExpToGive();
+	void ChangeColor();//色の変更
 protected:
 	enum class RandomSign
 	{
@@ -57,6 +57,11 @@ protected:
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
 private:
 	/*定数*/
+	static const COLOR_F CHANGE_DIF_COLOR;//ディフューズカラー
+	static const COLOR_F CHANGE_SPC_COLOR;//スペキュラカラー
+	static const COLOR_F CHANGE_EMI_COLOR;//エミッシブカラー
+	static const COLOR_F CHANGE_AMB_COLOR;//アンビエントカラー
+
 	static constexpr int RANDOM_X_RANGE = 300;		//ｘ座標
 	static constexpr int RANDOM_Z_RANGE = 300;		//ｚ座標
 	static constexpr int RANDOM_SIGN_RANGE = 1;		//符号
@@ -67,6 +72,12 @@ private:
 	static const int SPHERE_COLOR;					//球の色
 
 	/*メンバ変数*/
+	bool isChangeColor;//色の変更をしているかどうか
+	int materialNum;//マテリアルの数
+	std::vector<COLOR_F> difColorInfo;//ディフューズカラー情報
+	std::vector<COLOR_F> spcColorInfo;//スペキュラカラー情報
+	std::vector<COLOR_F> emiColorInfo;//エミッシブカラー情報
+	std::vector<COLOR_F> ambColorInfo;//アンビエントカラー情報
 	//EffectManager* effectManager;//エフェクト
 };
 

@@ -39,14 +39,15 @@ public:
 	void GetStageChangeData	(vector<int>* _image);	//ステージデータのgetter
 	void GetEnemyData		(vector<int>* _model);	//エネミーデータのgetter
 	
-	void GetPlayerData		 (int* _model);	//プレイヤーデータのgetter
+	void GetPlayerData		 (int* _model,int* _frameImage,int* _hpImage,int* _expImage);	//プレイヤーデータのgetter
 	void GetStageData		 (int* _model);	//ステージデータのgetter
 	void GetCharacterStatusData(int* _image,int* _font);	//メニューデータのgetter
 	void GetShadowData		 (int* _image);	//シャドウデータのgetter
 	void GetSkydomeData		 (int* _skydomeModel);	//スカイドームデータのgetter
-
 	void GetGameClearData	 (int* _image);//ゲームクリアデータのgetter
 	void GetGameOverData	 (int* _image);//ゲームクリアデータのgetter
+
+
 private:
 	Load();//コンストラクタ
 	static Load* load;
@@ -80,8 +81,15 @@ private:
 	int stageModel;					//ステージモデルハンドル
 	int characterStatusImage;		//キャラクターステータス画像
 	int characterStatusFont;		//キャラクターステータスフォント
+
 	int shadowImage;				//影画像
-	int skydomeModel;//スカイドーム
+
+	int skydomeModel;				//スカイドーム
+
+	int hpBarGraph;					//HPバー画像
+	int prevBarGraph;				//以前のバー位置描画画像
+	int expBarGraph;				//経験値バー画像
+	int barFrameGraph;				//バーフレーム画像
 
 	/// <summary>
 	/// ゲームクリア

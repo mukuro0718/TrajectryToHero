@@ -9,10 +9,14 @@
 /// コンストラクタ
 /// </summary>
 PlayerManager::PlayerManager()
+	:model(0)
+	,frameImage(0)
+	,hpImage(0)
+	,expImage(0)
 {
 	auto& load = Load::GetInstance();
-	load.GetPlayerData(&model);
-	player = new SwordGirl(model);
+	load.GetPlayerData(&model,&frameImage,&hpImage,&expImage);
+	player = new SwordGirl(model,frameImage,hpImage,expImage);
 }
 /// <summary>
 /// デストラクタ

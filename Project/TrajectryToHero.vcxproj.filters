@@ -82,9 +82,6 @@
     <Filter Include="Object\Scene\Game\Collision">
       <UniqueIdentifier>{81794503-8605-4977-a70d-f8cebd2ed49c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Effect">
-      <UniqueIdentifier>{b87444f0-9897-4ed7-845f-b31c98743dcd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Character\Shadow">
       <UniqueIdentifier>{9ff3fc56-5979-4ea3-a78e-3a6c77cc5e16}</UniqueIdentifier>
     </Filter>
@@ -148,8 +145,17 @@
     <Filter Include="Object\Scene\Game\Character\Player\PlayerManager">
       <UniqueIdentifier>{9979043d-44b7-429c-88e6-b0be02218471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Character\Player\SwordTrail">
+    <Filter Include="Object\Scene\Game\Particle">
+      <UniqueIdentifier>{b87444f0-9897-4ed7-845f-b31c98743dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\SwordTrail">
       <UniqueIdentifier>{b9455fae-9e36-41f9-a749-af24d2fa2c66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\BloodParticle">
+      <UniqueIdentifier>{20c4e128-b2e3-44ba-9cb2-d11a832b1126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\BloodParticle\BloodParticleBase">
+      <UniqueIdentifier>{e3b68dba-5982-44f0-9067-c48d6aa17040}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -210,17 +216,8 @@
     <ClCompile Include="Collision.cpp">
       <Filter>Object\Scene\Game\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="EffectBase.cpp">
-      <Filter>Object\Scene\Game\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectManager.cpp">
-      <Filter>Object\Scene\Game\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Shadow.cpp">
       <Filter>Object\Scene\Game\Character\Shadow</Filter>
-    </ClCompile>
-    <ClCompile Include="SpreadEffect.cpp">
-      <Filter>Object\Scene\Game\Effect</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -277,7 +274,13 @@
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClCompile>
     <ClCompile Include="SwordTrail.cpp">
-      <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
+      <Filter>Object\Scene\Game\Particle\SwordTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="BloodParticle.cpp">
+      <Filter>Object\Scene\Game\Particle\BloodParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="BloodParticleBase.cpp">
+      <Filter>Object\Scene\Game\Particle\BloodParticle\BloodParticleBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,17 +338,8 @@
     <ClInclude Include="Collision.h">
       <Filter>Object\Scene\Game\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="EffectBase.h">
-      <Filter>Object\Scene\Game\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectManager.h">
-      <Filter>Object\Scene\Game\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="Shadow.h">
       <Filter>Object\Scene\Game\Character\Shadow</Filter>
-    </ClInclude>
-    <ClInclude Include="SpreadEffect.h">
-      <Filter>Object\Scene\Game\Effect</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -358,9 +352,6 @@
     </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>Object\Scene\Game\Character\Enemy\EnemyType\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyBase.h">
-      <Filter>Object\Scene\Game\Character\Enemy\Base</Filter>
     </ClInclude>
     <ClInclude Include="StrongEnemy.h">
       <Filter>Object\Scene\Game\Character\Enemy\EnemyType\StrongEnemy</Filter>
@@ -402,7 +393,16 @@
       <Filter>Object\Scene\Game\Character\Player\PlayerManager</Filter>
     </ClInclude>
     <ClInclude Include="SwordTrail.h">
-      <Filter>Object\Scene\Game\Character\Player\SwordTrail</Filter>
+      <Filter>Object\Scene\Game\Particle\SwordTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodParticle.h">
+      <Filter>Object\Scene\Game\Particle\BloodParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBase.h">
+      <Filter>Object\Scene\Game\Character\Enemy\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BloodParticleBase.h">
+      <Filter>Object\Scene\Game\Particle\BloodParticle\BloodParticleBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

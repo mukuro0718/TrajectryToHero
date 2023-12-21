@@ -1,21 +1,34 @@
 #include "SwordTrail.h"
-#include"Common.h"
+#include "Timer.h"
+#include "Common.h"
+const VERTEX3D SwordTrail::INIT_VERTEX =
+{
+	ORIGIN_POS,	//座標
+	ORIGIN_POS,	//法線
+	0,			//ディフューズカラー
+	0,			//スペキュラカラー
+	0.0f,		//テクスチャ座標
+	0.0f,		//テクスチャ座標
+	0.0f,		//補助テクスチャ座標
+	0.0f		//補助テクスチャ座標
+};
+const VECTOR SwordTrail::VERTEX_NORM = VGet(0.0f, 0.0f, -1.0f);
+const COLOR_U8 SwordTrail::TRAIL_COLOR = GetColorU8(255, 255, 255, MAX_ALPHA_VALUE);
 /// <summary>
 /// コンストラクタ
 /// </summary>
 SwordTrail::SwordTrail()
-	: screen{0,0}
-	, current(0)
-	, alpha(0)
-	, screenWidth(0)
-	, screenHeight(0)
-	, offsetX1(0)
-	, offsetY1(0)
-	, offsetX2(0)
-	, offsetY2(0)
-	,notBlendDraw(0)
+	:holdVertexNum(0)
+	,vertexInfo{INIT_VERTEX}
+	,assignAd(0)
+	,vertexSetWaitFrameCount(0)
+	,frameCount(0)
+	,drawTimer(nullptr)
+	,isDraw(false)
 {
-	//処理なし
+	drawTimer = new Timer();
+	drawTimer->Init(8);
+	Init();
 }
 /// <summary>
 /// デストラクタ
@@ -27,94 +40,134 @@ SwordTrail::~SwordTrail()
 /// <summary>
 /// 初期化
 /// </summary>
-void SwordTrail::Init(const int _alpha,const int _offsetX1,const int _offsetY1,const int _offsetX2,const int _offsetY2)
+void SwordTrail::Init()
 {
-	screenWidth = WINDOW_HEIGHT;
-	screenHeight = WINDOW_WIDTH;
-	for (int i = 0; i < SCREEN_INDEX; ++i)
+	for (int i = 0; i < 2; i++)
 	{
-		//スクリーンの初期化
-		screen[i] = SCREEN_INIT_VALUE;
-		//指定した大きさの殻のグラフィックを作る
-		screen[i] = MakeScreen(screenWidth, screenHeight);
+		vertexInfo.push_back(INIT_VERTEX);
+		alphaValue.push_back(MAX_ALPHA_VALUE);
 	}
-	current = 0;
-	alpha = _alpha;
-	offsetX1 = _offsetX1;
-	offsetX2 = _offsetX2;
-	offsetY1 = _offsetY1;
-	offsetY2 = _offsetY2;
-
-	notBlendDraw = 0;
 }
-
-
 /// <summary>
-/// 初期化もれチェック
+/// 更新
 /// </summary>
-void SwordTrail::ReplayInit()
+void SwordTrail::Update(const VECTOR _topPos, const VECTOR _underPos)
 {
-	for (int i = 0; i < 2; ++i)
+	if (drawTimer->getIsStartTimer())
 	{
-		//もしスクリーンが初期化されて居なかったら
-		if (screen[i] != -1)
+		if (drawTimer->CountTimer())
 		{
-			//スクリーンを削除
-			DeleteGraph(screen[i]);
+			drawTimer->EndTimer();
+			isDraw = false;
+			Final();
 		}
-		//唐になったスクリーンにサイド空のグラフィックを入れる
-		screen[i] = MakeScreen(screenWidth, screenHeight);
+		else
+		{
+			isDraw = true;
+			vertexInfo[holdVertexNum] = SetVertexInfo(_topPos);
+			vertexInfo[holdVertexNum + 1] = SetVertexInfo(_underPos);
+			//もしフレームカウントが４の倍数だったらベクターに要素を追加する
+			if (vertexSetWaitFrameCount % 4 == 0)
+			{
+				//要素の追加（上下で２つの頂点を保存するため２つ）
+				vertexInfo.push_back(SetVertexInfo(_topPos));
+				vertexInfo.push_back(SetVertexInfo(_underPos));
+				alphaValue.push_back(MAX_ALPHA_VALUE);
+				alphaValue.push_back(MAX_ALPHA_VALUE);
+				holdVertexNum += 2;
+				//アドレスの追加
+				SetVertexAd();
+			}
+			SetAlpha();
+			++vertexSetWaitFrameCount;
+		}
 	}
-	current = 0;
-
-	notBlendDraw = 0;
 }
-
-
+/// <summary>
+/// 頂点情報の設定
+/// </summary>
+VERTEX3D SwordTrail::SetVertexInfo(const VECTOR _pos)
+{
+	VERTEX3D vertex;
+	vertex.pos  = _pos			; //座標
+	vertex.norm = VERTEX_NORM	; //法線
+	vertex.dif  = TRAIL_COLOR	; //ディフューズカラー
+	vertex.spc  = TRAIL_COLOR	; //スペキュラカラー
+	vertex.u    = 0.0f			; //テクスチャ座標
+	vertex.v	= 0.0f			; //テクスチャ座標
+	vertex.su   = 0.0f			; //補助テクスチャ座標
+	vertex.sv   = 0.0f			; //補助テクスチャ座標
+	return vertex;
+}
+/// <summary>
+/// 使用する頂点の設定
+/// </summary>
+void SwordTrail::SetVertexAd()
+{
+		//頂点が３つで一つのポリゴンが作れるため、３つをセットする
+		for (int i = 0; i < 3; i++)
+		{
+			vertexIndexAd.push_back(assignAd);//2,3,4
+			++assignAd;//3,4,5
+		}
+		//頂点が３つで一つのポリゴンが作れるため、３つをセットする
+		for (int i = 0; i < 3; i++)
+		{
+			vertexIndexAd.push_back(assignAd);//5,4,3
+			--assignAd;//4,3,2
+		}
+		assignAd += 2;
+}
+/// <summary>
+/// 描画
+/// </summary>
+void SwordTrail::Draw()
+{
+	if (isDraw)
+	{
+		DrawPolygonIndexed3D(&vertexInfo[0], vertexInfo.size(), &vertexIndexAd[0], vertexIndexAd.size() / 3, DX_NONE_GRAPH, TRUE);
+	}
+}
 /// <summary>
 /// 削除
 /// </summary>
-void SwordTrail::Delete()
+void SwordTrail::Final()
 {
-	for (int i = 0; i < 2; ++i)
+	vertexInfo.clear();
+	vertexIndexAd.clear();
+	alphaValue.clear();
+	vertexSetWaitFrameCount = 0;
+	holdVertexNum = 0;
+	assignAd = 0;
+	Init();
+}
+/// <summary>
+/// タイマーのスタート
+/// </summary>
+void SwordTrail::StartTimer()
+{
+	drawTimer->StartTimer();
+}
+/// <summary>
+/// タイマークラスのスタートフラグのゲッター
+/// </summary>
+const bool SwordTrail::GetIsStartTimer() 
+{
+	return drawTimer->getIsStartTimer();
+}
+/// <summary>
+/// アルファ値の設定
+/// </summary>
+void SwordTrail::SetAlpha()
+{
+	for (int i = 0; i < holdVertexNum; i++)
 	{
-		if (screen[i] != -1)
+		vertexInfo[i].dif.a = alphaValue[i];
+		vertexInfo[i].spc.a = alphaValue[i];
+		alphaValue[i] -= ADD_ALPHA_VALUE;
+		if (alphaValue[i] < 0)
 		{
-			DeleteGraph(screen[i]);
+			alphaValue[i] = 0;
 		}
 	}
-}
-
-
-/// <summary>
-/// スクリーンの設定とスクリーンの掃除
-/// </summary>
-void SwordTrail::PreRenderSwordTrail()
-{
-	SetDrawScreen(screen[current]);
-	ClearDrawScreen();
-}
-
-
-
-void SwordTrail::PostRenderSwordTrail()
-{
-	//描画モードの取得
-	int drawMode = GetDrawMode();
-	SetDrawMode(DX_DRAWMODE_BILINEAR);
-
-	int blendMode, param;
-	GetDrawBlendMode(&blendMode, &param);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-
-	if (notBlendDraw++ > 2)
-	{
-		DrawExtendGraph(offsetX1, offsetY1, screenWidth + offsetX2, screenHeight + offsetY2, screen[1 - current], false);
-	}
-	SetDrawBlendMode(blendMode, param);
-	SetDrawMode(drawMode);
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(0, 0, screen[current], false);
-	current = 1 - current;
 }

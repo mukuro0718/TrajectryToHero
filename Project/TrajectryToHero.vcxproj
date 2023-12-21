@@ -140,14 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="BloodParticleBase.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterBase.cpp" />
     <ClCompile Include="CharacterStatus.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="EffectBase.cpp" />
-    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="FPSController.cpp" />
@@ -169,7 +168,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skydome.cpp" />
-    <ClCompile Include="SpreadEffect.cpp" />
+    <ClCompile Include="BloodParticle.cpp" />
     <ClCompile Include="StageBase.cpp" />
     <ClCompile Include="StageChanger.cpp" />
     <ClCompile Include="StageManager.cpp" />
@@ -184,14 +183,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="BloodParticleBase.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterBase.h" />
     <ClInclude Include="CharacterStatus.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="EffectBase.h" />
-    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="FPSController.h" />
@@ -212,7 +210,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="Skydome.h" />
-    <ClInclude Include="SpreadEffect.h" />
+    <ClInclude Include="BloodParticle.h" />
     <ClInclude Include="StageBase.h" />
     <ClInclude Include="StageChanger.h" />
     <ClInclude Include="StageManager.h" />
