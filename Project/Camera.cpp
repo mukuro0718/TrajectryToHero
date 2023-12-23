@@ -58,11 +58,11 @@ void Camera::ChangeRotate(VECTOR _playerPos)
 	//XBuf +:‰E -:¶  YBuf +:‰º -:ã
 	GetJoypadAnalogInputRight(&inputRightStick.XBuf, &inputRightStick.YBuf, DX_INPUT_PAD1);
 	//¶‰E‰ñ“]
-	if (inputRightStick.XBuf > NONE_INPUT_VALUE.XBuf)
+	if (inputRightStick.XBuf > NONE_INPUT_VALUE.XBuf || CheckHitKey(KEY_INPUT_D))
 	{
 		angleX -= ADD_ANGLE_VALUE;
 	}
-	if (inputRightStick.XBuf < NONE_INPUT_VALUE.XBuf)
+	if (inputRightStick.XBuf < NONE_INPUT_VALUE.XBuf || CheckHitKey(KEY_INPUT_A))
 	{
 		angleX += ADD_ANGLE_VALUE;
 	}

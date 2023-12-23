@@ -67,6 +67,11 @@ void Load::LoadingData()
 	expBarGraph = LoadGraph("Data/Img/Game/UI/EXPBar.png");
 	prevBarGraph = LoadGraph("Data/Img/Game/UI/PrevBar.png");
 	barFrameGraph = LoadGraph("Data/Img/Game/UI/UIBar.png");
+	atkUIImage = LoadGraph("Data/Img/Game/UI/ATK.png");
+	defUIImage = LoadGraph("Data/Img/Game/UI/DEF.png");
+	agiUIImage = LoadGraph("Data/Img/Game/UI/AGI.png");
+	//パーティクル画像
+	bloodParticleImage = LoadGraph("Data/Img/Game/Particle/Blood.png");
 	//影画像
 	shadowImage = LoadGraph("Data/Img/Game/Shadow/Shadow.tga");
 	//ゲームクリア画像
@@ -165,14 +170,31 @@ void Load::GetShadowData(int* _shadowImage)
 /// <summary>
 /// ゲームクリアデータのgetter
 /// </summary>
-/// <param name="_image">ゲームクリア画像</param>
-/// <param name="_model">ゲームクリアモデル</param>
 void Load::GetGameClearData(int* _image)
 {
 	*_image = gameClearImage;
 }
+/// <summary>
+/// ゲームオーバーデータのgetter
+/// </summary>
 void Load::GetGameOverData(int* _image)
 {
 	*_image = gameOverImage;	
 }
-
+/// <summary>
+/// パーティクルデータのgetter
+/// </summary>
+void Load::GetParticleData(int* _image)
+{
+	*_image = bloodParticleImage;
+}
+/// <summary>
+/// ステータスUIデータのgetter
+/// </summary>
+void Load::GetStatusUIData(int* _atkImage, int* _defImage, int* _agiImage, int* _font)
+{
+	*_atkImage = atkUIImage;
+	*_defImage = defUIImage;
+	*_agiImage = agiUIImage;
+	*_font = characterStatusFont;
+}

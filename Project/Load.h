@@ -47,7 +47,9 @@ public:
 	void GetGameClearData	 (int* _image);//ゲームクリアデータのgetter
 	void GetGameOverData	 (int* _image);//ゲームクリアデータのgetter
 
+	void GetParticleData(int* _image);//パーティクルデータのgetter
 
+	void GetStatusUIData(int* _atkImage, int* _defImage, int* _agiImage, int* font);//ステータスUIデータのgetter
 private:
 	Load();//コンストラクタ
 	static Load* load;
@@ -90,6 +92,12 @@ private:
 	int prevBarGraph;				//以前のバー位置描画画像
 	int expBarGraph;				//経験値バー画像
 	int barFrameGraph;				//バーフレーム画像
+
+	int bloodParticleImage;//血液パーティクル画像
+
+	int atkUIImage;//攻撃力UI画像
+	int defUIImage;//防御力UI画像
+	int agiUIImage;//素早さUI画像
 
 	/// <summary>
 	/// ゲームクリア
