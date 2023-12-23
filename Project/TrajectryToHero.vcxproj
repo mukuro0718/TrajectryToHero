@@ -173,6 +173,7 @@
     <ClCompile Include="StageChanger.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StatusManager.cpp" />
+    <ClCompile Include="StatusUI.cpp" />
     <ClCompile Include="StrongEnemy.cpp" />
     <ClCompile Include="SwordGirl.cpp" />
     <ClCompile Include="SwordTrail.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="StageChanger.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="StatusManager.h" />
+    <ClInclude Include="StatusUI.h" />
     <ClInclude Include="StrongEnemy.h" />
     <ClInclude Include="SwordGirl.h" />
     <ClInclude Include="SwordTrail.h" />

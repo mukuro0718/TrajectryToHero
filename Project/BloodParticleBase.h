@@ -12,26 +12,40 @@
 class BloodParticleBase
 {
 public:
-	BloodParticleBase();//コンストラクタ
+	BloodParticleBase(){}//コンストラクタ
+	BloodParticleBase(const int _imageHandle);//コンストラクタ
 	~BloodParticleBase();//デストラクタ
-	void Init(const VECTOR _targetDir);//初期化
+	void Init(const VECTOR _targetDir, const VECTOR _targetPos);//初期化
 	void Update();//更新
+	void Draw();//描画
 private:
 	/*静的定数*/
-	static constexpr float Y_DEG = 90.0f;//Y軸回転度数
+	enum class Sign
+	{
+		PLUS,//プラス
+		MINUS,//マイナス
+	};
+	static constexpr float Y_DEG = 150.0f;//Y軸回転度数
 	static constexpr float Z_DEG = 45.0f;//z軸回転度数
-	static constexpr int RANDOM_OFFSET_RANGE = 30;//ランダムで出すオフセットの範囲
-	static constexpr int RANDOM_SPEED_RANGE = 5;//ランダムで出すスピードの範囲
-	static constexpr int RANDOM_SCALE_RANGE = 10;//ランダムで出すスケールの範囲
+	static constexpr int SIGN_RANGE = 1;//符号の範囲
+	static constexpr int RANDOM_DEG_RANGE = 30;//ランダムで出す角度の範囲
+	static constexpr int RANDOM_SPEED_RANGE = 10;//ランダムで出すスピードの範囲
+	static constexpr int RANDOM_SCALE_RANGE = 3;//ランダムで出すスケールの範囲
+	static constexpr int MAX_ALPHA = 255;
+	static constexpr int ALPHA_REDUCED_VALUE = 10;
+	static constexpr float GRAVITY = 0.098f;//重力
 	/*内部処理関数*/
 	void SetScale();						//スケールの設定
 	void SetSpeed();						//速さの設定
 	void SetDir(const VECTOR _targetDir);	//方向の設定
+	float ReturnRandomFloatValue(const int _range,const bool _useSign);//指定したランダム範囲で数字を出す
 	/*メンバ変数*/
 	VECTOR particleDir;	//パーティクルの方向(単位ベクトルにする)
 	VECTOR moveDir;		//移動方向(単位ベクトルにする)
 	VECTOR pos;			//座標	
-	VECTOR scale;		//拡大率
-	float  speed;		//エフェクトの飛ぶ速さ
+	float scale;		//拡大率
+	float  speed;		//パーティクルの飛ぶ速さ
+	int imageHandle;	//画像ハンドル
+	int alpha;//アルファ
 };
 

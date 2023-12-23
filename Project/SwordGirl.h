@@ -92,4 +92,5 @@ private:
 	int frameImage;
 	int hpImage;
 	int expImage;
+	VECTOR playerDir;//プレイヤーの向いている方向（移動したときのみ保存）
 };

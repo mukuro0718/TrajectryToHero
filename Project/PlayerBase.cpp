@@ -6,6 +6,7 @@
 #include"math.h"
 #include"Timer.h"
 #include"SwordTrail.h"
+#include"BloodParticle.h"
 
 const int PlayerBase::CAPSULE_COLOR = GetColor(255, 0, 0);
 const int PlayerBase::SPHERE_COLOR = GetColor(200, 0, 0);
@@ -19,6 +20,7 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	:status(nullptr)
 	,attackLatency(nullptr)
 	, swordTrail(nullptr)
+	, blood(nullptr)
 	, cameraToPlayer(ORIGIN_POS)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
@@ -26,6 +28,7 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	status = new CharacterStatus();
 	attackLatency = new Timer();
 	swordTrail = new SwordTrail();
+	blood = new BloodParticle();
 	attackLatency->Init(5);
 	//モデルのロード
 	modelHandle = MV1DuplicateModel(_modelHandle);
@@ -49,7 +52,7 @@ void PlayerBase::Draw()
 	// ３Ｄモデルの描画
 	MV1DrawModel(modelHandle);
 #ifdef _DEBUG
-	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR,false);
+	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR, false);
 	DrawCapsule(capsuleInfo);
 	//VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 69);
 	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
@@ -82,11 +85,10 @@ void PlayerBase::Draw()
 	{
 		attackLatency->EndTimer();
 	}
-		swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
-		swordTrail->Draw();
 #endif // _DEBUG
-
-	
+	blood->Draw();
+	swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
+	swordTrail->Draw();
 }
 /// <summary>
 /// 最終処理

@@ -7,6 +7,7 @@
 #include"Animation.h"
 #include"StatusManager.h"
 #include"CharacterStatus.h"
+#include"BloodParticle.h"
 #include<math.h>
 const VECTOR  SwordGirl::FIRST_MODEL_SCALE	= VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
 const VECTOR  SwordGirl::FIRST_POS			= VGet(-50.0f, 0.0f, 0.0f);
@@ -29,7 +30,8 @@ SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _h
 	, frameImage(_frameImage)
 	, hpImage(_hpImage)
 	, expImage(_expImage)
-	,materialNum(0)
+	, materialNum(0)
+	, playerDir(ORIGIN_POS)
 {
 	//生成
 	Create();
@@ -90,6 +92,10 @@ void SwordGirl::FixMoveVec(const VECTOR _fixVec)
 /// </summary>
 void SwordGirl::Update()
 {
+	if (isInvincible)
+	{
+		blood->Init(playerDir,pos);
+	}
 	//移動量を座標に足す
 	pos = VAdd(pos, moveVec);
 	//ステージの範囲をもとに位置を補正する
@@ -118,6 +124,7 @@ void SwordGirl::Update()
 	//モデルの設定
 	MV1SetRotationXYZ(modelHandle, rotate);
 	MV1SetPosition(modelHandle, pos);
+	blood->Update();
 	ChangeColor();//モデルの色を変える
 	//アニメーションの再生
 	anim->Play(&modelHandle);
@@ -235,6 +242,7 @@ void SwordGirl::Move(const VECTOR _cameraToPlayer)
 			//座標計算
 			moveVec.x += -sinf(rotate.y) * status->GetAgi();
 			moveVec.z += -cosf(rotate.y) * status->GetAgi();
+			playerDir = VNorm(playerDir);
 		}
 		else
 		{

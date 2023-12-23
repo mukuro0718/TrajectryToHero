@@ -3,11 +3,14 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BloodParticleBase::BloodParticleBase()
+BloodParticleBase::BloodParticleBase(const int _imageHandle)
 	:particleDir(ORIGIN_POS)
 	,moveDir(ORIGIN_POS)
 	,pos(ORIGIN_POS)
+	,scale(0.0f)
 	,speed(0.0f)
+	,alpha(0)
+	,imageHandle(_imageHandle)
 {
 
 }
@@ -21,8 +24,11 @@ BloodParticleBase::~BloodParticleBase()
 /// <summary>
 /// 初期化
 /// </summary>
-void BloodParticleBase::Init(const VECTOR _targetDir)
+void BloodParticleBase::Init(const VECTOR _targetDir , const VECTOR _targetPos)
 {
+	pos = _targetPos;
+	pos.y += 20.0f;
+	alpha = 255;
 	SetDir(_targetDir);
 	SetScale();
 	SetSpeed();
@@ -32,26 +38,24 @@ void BloodParticleBase::Init(const VECTOR _targetDir)
 /// </summary>
 void BloodParticleBase::Update()
 {
-	//移動サイズを求める
-	VECTOR moveSize = VScale(moveDir, speed);
+
 	//座標の更新
-	pos = VAdd(pos, moveSize);
+	pos = VAdd(pos, moveDir);
+	pos.y -= GRAVITY;
 }
 /// <summary>
 /// スケールの設定
 /// </summary>
 void BloodParticleBase::SetScale()
 {
-	scale.x = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
-	scale.y = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
-	scale.z = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
+	scale = ReturnRandomFloatValue(RANDOM_SCALE_RANGE, false);
 }
 /// <summary>
 /// 速さの設定
 /// </summary>
 void BloodParticleBase::SetSpeed()
 {
-	speed = static_cast<float>(GetRand(RANDOM_SPEED_RANGE));
+	speed = ReturnRandomFloatValue(RANDOM_SPEED_RANGE,false) / 10;
 }
 /// <summary>
 /// 方向の設定
@@ -72,13 +76,43 @@ void BloodParticleBase::SetDir(const VECTOR _targetDir)
 	particleDir = VTransform(particleDir, zMatrix);
 	
 	/*移動方向を決める(単位ベクトルにする)*/
-	//ランダムでXYZの増加量を決める
-	VECTOR offset = ORIGIN_POS;
-	offset.x = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
-	offset.y = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
-	offset.z = static_cast<float>(GetRand(RANDOM_OFFSET_RANGE));
+	//ランダムでXYZの傾きを決める
+	MATRIX xRot = MGetRotX(ReturnRandomFloatValue(RANDOM_DEG_RANGE, true) * (DX_PI_F / 180));
+	MATRIX yRot = MGetRotY(ReturnRandomFloatValue(RANDOM_DEG_RANGE, true) * (DX_PI_F / 180));
+	MATRIX zRot = MGetRotZ(ReturnRandomFloatValue(RANDOM_DEG_RANGE, true) * (DX_PI_F / 180));
 	//目標の方向ベクトルにオフセットベクトルを足す
-	moveDir = VAdd(particleDir, offset);
+	moveDir = VTransform(particleDir, xRot);
+	moveDir = VTransform(particleDir, yRot);
+	moveDir = VTransform(particleDir, zRot);
 	//出したベクトルを正規化して方向ベクトルにする
 	moveDir = VNorm(moveDir);
+	moveDir = VScale(moveDir, speed);
+}
+/// <summary>
+/// 描画
+/// </summary>
+void BloodParticleBase::Draw()
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	DrawBillboard3D(pos, 0.0f, 0.0f, scale, 0.0f, imageHandle, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND,0);
+	alpha -= ALPHA_REDUCED_VALUE;
+	if (alpha < 0)
+	{
+		alpha = 0;
+	}
+}
+/// <summary>
+/// 指定した範囲のランダム値を返す
+/// </summary>
+float BloodParticleBase::ReturnRandomFloatValue(const int _range, const bool _useSign)
+{
+	if (_useSign)
+	{
+		if (static_cast<int>(Sign::MINUS) == GetRand(RANDOM_SCALE_RANGE))
+		{
+			return static_cast<float>(-GetRand(_range) - 2);
+		}
+	}
+	return static_cast<float>(GetRand(_range) + 2);
 }

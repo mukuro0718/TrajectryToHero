@@ -10,7 +10,7 @@ class EffectManager;
 class CharacterStatus;
 class Timer;
 class SwordTrail;
-
+class BloodParticle;
 class PlayerBase :public CharacterBase
 {
 public:
@@ -34,7 +34,7 @@ protected:
 	/*メンバ変数*/
 	CharacterStatus* status;			//ステータス
 	VECTOR cameraToPlayer;
-
+	BloodParticle* blood;//血しぶきパーティクル
 private:
 	/*メンバ変数*/
 	static constexpr float CAPSULE_HEIGHT = 30.0f;//カプセルの高さ

@@ -157,6 +157,12 @@
     <Filter Include="Object\Scene\Game\Particle\BloodParticle\BloodParticleBase">
       <UniqueIdentifier>{e3b68dba-5982-44f0-9067-c48d6aa17040}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\UI">
+      <UniqueIdentifier>{799377aa-eb5b-411e-82a0-0ed474e80636}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\UI\StatusUI">
+      <UniqueIdentifier>{76d3da3c-8189-46ee-a2ea-43a9a7226d61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -282,6 +288,9 @@
     <ClCompile Include="BloodParticleBase.cpp">
       <Filter>Object\Scene\Game\Particle\BloodParticle\BloodParticleBase</Filter>
     </ClCompile>
+    <ClCompile Include="StatusUI.cpp">
+      <Filter>Object\Scene\Game\UI\StatusUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -403,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="BloodParticleBase.h">
       <Filter>Object\Scene\Game\Particle\BloodParticle\BloodParticleBase</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusUI.h">
+      <Filter>Object\Scene\Game\UI\StatusUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
