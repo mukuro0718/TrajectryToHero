@@ -49,6 +49,7 @@ void Game::Init()
     playerManager->Init();
     camera->Init(playerManager->GetPos());
     stageManager->Update();
+    stageChanger->Init();
     enemyManager->Init();
 }
 void Game::Delete()
@@ -90,37 +91,58 @@ void Game::Delete()
 void Game::Update()
 {
     clsDx();
-    if (!playerManager->GetIsShowStatusMenu())
+    if (!stageChanger->GetIsChangeStage())
     {
-        /*カメラのみ更新*/
-        camera->Update(playerManager->GetPos());
-        /*移動処理*/
-        playerManager->Move(camera->GetCameraToPlayer());
-        enemyManager->Move(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
-        /*攻撃処理*/
-        playerManager->Attack();
-        /*コリジョン処理*/
-        OnDamage();
-        FixMoveVec();
-        /*更新処理*/
-        playerManager->Update();
-        enemyManager->Update(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
-        stageChanger->DrawImageWhenSwitchingStage();
+        
+        if (!playerManager->GetIsShowStatusMenu())
+        {
+            /*カメラのみ更新*/
+            camera->Update(playerManager->GetPos());
+            /*移動処理*/
+            playerManager->Move(camera->GetCameraToPlayer());
+            enemyManager->Move(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+            /*攻撃処理*/
+            playerManager->Attack();
+            /*コリジョン処理*/
+            OnDamage();
+            FixMoveVec();
+            /*更新処理*/
+            playerManager->Update();
+            enemyManager->Update(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+            stageChanger->DrawImageWhenSwitchingStage();
+        }
+        playerManager->StatusUpdate();
+        clsDx();
+        printfDx("pos X:%f,Y:%f,Z:%f", playerManager->GetPos().x, playerManager->GetPos().y, playerManager->GetPos().z);
+        GameEnd(playerManager->GetIsDeath());
     }
-    playerManager->StatusUpdate();
-    GameEnd(playerManager->GetIsDeath());
+    if (!stageChanger->GetIsBoss())
+    {
+        stageChanger->DrawAlert(playerManager->GetPos());
+    }
 }
 /// <summary>
 /// 描画
 /// </summary>
 void Game::Draw()
 {
-    skydome->Draw();
-    stageManager->Draw();
-    playerManager->Draw();
-    enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
-    playerManager->DrawShadow(stageManager->GetModelHandle());
-    enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+    if (!stageChanger->GetIsChangeStage())
+    {
+        skydome->Draw();
+        stageChanger->Draw();
+        stageManager->Draw();
+        playerManager->Draw();
+        enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+        playerManager->DrawShadow(stageManager->GetModelHandle());
+        enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+    }
+    else
+    {
+        if (!stageChanger->GetIsAlert())
+        {
+            stageChanger->DrawImageWhenSwitchingStage();
+        }
+    }
 }
 /// <summary>
 /// 移動量補正

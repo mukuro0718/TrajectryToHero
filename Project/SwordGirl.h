@@ -14,7 +14,7 @@ class SwordGirl :public PlayerBase
 {
 public:
 	SwordGirl(){};						//コンストラクタ
-	SwordGirl(const int _modelHandle,const int _frameImage,const int _hpImage,const int _expImage);	//引数ありコンストラクタ
+	SwordGirl(const int _modelHandle,const int _frameImage,const int _hpImage,const int _expImage, const int _font);	//引数ありコンストラクタ
 	~SwordGirl();						//デストラクタ
 	void Update()override;				//更新
 	void Init()override;				//初期化
@@ -25,6 +25,7 @@ public:
 	void CountInvincibleTimer();//無敵時間の計測
 	const VECTOR GetPos()const { return pos; }//座標のgetter
 	const bool GetIsAttack()const { return isAttack; }//攻撃フラグのgetter
+	const bool GetIsMove()const { return isMove; }//移動フラグのgetter
 	void DrawMenu();//ステータスメニューの表示
 	const bool GetIsShowStatusMenu();//ステータスクラスのisShowMenuを返す
 	void StatusUpdate();//ステータスの更新
@@ -62,8 +63,11 @@ private:
 	static const COLOR_F CHANGE_SPC_COLOR;//スペキュラカラー
 	static const COLOR_F CHANGE_EMI_COLOR;//エミッシブカラー
 	static const COLOR_F CHANGE_AMB_COLOR;//アンビエントカラー
-	static constexpr VEC2D HP_FRAME_POS = { 0,0 };//HPフレーム座標
-	static constexpr VEC2D EXP_FRAME_POS = { 0,0 };//EXPフレーム座標
+	static const int FONT_COLOR;//フォントカラー
+	static constexpr RangeOfAction HP_FRAME_POS = { 70,10,370,40 };//HPフレーム座標
+	static constexpr RangeOfAction EXP_FRAME_POS = { 70,50,370,80 };//EXPフレーム座標
+	static constexpr VEC2D HP_BAR_POS = { 70,10 };//HPフレーム座標
+	static constexpr VEC2D EXP_BAR_POS = { 70,50, };//EXPフレーム座標
 	static constexpr CollisionSetUpInfo PLAYER_COLL_INFO			 = { 66,1,1,1 }			;//プレイヤーコリジョン情報
 	static constexpr RangeOfAction		PLAYER_RANGE_OF_ACTION		 = { 451,-450,510,-400 };//プレイヤー行動可能範囲
 	static constexpr InputAnalogStick	NONE_INPUT_VALUE			 = { 0,0 }				;//スティック入力がない
@@ -93,4 +97,8 @@ private:
 	int hpImage;
 	int expImage;
 	VECTOR playerDir;//プレイヤーの向いている方向（移動したときのみ保存）
+	VEC2D nowHP;
+	VEC2D prevHP;
+	VEC2D nowEXP;
+	int font;
 };

@@ -47,6 +47,7 @@ void Load::LoadingData()
 	//プレイヤーモデル
 	//playerModel = MV1LoadModel("Data/Model/Player/Player.mv1");
 	playerModel = MV1LoadModel("Data/Model/Player/Player_test2.mv1");
+	playerFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 35, 32, DX_FONTTYPE_NORMAL);
 	//エネミーモデル
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/StrongEnemy.mv1"));
@@ -62,14 +63,20 @@ void Load::LoadingData()
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Farm_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Boss_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/警告.png"));
+	gateImage = LoadGraph("Data/Img/Game/StageChange/Gate.png");
 	//UI画像
-	hpBarGraph = LoadGraph("Data/Img/Game/UI/RectArea.png");
-	expBarGraph = LoadGraph("Data/Img/Game/UI/EXPBar.png");
-	prevBarGraph = LoadGraph("Data/Img/Game/UI/PrevBar.png");
+	hpBarGraph	  = LoadGraph("Data/Img/Game/UI/HPBar.png");
+	expBarGraph   = LoadGraph("Data/Img/Game/UI/EXPBar.png");
+	prevBarGraph  = LoadGraph("Data/Img/Game/UI/PrevBar.png");
 	barFrameGraph = LoadGraph("Data/Img/Game/UI/UIBar.png");
 	atkUIImage = LoadGraph("Data/Img/Game/UI/ATK.png");
 	defUIImage = LoadGraph("Data/Img/Game/UI/DEF.png");
 	agiUIImage = LoadGraph("Data/Img/Game/UI/AGI.png");
+	statusUIFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 60, 16, DX_FONTTYPE_NORMAL);
+	moveOpeUIImage	 = LoadGraph("Data/Img/Game/UI/MoveUI.png");
+	menuOpeUIImage   = LoadGraph("Data/Img/Game/UI/MenuUI.png");
+	attackOpeUIImage = LoadGraph("Data/Img/Game/UI/AttackUI.png");
+	cameraOpeUIImage = LoadGraph("Data/Img/Game/UI/CameraUI.png");
 	//パーティクル画像
 	bloodParticleImage = LoadGraph("Data/Img/Game/Particle/Blood.png");
 	//影画像
@@ -105,8 +112,9 @@ void Load::GetTitleData(vector<int>* _image)
 /// プレイヤーデータのgetter
 /// </summary>
 /// <param name="model">モデルハンドルを格納するvectorのポインタ</param>
-void Load::GetPlayerData(int* _model, int* _frameImage, int* _hpImage, int* _expImage)
+void Load::GetPlayerData(int* _model, int* _frameImage, int* _hpImage, int* _expImage,int* _font)
 {
+	*_font = playerFont;
 	*_model = playerModel;
 	*_frameImage = barFrameGraph;
 	*_hpImage = hpBarGraph;
@@ -135,12 +143,13 @@ void Load::GetStageData(int* _model)
 /// ウェーブデータのgetter
 /// </summary>
 /// <param name="image">画像ハンドルを格納するvectorのポインタ</param>
-void Load::GetStageChangeData(vector<int>* _image)
+void Load::GetStageChangeData(vector<int>* _image, int* _gate)
 {
 	for (int i = 0; i < STAGE_CHANGE_IMAGE_NUM; i++)
 	{
 		_image->push_back(stageChangeImage[i]);
 	}
+	*_gate = gateImage;
 }
 /// <summary>
 /// メニューデータのgetter
@@ -196,5 +205,15 @@ void Load::GetStatusUIData(int* _atkImage, int* _defImage, int* _agiImage, int* 
 	*_atkImage = atkUIImage;
 	*_defImage = defUIImage;
 	*_agiImage = agiUIImage;
-	*_font = characterStatusFont;
+	*_font = statusUIFont;
+}
+/// <summary>
+/// 操作説明UIデータのgetter
+/// </summary>
+void Load::GetOpeUIData(int* _moveImage, int* _menuImage, int* _attackImage, int* _cameraImage)
+{
+	*_moveImage = moveOpeUIImage;
+	*_menuImage = menuOpeUIImage;
+	*_attackImage = attackOpeUIImage;
+	*_cameraImage = cameraOpeUIImage;
 }

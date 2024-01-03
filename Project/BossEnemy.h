@@ -7,20 +7,20 @@
 class Timer;
 class Animation;
 
-class Boss :public EnemyBase
+class BossEnemy :public EnemyBase
 {
 public:
-	Boss() {};				//コンストラクタ
-	Boss(const VECTOR _spawnPos,const int _modelHandle);//引数ありコンストラクタ
-	~Boss();				//デストラクタ
+	BossEnemy() {};				//コンストラクタ
+	BossEnemy(const VECTOR _spawnPos,const int _modelHandle);//引数ありコンストラクタ
+	~BossEnemy();				//デストラクタ
 
-	void   Update()override;		//更新
-	void   Init  ()override;	//初期化
+	void Update()override;		//更新
+	void Init  ()override;	//初期化
 	void Move  (const VECTOR _playerPos)override;		//移動
 
 
 private:
-	//定数
+	/*定数*/
 	enum class AnimationType//アニメーション
 	{
 		WALK,
@@ -31,25 +31,27 @@ private:
 		IDLE,			//待機アニメーション
 		DEATH,			//死亡アニメーション
 	};
+	/*静的定数*/
 	static constexpr float	RADIUS		   = 10.0f;	//半径
 	static constexpr int	RANDOM_X_RANGE = -100;	//敵の生成時に決めるX座標の範囲
 	static const	 VECTOR MODEL_SCALE;			//モデルの拡大率
 	static const	 VECTOR MODEL_ROTATE;			//モデルの回転値
 	static const	 VECTOR INIT_POS;				//初期座標
-	//クラス
-	Animation*	anim;						//アニメーションクラス
-	Timer*		invincibleTimer;			//無敵時間クラス
-	Timer*		restTimeAfterAttack;		//攻撃後休憩時間クラス
-	//内部処理関数
+	/*クラス*/
+	Animation*	anim;					//アニメーションクラス
+	Timer*		invincibleTimer;		//無敵時間クラス
+	Timer*		restTimeAfterAttack;	//攻撃後休憩時間クラス
+	Timer*		waitBeforeJunpAttack;	//ジャンプ攻撃待機時間
+	Timer*		waitBeforeRotateAttack;	//回転攻撃待機時間
+	Timer*		rotateAttackLoopTime;	//回転攻撃ループ時間
+	/*内部処理関数*/
+	void Create();//作成
 	float ChangeRotate(VECTOR _playerPos);	//角度の変更
 	void  Final();							//最終処理
-	//変数
+	/*メンバ変数*/
 	int  attackAnimLoopCount;	//攻撃アニメーションループ時間
 	bool isRestTime;			//休憩に入るかどうか
 	VECTOR jumpAttackTargetPos;//ジャンプアタック中の目標座標
-	Timer* waitBeforeJunpAttack;//ジャンプ攻撃待機時間
-	Timer* waitBeforeRotateAttack;//回転攻撃待機時間
-	Timer* rotateAttackLoopTime;//回転攻撃ループ時間
 	bool isJumpAttack;//ジャンプアタックを許可するかどうか（true:許可する false:許可しない）
 	bool isRotateAttack;//ジャンプアタックを許可するかどうか（true:許可する false:許可しない
 	int attackType;//攻撃のタイプ

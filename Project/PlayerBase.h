@@ -11,6 +11,7 @@ class CharacterStatus;
 class Timer;
 class SwordTrail;
 class BloodParticle;
+class StatusUI;
 class PlayerBase :public CharacterBase
 {
 public:
@@ -36,19 +37,21 @@ protected:
 	VECTOR cameraToPlayer;
 	BloodParticle* blood;//血しぶきパーティクル
 private:
+	/*静的定数*/
+	static constexpr float	CAPSULE_HEIGHT		= 30.0f;//カプセルの高さ
+	static constexpr float	CAPSULE_RADIUS		= 10.0f;//カプセルの半径
+	static constexpr float	SPHERE_RADIUS		= 20.0f;//スフィアの半径
+	static constexpr float	INIT_DEGREES		= 0.0f;	//初期度数
+	static constexpr float	ADD_DEGREES_VALUE	= 1.6f;	//X度数増加量
+	static const	 int	SPHERE_COLOR;				//スフィアの色
+	static const	 int	CAPSULE_COLOR;				//カプセルの色
+	static const	 VECTOR SPHERE_POS_OFFSET;			//スフィアオフセット
+	static const	 VECTOR CENTER_POS_OFFSET;			//中心座標オフセット
 	/*メンバ変数*/
-	static constexpr float CAPSULE_HEIGHT = 30.0f;//カプセルの高さ
-	static constexpr float CAPSULE_RADIUS = 10.0f;//カプセルの半径
-	static const	 int   CAPSULE_COLOR;//カプセルの色
-	static constexpr float SPHERE_RADIUS = 20.0f;//スフィアの半径
-	static const int SPHERE_COLOR;//スフィアの色
-	static const VECTOR SPHERE_POS_OFFSET;//スフィアオフセット
-	static constexpr float INIT_DEGREES = 0.0f;//初期度数
-	static constexpr float ADD_DEGREES_VALUE = 1.6f;//X度数増加量
-	static const VECTOR CENTER_POS_OFFSET;//中心座標オフセット
-	VECTOR centerPos;//中心座標
-	float degrees;//度数
-	SwordTrail* swordTrail;//剣の軌跡
-	Timer* attackLatency;//攻撃時待機時間
+	VECTOR centerPos;	//中心座標
+	float degrees;		//度数
+	SwordTrail* swordTrail;	//剣の軌跡
+	Timer* attackLatency;	//攻撃時待機時間
+	StatusUI* statusUI;		//ステータスUI
 };
 

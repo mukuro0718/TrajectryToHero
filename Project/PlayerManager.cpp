@@ -4,19 +4,25 @@
 #include"PlayerManager.h"
 #include"SwordGirl.h"
 #include"Common.h"
+#include"OperationUI.h"
 #include"Load.h"
 /// <summary>
 /// コンストラクタ
 /// </summary>
 PlayerManager::PlayerManager()
-	:model(0)
-	,frameImage(0)
-	,hpImage(0)
-	,expImage(0)
+	: model(0)
+	, frameImage(0)
+	, hpImage(0)
+	, expImage(0)
+	, font(0)
+	, player(nullptr)
+	, opeUI(nullptr)
+	, isDrawImg(false)
 {
 	auto& load = Load::GetInstance();
-	load.GetPlayerData(&model,&frameImage,&hpImage,&expImage);
-	player = new SwordGirl(model,frameImage,hpImage,expImage);
+	load.GetPlayerData(&model,&frameImage,&hpImage,&expImage,&font);
+	player = new SwordGirl(model,frameImage,hpImage,expImage,font);
+	opeUI = new OperationUI();
 }
 /// <summary>
 /// デストラクタ
@@ -37,6 +43,8 @@ void PlayerManager::Update()
 {
 	player->CountInvincibleTimer();
 	player->Update();
+	opeUI->Update(player->GetIsMove());
+	player->UpdateUI();
 	player->AnimChange();
 }
 /// <summary>
@@ -60,6 +68,8 @@ void PlayerManager::Draw()
 {
 	player->Draw();
 	player->DrawMenu();
+	player->DrawUI();
+	opeUI->Draw();
 }
 /// <summary>
 /// 削除

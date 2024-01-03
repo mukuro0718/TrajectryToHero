@@ -326,13 +326,13 @@ void CharacterStatus::ChangeSelectStatus()
 /// </summary>
 void CharacterStatus::ShowInfo()
 {
-	printfDx("STATUS\n");
-	printfDx("LV:%f\n", lv);
-	printfDx("HP:%f\n", hp);
-	printfDx("ATK:%f\n", atk);
-	printfDx("DEF:%f\n", def);
-	printfDx("AGI:%f\n", agi);
-	printfDx("EXP:%f\n", exp);
-	printfDx("needEXP:%f\n", needExp);
-	printfDx("maxHP:%f\n", maxHp);
+	//printfDx("STATUS\n");
+	//printfDx("LV:%f\n", lv);
+	//printfDx("HP:%f\n", hp);
+	//printfDx("ATK:%f\n", atk);
+	//printfDx("DEF:%f\n", def);
+	//printfDx("AGI:%f\n", agi);
+	//printfDx("EXP:%f\n", exp);
+	//printfDx("needEXP:%f\n", needExp);
+	//printfDx("maxHP:%f\n", maxHp);
 }

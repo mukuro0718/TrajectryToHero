@@ -163,6 +163,9 @@
     <Filter Include="Object\Scene\Game\UI\StatusUI">
       <UniqueIdentifier>{76d3da3c-8189-46ee-a2ea-43a9a7226d61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\UI\OperationUI">
+      <UniqueIdentifier>{8b7e11df-f993-45e2-bcf4-f6f32179f35c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -234,7 +237,7 @@
     <ClCompile Include="SwordGirl.cpp">
       <Filter>Object\Scene\Game\Character\Player\PlayerType</Filter>
     </ClCompile>
-    <ClCompile Include="Boss.cpp">
+    <ClCompile Include="BossEnemy.cpp">
       <Filter>Object\Scene\Game\Character\Enemy\EnemyType\Boss</Filter>
     </ClCompile>
     <ClCompile Include="EnemyBase.cpp">
@@ -290,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="StatusUI.cpp">
       <Filter>Object\Scene\Game\UI\StatusUI</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationUI.cpp">
+      <Filter>Object\Scene\Game\UI\OperationUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,7 +365,7 @@
     <ClInclude Include="SwordGirl.h">
       <Filter>Object\Scene\Game\Character\Player\PlayerType</Filter>
     </ClInclude>
-    <ClInclude Include="Boss.h">
+    <ClInclude Include="BossEnemy.h">
       <Filter>Object\Scene\Game\Character\Enemy\EnemyType\Boss</Filter>
     </ClInclude>
     <ClInclude Include="StrongEnemy.h">
@@ -415,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="StatusUI.h">
       <Filter>Object\Scene\Game\UI\StatusUI</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationUI.h">
+      <Filter>Object\Scene\Game\UI\OperationUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

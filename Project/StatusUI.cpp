@@ -20,23 +20,16 @@ StatusUI::StatusUI()
 /// </summary>
 StatusUI::~StatusUI()
 {
-
-}
-/// <summary>
-/// çXêV
-/// </summary>
-void StatusUI::Update()
-{
-
+	//èàóùÇ»Çµ
 }
 /// <summary>
 /// ï`âÊ
 /// </summary>
 void StatusUI::Draw(const int _atkUpCount, const int _defUpCount, const int _agiUpCount)
 {
-	DrawGraph(ATK_IMAGE_POS.x, ATK_IMAGE_POS.y, atkImageHandle, TRUE);
-	DrawGraph(DEF_IMAGE_POS.x, DEF_IMAGE_POS.y, defImageHandle, TRUE);
-	DrawGraph(AGI_IMAGE_POS.x, AGI_IMAGE_POS.y, agiImageHandle, TRUE);
+	DrawExtendGraph(ATK_IMAGE_POS.x, ATK_IMAGE_POS.y, ATK_IMAGE_POS.x + IMAGE_SIZE.x, ATK_IMAGE_POS.y + IMAGE_SIZE.y, atkImageHandle, TRUE);
+	DrawExtendGraph(DEF_IMAGE_POS.x, DEF_IMAGE_POS.y, DEF_IMAGE_POS.x + IMAGE_SIZE.x, DEF_IMAGE_POS.y + IMAGE_SIZE.y, defImageHandle, TRUE);
+	DrawExtendGraph(AGI_IMAGE_POS.x, AGI_IMAGE_POS.y, AGI_IMAGE_POS.x + IMAGE_SIZE.x, AGI_IMAGE_POS.y + IMAGE_SIZE.y, agiImageHandle, TRUE);
 	DrawFormatStringToHandle(ATK_TEXT_POS.x, ATK_TEXT_POS.y, FONT_COLOR, fontHandle, "Å~%d", _atkUpCount);
 	DrawFormatStringToHandle(DEF_TEXT_POS.x, DEF_TEXT_POS.y, FONT_COLOR, fontHandle, "Å~%d", _defUpCount);
 	DrawFormatStringToHandle(AGI_TEXT_POS.x, AGI_TEXT_POS.y, FONT_COLOR, fontHandle, "Å~%d", _agiUpCount);

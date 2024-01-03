@@ -7,28 +7,30 @@
 #include"Timer.h"
 #include"SwordTrail.h"
 #include"BloodParticle.h"
-
-const int PlayerBase::CAPSULE_COLOR = GetColor(255, 0, 0);
-const int PlayerBase::SPHERE_COLOR = GetColor(200, 0, 0);
-const VECTOR PlayerBase::SPHERE_POS_OFFSET = VGet(-10.0f,30.0f,0.0f);
-const VECTOR PlayerBase::CENTER_POS_OFFSET = VGet(0.0f, 20.0f, 0.0f);
+#include"StatusUI.h"
+const int	 PlayerBase::CAPSULE_COLOR		= GetColor(255, 0, 0);
+const int	 PlayerBase::SPHERE_COLOR		= GetColor(200, 0, 0);
+const VECTOR PlayerBase::SPHERE_POS_OFFSET	= VGet(-10.0f,30.0f,0.0f);
+const VECTOR PlayerBase::CENTER_POS_OFFSET	= VGet(0.0f, 20.0f, 0.0f);
 /// <summary>
 /// 引数ありコンストラクタ
 /// </summary>
 /// <param name="modelHandle">プレイヤーモデルハンドル</param>
 PlayerBase::PlayerBase(const int _modelHandle)
-	:status(nullptr)
-	,attackLatency(nullptr)
+	: status(nullptr)
+	, attackLatency(nullptr)
 	, swordTrail(nullptr)
 	, blood(nullptr)
+	, statusUI(nullptr)
 	, cameraToPlayer(ORIGIN_POS)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
 {
-	status = new CharacterStatus();
+	blood		  = new BloodParticle();
+	status		  = new CharacterStatus();
+	statusUI	  = new StatusUI();
+	swordTrail	  = new SwordTrail();
 	attackLatency = new Timer();
-	swordTrail = new SwordTrail();
-	blood = new BloodParticle();
 	attackLatency->Init(5);
 	//モデルのロード
 	modelHandle = MV1DuplicateModel(_modelHandle);
@@ -87,6 +89,7 @@ void PlayerBase::Draw()
 	}
 #endif // _DEBUG
 	blood->Draw();
+	statusUI->Draw(static_cast<int>(status->GetAtk()) - 1, static_cast<int>(status->GetDef()) - 1, static_cast<int>(status->GetAgi()) - 1);
 	swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
 	swordTrail->Draw();
 }

@@ -4,7 +4,7 @@
 #pragma once
 #include"DxLib.h"
 #include"SwordGirl.h"
-class BlurScreen;
+class OperationUI;
 
 class PlayerManager
 {
@@ -59,7 +59,8 @@ private:
 	int hpImage;
 	int expImage;
 	SwordGirl* player;
-
+	OperationUI* opeUI;
+	int font;
 	bool isDrawImg;
 };
 

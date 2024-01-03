@@ -15,11 +15,12 @@ const COLOR_F SwordGirl::CHANGE_DIF_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//
 const COLOR_F SwordGirl::CHANGE_SPC_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
 const COLOR_F SwordGirl::CHANGE_EMI_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//エミッシブカラー
 const COLOR_F SwordGirl::CHANGE_AMB_COLOR	= GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//アンビエントカラー
+const int SwordGirl::FONT_COLOR = GetColor(150, 150, 150);
 /// <summary>
 /// 引数ありコンストラクタ
 /// </summary>
 /// <param name="modelHandle">モデルハンドル</param>
-SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _hpImage, const int _expImage)
+SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _hpImage, const int _expImage,const int _font)
 	: PlayerBase(_modelHandle)
 	, anim(nullptr)
 	, stayTimer(nullptr)
@@ -32,6 +33,7 @@ SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _h
 	, expImage(_expImage)
 	, materialNum(0)
 	, playerDir(ORIGIN_POS)
+	, font(_font)
 {
 	//生成
 	Create();
@@ -78,6 +80,10 @@ void SwordGirl::Init()
 	invincibleTimer->Init(INVINCIBLE_TIMER_TARGET_TIME);
 	status->InitPlayerStatus();
 	prevLv = static_cast<int>(status->GetLv());
+	nowHP.y = 30;
+	prevHP.y = 30;
+	prevHP.x = 300;
+	nowEXP.y = 30;
 }
 /// <summary>
 /// 移動量の補正
@@ -331,16 +337,28 @@ const bool SwordGirl::GetIsShowStatusMenu()
 	return status->GetIsShowMenu();
 }
 /// <summary>
+/// UIの更新
+/// </summary>
+void SwordGirl::UpdateUI()
+{
+	//最大HPを求める
+	//現在のHPを求める
+	//指数化する（式：現在のHP/最大HP * 100）
+	nowHP.x = static_cast<int>(status->GetHp()/ status->GetMaxHP() * 300.0f);
+	nowEXP.x = static_cast<int>(status->GetExp() / status->GetNeedExp() * 300.0f);
+}
+/// <summary>
 /// UIの描画
 /// </summary>
 void SwordGirl::DrawUI()
 {
-	////フレームの描画
-	//DrawGraph(HP_FRAME_POS.x, HP_FRAME_POS.y, frameImage, TRUE);
-	//DrawGraph(EXP_FRAME_POS.x, EXP_FRAME_POS.y, frameImage, TRUE);
-	////前のHPバーの表示
-	////HPが減少した際は徐々に現在のHPまで画像を縮める
-	//DrawExtendGraph(prevPos.lx, prevPos.rx, prevPos.ly, prevPos.ry, prevBarGraph, TRUE);
-	////HPバーの表示
-	//DrawExtendGraph(hpPos.lx, hpPos.rx, hpPos.ly, hpPos.ry, hpBarGraph, TRUE);
+	//テキストの表示
+	DrawStringToHandle(0, 10, "HP", FONT_COLOR, font);
+	DrawStringToHandle(0, 50, "EXP", FONT_COLOR, font);
+	//フレームの描画
+	DrawExtendGraph(static_cast<int>(HP_FRAME_POS.LX),  static_cast<int>(HP_FRAME_POS.LZ),  static_cast<int>(HP_FRAME_POS.RX),  static_cast<int>(HP_FRAME_POS.RZ),  frameImage, TRUE);
+	DrawExtendGraph(static_cast<int>(EXP_FRAME_POS.LX), static_cast<int>(EXP_FRAME_POS.LZ), static_cast<int>(EXP_FRAME_POS.RX), static_cast<int>(EXP_FRAME_POS.RZ), frameImage, TRUE);
+	//HPバーの表示
+	DrawExtendGraph(HP_BAR_POS.x, HP_BAR_POS.y, HP_BAR_POS.x + nowHP.x, HP_BAR_POS.y + nowHP.y, hpImage, TRUE);
+	DrawExtendGraph(EXP_BAR_POS.x, EXP_BAR_POS.y, EXP_BAR_POS.x + nowEXP.x, EXP_BAR_POS.y + nowEXP.y, expImage, TRUE);
 }

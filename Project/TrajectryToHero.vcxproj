@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BloodParticleBase.cpp" />
-    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterBase.cpp" />
     <ClCompile Include="CharacterStatus.cpp" />
@@ -161,6 +161,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Opening.cpp" />
     <ClCompile Include="OpeningScene.cpp" />
+    <ClCompile Include="OperationUI.cpp" />
     <ClCompile Include="PlayerBase.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="SceneBase.cpp" />
@@ -185,7 +186,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BloodParticleBase.h" />
-    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterBase.h" />
     <ClInclude Include="CharacterStatus.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Load.h" />
     <ClInclude Include="Opening.h" />
     <ClInclude Include="OpeningScene.h" />
+    <ClInclude Include="OperationUI.h" />
     <ClInclude Include="PlayerBase.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="SceneBase.h" />

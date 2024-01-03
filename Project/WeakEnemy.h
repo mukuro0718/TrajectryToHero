@@ -8,7 +8,6 @@
 
 class Timer;
 class Animation;
-class StatusInit;
 
 class WeakEnemy :public EnemyBase
 {
@@ -37,13 +36,12 @@ private:
 	static const VECTOR MODEL_SCALE;				//初期モデルの拡大率
 	static const VECTOR MODEL_ROTATE;				//初期モデルの回転値
 	/*内部処理関数*/
-	void Create();//生成
+	void Create();//作成
 	void   Final();							//最終処理
 	void ChangeAnim();
 	double ChangeRotate(VECTOR playerPos);	//角度の変更
 	/*メンバ変数*/
 	Animation*	anim;					//アニメーションクラス
-	StatusInit* statusInit;             //ステータス初期化クラス
 	Timer*		invincibleTimer;		//無敵時間
 	Timer*		restTimeAfterAttack;	//攻撃後休憩時間
 

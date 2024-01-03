@@ -34,8 +34,12 @@ public:
     void InitExpToGive();
     const float GetAgi()const { return agi; }
     const float GetHp()const { return hp; }
+    const float GetDef()const { return def; }
     const float GetLv()const { return lv; }
     const float GetAtk()const { return atk; }
+    const float GetMaxHP()const { return maxHp;}
+    const float GetExp()const { return exp; }
+    const float GetNeedExp()const { return needExp; }
     const bool GetIsShowMenu()const { return isShowMenu; }
     void ShowInfo();//î•ñ‚Ì•\¦
 private:

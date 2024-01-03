@@ -2,46 +2,36 @@
 //@brief ボスエネミークラス/継承
 //===========================================================================
 
-#include"Boss.h"
+#include"BossEnemy.h"
 #include<math.h>
 #include"Animation.h"
-#include"CharacterStatus.h"
 #include"Timer.h"
 //モデル設定
-const VECTOR Boss::MODEL_SCALE = VGet(0.4f, 0.4f, 0.4f);//モデルの拡大率
-const VECTOR Boss::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
-const VECTOR Boss::INIT_POS = VGet(0.0f, 0.0f, 500.0f);//モデルの回転値
+const VECTOR BossEnemy::MODEL_SCALE = VGet(0.4f, 0.4f, 0.4f);//モデルの拡大率
+const VECTOR BossEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
+const VECTOR BossEnemy::INIT_POS = VGet(0.0f, 0.0f, 500.0f);//モデルの回転値
 
 /// <summary>
 /// コンストラクタ
 /// </summary>
-Boss::Boss(const VECTOR _spawnPos,const int _modelHandle)
+BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle)
 	:EnemyBase(_modelHandle)
 {
-	//インスタンスの初期化
-	invincibleTimer		= NULL;
-	restTimeAfterAttack = NULL;
-	anim				= NULL;
-	//インスタンスの生成
-	invincibleTimer		= new Timer();
-	restTimeAfterAttack = new Timer();
-	anim				= new Animation();
+	Create();
 	spawnPos = _spawnPos;
 	Init();
 	//モデル設定
 	MV1SetScale(modelHandle, scale);
 	//回転値のセット
 	MV1SetRotationXYZ(modelHandle, rotate);
-	//コリジョン情報を構築
-	MV1SetupCollInfo(modelHandle, -1, 1, 1, 1);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/Boss_Walk.mv1"), 0);
-	anim->Add(MV1LoadModel("Data/Animation/Boss_StronglAttackAnim.mv1"), 0);	//通常攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Boss_RotateAttackAnim.mv1"), 0);	//回転攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Boss_JumpAttackAnim.mv1"), 0);		//ジャンプ攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Boss_JumpIdleAnim.mv1"), 0);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Boss_IdleAnim.mv1"), 0);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Boss_DeathAnim.mv1"), 0);			//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_Walk.mv1"), 0);
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_StronglAttackAnim.mv1"), 0);	//通常攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_RotateAttackAnim.mv1"), 0);	//回転攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_JumpAttackAnim.mv1"), 0);		//ジャンプ攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_JumpIdleAnim.mv1"), 0);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_IdleAnim.mv1"), 0);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_DeathAnim.mv1"), 0);			//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ（最初は明示的に呼び出してアニメーションをアタッチする必要がある）
@@ -50,33 +40,47 @@ Boss::Boss(const VECTOR _spawnPos,const int _modelHandle)
 /// <summary>
 /// デストラクタ
 /// </summary>
-Boss::~Boss()
+BossEnemy::~BossEnemy()
 {
 	Final();
 }
 /// <summary>
-/// 初期化
+/// 作成
 /// </summary>
-void Boss::Init()
+void BossEnemy::Create()
 {
+	//インスタンスの初期化
+	invincibleTimer		= NULL;
+	restTimeAfterAttack = NULL;
+	anim				= NULL;
+	//インスタンスの生成
+	invincibleTimer			= new Timer();
+	restTimeAfterAttack		= new Timer();
+	anim					= new Animation();
 	waitBeforeJunpAttack	= new Timer();
 	waitBeforeRotateAttack	= new Timer();
 	rotateAttackLoopTime	= new Timer();
+}
+/// <summary>
+/// 初期化
+/// </summary>
+void BossEnemy::Init()
+{
+	//必要なInitクラスの呼び出し
+	waitBeforeJunpAttack  ->Init(10);
+	waitBeforeRotateAttack->Init(10);
+	rotateAttackLoopTime  ->Init(50);
+	invincibleTimer		  ->Init(9);	
+	restTimeAfterAttack   ->Init(20);
+	//最大HPの設定
+	status->InitBossEnemyStatus();
+	maxHP = status->GetHp();
 	attackType				= 0;
 	jumpAttackTargetPos		= ORIGIN_POS;
 	attackAnimLoopCount		= 0;
 	pos						= spawnPos;
 	rotate					= MODEL_ROTATE;
 	scale					= MODEL_SCALE;
-	waitBeforeJunpAttack->Init(10);
-	waitBeforeRotateAttack->Init(10);
-	rotateAttackLoopTime->Init(50);
-	//必要なInitクラスの呼び出し
-	invincibleTimer->Init(9);	
-	restTimeAfterAttack->Init(20);
-	status->InitBossEnemyStatus();
-	//最大HPの設定
-	maxHP = status->GetHp();
 	isJumpAttack	= false;
 	isJumpIdle		= false;
 	isAttack		= false;
@@ -87,28 +91,45 @@ void Boss::Init()
 /// <summary>
 /// 最終処理
 /// </summary>
-void Boss::Final()
+void BossEnemy::Final()
 {
 	if (invincibleTimer)
 	{
 		delete(invincibleTimer);
-		invincibleTimer = NULL;
+		invincibleTimer = nullptr;
 	}
 	if (restTimeAfterAttack)
 	{
 		delete(restTimeAfterAttack);
-		restTimeAfterAttack = NULL;
+		restTimeAfterAttack = nullptr;
 	}
 	if (anim)
 	{
 		delete(anim);
-		anim = NULL;
+		anim = nullptr;
 	}
+	if (waitBeforeJunpAttack)
+	{
+		delete(waitBeforeJunpAttack);
+		waitBeforeJunpAttack = nullptr;
+	}
+	if (waitBeforeRotateAttack)
+	{
+		delete(waitBeforeRotateAttack);
+		waitBeforeRotateAttack = nullptr;
+	}
+
+	if (rotateAttackLoopTime)
+	{
+		delete(rotateAttackLoopTime);
+		rotateAttackLoopTime = nullptr;
+	}
+
 }
 /// <summary>
 /// 更新
 /// </summary>
-void Boss::Update()
+void BossEnemy::Update()
 {
 
 	//無敵フラグが立っていたら
@@ -122,9 +143,6 @@ void Boss::Update()
 			isInvincible = false;
 		}
 	}
-	//コリジョン情報を更新
-	MV1RefreshCollInfo(modelHandle, -1);
-
 	//もしプレイヤーに当たっていたら
 	if (status->GetHp() < 0)
 	{
@@ -152,7 +170,7 @@ void Boss::Update()
 /// <summary>
 /// 移動
 /// </summary>
-void Boss::Move(const VECTOR _playerPos)
+void BossEnemy::Move(const VECTOR _playerPos)
 {
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
@@ -328,7 +346,7 @@ void Boss::Move(const VECTOR _playerPos)
 /// <summary>
 ///	角度の変更
 /// </summary>
-float Boss::ChangeRotate(VECTOR playerPos)
+float BossEnemy::ChangeRotate(VECTOR playerPos)
 {
 	//2点間のベクトルを出す(エネミーからプレイヤー)
 	VECTOR EP_Vector = VSub(pos, playerPos);

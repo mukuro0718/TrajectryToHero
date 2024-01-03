@@ -5,7 +5,6 @@
 #include"WeakEnemy.h"
 #include<math.h>
 #include"Animation.h"
-//#include"CharacterStatus.h"
 #include"Timer.h"
 //モデル設定
  const VECTOR WeakEnemy::MODEL_SCALE = VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
@@ -35,19 +34,18 @@ WeakEnemy::WeakEnemy(const VECTOR _spawnPos,const int _modelHandle)
 	anim->Attach(&modelHandle);
 }
 /// <summary>
-/// 生成
+/// 作成
 /// </summary>
 void WeakEnemy::Create()
 {
 	//インスタンスの初期化
-	statusInit = NULL;
-	invincibleTimer = NULL;
-	restTimeAfterAttack = NULL;
-	anim = NULL;
+	invincibleTimer		= nullptr;
+	restTimeAfterAttack = nullptr;
+	anim				= nullptr;
 	//インスタンスの生成
-	invincibleTimer = new Timer();
+	invincibleTimer		= new Timer();
 	restTimeAfterAttack = new Timer();
-	anim = new Animation();
+	anim				= new Animation();
 }
 /// <summary>
 /// デストラクタ
@@ -110,7 +108,6 @@ void WeakEnemy::Update()
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
 	ChangeAnim();
-	//pos.y = 10.0f;
 	MV1SetPosition(modelHandle, pos);//位置の設定
 	//色の変更
 	ChangeColor();
@@ -247,16 +244,16 @@ void WeakEnemy::Final()
 	if (invincibleTimer)
 	{
 		delete(invincibleTimer);
-		invincibleTimer = NULL;
+		invincibleTimer = nullptr;
 	}
 	if (restTimeAfterAttack)
 	{
 		delete(restTimeAfterAttack);
-		restTimeAfterAttack = NULL;
+		restTimeAfterAttack = nullptr;
 	}
 	if (anim)
 	{
 		delete(anim);
-		anim = NULL;
+		anim = nullptr;
 	}
 }

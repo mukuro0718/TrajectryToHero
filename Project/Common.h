@@ -51,6 +51,14 @@ struct VEC2D
     int x = 0;
     int y = 0;
 };
+//描画範囲
+struct DrawRect
+{
+    int lx = 0;
+    int ly = 0;
+    int rx = 0;
+    int ry = 0;
+};
 //シーンタイプ
 enum class SceneType:int
 {
