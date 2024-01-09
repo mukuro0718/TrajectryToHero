@@ -89,10 +89,10 @@ void PlayerManager::FixMoveVec(const VECTOR _fixVec)
 /// <summary>
 /// HP計算
 /// </summary>
-void PlayerManager::CalcHP(const float _atk)
+void PlayerManager::CalcHP(const float _atk,const VECTOR _attackerPos)
 {
 	//HP計算
-	player->CalcHP(_atk);
+	player->CalcHP(_atk,_attackerPos);
 }
 /// <summary>
 /// レベルアップ処理

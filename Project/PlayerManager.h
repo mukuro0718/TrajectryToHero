@@ -48,9 +48,10 @@ public:
 	最後のconst = このメンバ関数は値をいじらない
 	*/
 	//HP計算
-	void CalcHP(const float _atk);
+	void CalcHP(const float _atk, const VECTOR _attackerPos);
 	//レベルアップ処理
 	void CalcExp(const float _expToGive);
+
 private:
 	static constexpr float SHADOW_SIZE = 20.0f;
 	static constexpr float SHADOW_HEIGHT = 1000.0f;

@@ -10,28 +10,34 @@
 const VECTOR BossEnemy::MODEL_SCALE = VGet(0.4f, 0.4f, 0.4f);//モデルの拡大率
 const VECTOR BossEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
 const VECTOR BossEnemy::INIT_POS = VGet(0.0f, 0.0f, 500.0f);//モデルの回転値
+const int    BossEnemy::CAPSULE_COLOR = GetColor(0, 255, 0);
+const int	 BossEnemy::FONT_COLOR = GetColor(150, 150, 150);
 
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle)
+BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle, const int _frameImage, const int _hpImage, const int _font)
 	:EnemyBase(_modelHandle)
+	,font(_font)
+	,frameImage(_frameImage)
+	,hpImage(_hpImage)
 {
 	Create();
 	spawnPos = _spawnPos;
+	nowHP.y = 20;
 	Init();
 	//モデル設定
 	MV1SetScale(modelHandle, scale);
 	//回転値のセット
 	MV1SetRotationXYZ(modelHandle, rotate);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_Walk.mv1"), 0);
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_StronglAttackAnim.mv1"), 0);	//通常攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_RotateAttackAnim.mv1"), 0);	//回転攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_JumpAttackAnim.mv1"), 0);		//ジャンプ攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_JumpIdleAnim.mv1"), 0);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_IdleAnim.mv1"), 0);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/BossEnemy_DeathAnim.mv1"), 0);			//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/WalkAnim.mv1"), 0);
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/StronglAttackAnim.mv1"), 0);	//通常攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/RotateAttackAnim.mv1"), 0);	//回転攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/JumpAttackAnim.mv1"), 0);		//ジャンプ攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/JumpIdleAnim.mv1"), 0);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/IdleAnim.mv1"), 0);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/DeathAnim.mv1"), 0);			//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ（最初は明示的に呼び出してアニメーションをアタッチする必要がある）
@@ -50,14 +56,14 @@ BossEnemy::~BossEnemy()
 void BossEnemy::Create()
 {
 	//インスタンスの初期化
-	invincibleTimer		= NULL;
-	restTimeAfterAttack = NULL;
-	anim				= NULL;
+	invincibleTimer		= nullptr;
+	restTimeAfterAttack = nullptr;
+	anim				= nullptr;
 	//インスタンスの生成
 	invincibleTimer			= new Timer();
 	restTimeAfterAttack		= new Timer();
 	anim					= new Animation();
-	waitBeforeJunpAttack	= new Timer();
+	waitBeforeJumpAttack	= new Timer();
 	waitBeforeRotateAttack	= new Timer();
 	rotateAttackLoopTime	= new Timer();
 }
@@ -67,26 +73,29 @@ void BossEnemy::Create()
 void BossEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
-	waitBeforeJunpAttack  ->Init(10);
+	waitBeforeJumpAttack  ->Init(30);
 	waitBeforeRotateAttack->Init(10);
 	rotateAttackLoopTime  ->Init(50);
 	invincibleTimer		  ->Init(9);	
-	restTimeAfterAttack   ->Init(20);
+	restTimeAfterAttack   ->Init(50);
 	//最大HPの設定
 	status->InitBossEnemyStatus();
 	maxHP = status->GetHp();
 	attackType				= 0;
-	jumpAttackTargetPos		= ORIGIN_POS;
 	attackAnimLoopCount		= 0;
 	pos						= spawnPos;
 	rotate					= MODEL_ROTATE;
 	scale					= MODEL_SCALE;
+	jumpAttackTargetPos		= ORIGIN_POS;
+	spherePos = MV1GetFramePosition(modelHandle, 11);;
 	isJumpAttack	= false;
 	isJumpIdle		= false;
 	isAttack		= false;
 	isDeath			= false;
 	isHit			= false;
 	isRestTime		= false;
+	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
+	SetUpSphere(spherePos, 10.0f, CAPSULE_COLOR, false);
 }
 /// <summary>
 /// 最終処理
@@ -108,10 +117,10 @@ void BossEnemy::Final()
 		delete(anim);
 		anim = nullptr;
 	}
-	if (waitBeforeJunpAttack)
+	if (waitBeforeJumpAttack)
 	{
-		delete(waitBeforeJunpAttack);
-		waitBeforeJunpAttack = nullptr;
+		delete(waitBeforeJumpAttack);
+		waitBeforeJumpAttack = nullptr;
 	}
 	if (waitBeforeRotateAttack)
 	{
@@ -131,7 +140,7 @@ void BossEnemy::Final()
 /// </summary>
 void BossEnemy::Update()
 {
-
+	printfDx("BOSS X:%f,Y:%f,Z:%f",pos.x,pos.y,pos.z);
 	//無敵フラグが立っていたら
 	if (isInvincible)
 	{
@@ -146,11 +155,6 @@ void BossEnemy::Update()
 	//もしプレイヤーに当たっていたら
 	if (status->GetHp() < 0)
 	{
-		//現在のアニメーションをやられたアニメーションにする
-		if (!isDeath)
-		{
-			anim->SetAnim(static_cast<int>(AnimationType::DEATH));
-		}
 		if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
 		{
 			isDeath = true;
@@ -162,8 +166,14 @@ void BossEnemy::Update()
 		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
-	pos = VGet(pos.x, 0.0f, pos.z);
-	MV1SetPosition(modelHandle, pos);//位置の設定
+	//アニメーションの変更
+	ChangeAnim();
+	//位置の設定
+	MV1SetPosition(modelHandle, pos);
+	SetUpCapsule(pos, HEIGHT, RADIUS,CAPSULE_COLOR,false);
+	SetUpSphere(spherePos, 10.0f, CAPSULE_COLOR, false);
+	//色の変更
+	ChangeColor();
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle);
 }
@@ -172,131 +182,56 @@ void BossEnemy::Update()
 /// </summary>
 void BossEnemy::Move(const VECTOR _playerPos)
 {
+	moveVec = ORIGIN_POS;
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
 	//正規化したベクトル
 	VECTOR normalizePos = ORIGIN_POS;
+	//返り値として返す移動後座標（角度有）
+	VECTOR outPutPos = ORIGIN_POS;
+	//ベクトルの大きさ
 	float vectorSize = 0.0f;
-	//もし攻撃中ではなかったら攻撃をする
-	if (!isAttack)
+	//目標までのベクトル
+	targetPos = VSub(pos, _playerPos);
+	//そのベクトルの大きさを求める
+	vectorSize = VSize(targetPos);
+	printfDx("size %f", vectorSize);
+	//目標までのベクトルを正規化する
+	normalizePos = VNorm(targetPos);
+	//攻撃も休憩もしていなかったら
+	if (!isAttack && !isRestTime)
 	{
-		//もし休憩中ではなければ攻撃パターンを決めなおす
-		if (!isRestTime)
+		//攻撃フラグを立てる
+		isAttack = true;
+		if (vectorSize <= 20)
 		{
-			//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
-			targetPos = VSub(pos, _playerPos);
-			//そのベクトルの大きさを求める
-			vectorSize = VSize(targetPos);
-			if (vectorSize <= 11)
-			{
-				attackType = 1;
-			}
-			else
-			{
-				attackType = GetRand(1) + 2;
-			}
-			switch (attackType)
-			{
-			case 1://通常
-				anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
-				attackAnimLoopCount = 1;
-				break;
-			case 2://回転
-				anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
-				waitBeforeRotateAttack->StartTimer();
-				isRotateAttack = false;
-				break;
-			case 3://ジャンプ
-				anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
-				jumpAttackTargetPos = _playerPos;//目標座標を設定
-				waitBeforeJunpAttack->StartTimer();
-				isJumpAttack = false;
-				break;
-			default:
-				break;
-			}
-			isAttack = true;
-		}
-	}
-	//攻撃中だったら
-	else
-	{
-		//ジャンプアタック処理
-		/*ジャンプアタック中
-		攻撃開始時に目標座標を設定し、その座標に向かって飛ぶ
-		追尾なしの代わりに、移動速度が速い*/
-		if (attackType == static_cast<int>(AnimationType::JUMP_ATTACK))
-		{
-			//タイマーがスタートしていて、目標時間に達していたら
-			if (waitBeforeJunpAttack->getIsStartTimer() && waitBeforeJunpAttack->CountTimer())
-			{
-				//ジャンプアタックを許可する
-				isJumpAttack = true;
-				//タイマーを終了させる
-				waitBeforeJunpAttack->EndTimer();
-			}
-			//許可されていたら
-			if (isJumpAttack)
-			{
-				//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
-				targetPos = VSub(pos, jumpAttackTargetPos);
-				//そのベクトルの大きさを求める
-				vectorSize = VSize(targetPos);
-				//サイズが定数よりも小さくなったら
-				if (vectorSize <= 5)
-				{
-					//休憩フラグを立てる
-					isRestTime = true;
-					//攻撃フラグを下す
-					isAttack = false;
-				}
-				else
-				{
-					//目標までのベクトルを正規化する
-					normalizePos = VNorm(targetPos);
-					// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
-					moveVec = VScale(normalizePos, status->GetAgi() * -3);
-					//角度を変える
-					rotate = VGet(0.0f, (float)ChangeRotate(jumpAttackTargetPos), 0.0f);
-				}
-			}
+			attackType = static_cast<int>(AnimationType::NORMAL_ATTACK);
 		}
 		else
 		{
-			/*回転攻撃*/
-			if (attackType == static_cast<int>(AnimationType::ROTATE_ATTACK))
+			attackType = GetRand(1) + 2;
+		}
+	}
+	if (!isRestTime)
+	{
+			//角度を変える
+			rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
+		//もし回転攻撃タイマーが始まっていて
+		if (rotateAttackLoopTime->getIsStartTimer())
+		{
+			//目標時間に達したら
+			if (rotateAttackLoopTime->CountTimer())
 			{
-				//タイマーがスタートしていて、目標時間に達していたら
-				if (waitBeforeRotateAttack->getIsStartTimer() && waitBeforeRotateAttack->CountTimer())
-				{
-					//回転アタックを許可する
-					isRotateAttack = true;
-					//タイマーを終了させる
-					waitBeforeRotateAttack->EndTimer();
-				}
-				//許可されていたら
-				if (isRotateAttack)
-				{
-					//回転攻撃継続時間がスタートしていなかったら
-					if (!rotateAttackLoopTime->getIsStartTimer())
-					{
-						//タイマーをスタートする
-						rotateAttackLoopTime->StartTimer();
-					}
-					//スタートしていたら
-					else
-					{
-						//もしタイマーが目標時間に達したら
-						if (rotateAttackLoopTime->CountTimer())
-						{
-							//休憩フラグを立てる
-							isRestTime = true;
-							//攻撃フラグを下す
-							isAttack = false;
-						}
-					}
-				}
-				//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
+				//休憩タイマーをスタートさせる
+				restTimeAfterAttack->StartTimer();
+				isRestTime = true;
+				isAttack = false;
+				//回転攻撃タイマーを終わらせる
+				rotateAttackLoopTime->EndTimer();
+			}
+			else
+			{
+				//目標までのベクトル
 				targetPos = VSub(pos, _playerPos);
 				//そのベクトルの大きさを求める
 				vectorSize = VSize(targetPos);
@@ -304,42 +239,107 @@ void BossEnemy::Move(const VECTOR _playerPos)
 				normalizePos = VNorm(targetPos);
 				moveVec = VScale(normalizePos, status->GetAgi() * -1);
 			}
-			//もし通常攻撃中かつアニメーション変更フラグがたったら
-			if (attackType == static_cast<int>(AnimationType::NORMAL_ATTACK) && anim->GetIsChangeAnim())
+		}
+		//もしジャンプ攻撃タイマーが始まっていて
+		if (waitBeforeJumpAttack->getIsStartTimer())
+		{
+			//目標時間に達したら
+			if (waitBeforeJumpAttack->CountTimer())
 			{
-				//休憩フラグを立てる
+				jumpAttackTargetPos = _playerPos;
+				isJumpAttack = true;
+				waitBeforeJumpAttack->EndTimer();
+			}
+		}
+		if (isJumpAttack)
+		{
+			//目標までのベクトル
+			targetPos = VSub(pos, jumpAttackTargetPos);
+			//そのベクトルの大きさを求める
+			vectorSize = VSize(targetPos);
+			//目標までのベクトルを正規化する
+			normalizePos = VNorm(targetPos);
+			//ベクトルの大きさが定数値以下になったら
+			if (vectorSize <= 20)
+			{
+				//休憩タイマーが始める
+				restTimeAfterAttack->StartTimer();
 				isRestTime = true;
-				//攻撃フラグを下す
 				isAttack = false;
 			}
-			//角度を変える
-			rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
+			else
+			{
+				moveVec = VScale(normalizePos, status->GetAgi() * -3);
+				//角度を変える
+				rotate = VGet(0.0f, (float)ChangeRotate(jumpAttackTargetPos), 0.0f);
+			}
+		}
 
+	}
+	//もし休憩時間タイマーが始まっていて
+	else if (restTimeAfterAttack->getIsStartTimer())
+	{
+		//目標時間に達したら
+		if (restTimeAfterAttack->CountTimer())
+		{
+			restTimeAfterAttack->EndTimer();
+			isRestTime = false;
 		}
 	}
-	//休憩フラグが立っていて、タイマーがスタートしていなかったらスタートする
-	if (isRestTime && !restTimeAfterAttack->getIsStartTimer())
+}
+/// <summary>
+/// アニメーションの変更
+/// </summary>
+void BossEnemy::ChangeAnim()
+{
+	if (isAttack && !isRestTime)
 	{
-		//タイマーをスタート
-		restTimeAfterAttack->StartTimer();
+		switch (attackType)
+		{
+		case 1://通常
+			anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
+			spherePos = MV1GetFramePosition(modelHandle,11);
+			attackAnimLoopCount = 1;
+			break;
+		case 2://回転
+			anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
+			spherePos = MV1GetFramePosition(modelHandle, 31);
+			rotateAttackLoopTime->StartTimer();
+			break;
+		case 3://ジャンプ
+			anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
+			spherePos = MV1GetFramePosition(modelHandle, 7);
+			if (!isJumpAttack)
+			{
+				waitBeforeJumpAttack->StartTimer();
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	//死亡アニメーション
+	if (status->GetHp() < 0 && !isDeath)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
+	}
+	if (isRestTime)
+	{
+		spherePos = MV1GetFramePosition(modelHandle, 7);
+		if (anim->GetAnim() == static_cast<int>(AnimationType::JUMP_IDLE) && anim->GetPlayTime() == 0.0f)
+		{
+			anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+			attackType = 0;
+			isJumpAttack = false;
+		}
 		//アニメーションがジャンプアタックだったら
-		if (attackType == static_cast<int>(AnimationType::JUMP_ATTACK))
+		else if (attackType == static_cast<int>(AnimationType::JUMP_ATTACK))
 		{
 			anim->SetAnim(static_cast<int>(AnimationType::JUMP_IDLE));
 		}
 		else
 		{
 			anim->SetAnim(static_cast<int>(AnimationType::IDLE));
-		}
-	}
-	//スタートしているなら
-	else
-	{
-		//もしタイマーが目標時間に達したら
-		if (restTimeAfterAttack->CountTimer())
-		{
-			isRestTime = false;
-			restTimeAfterAttack->EndTimer();
 		}
 	}
 }
@@ -352,4 +352,30 @@ float BossEnemy::ChangeRotate(VECTOR playerPos)
 	VECTOR EP_Vector = VSub(pos, playerPos);
 	return static_cast<float>(atan2(static_cast<double>(EP_Vector.x), static_cast<double>(EP_Vector.z)));
 }
+/// <summary>
+/// UIの更新
+/// </summary>
+void BossEnemy::UpdateUI()
+{
+	//最大HPを求める
+	//現在のHPを求める
+	//指数化する（式：現在のHP/最大HP * 100）
+	nowHP.x = static_cast<int>(status->GetHp() / status->GetMaxHP() * 1000.0f);
 
+	if (nowHP.x <  0)
+	{
+		nowHP.x = 0;
+	}
+}
+/// <summary>
+/// UIの描画
+/// </summary>
+void BossEnemy::DrawUI()
+{
+	//テキストの表示
+	DrawStringToHandle(50, 980, "HP", FONT_COLOR, font);
+	//フレームの描画
+	DrawExtendGraph(static_cast<int>(HP_FRAME_POS.LX), static_cast<int>(HP_FRAME_POS.LZ), static_cast<int>(HP_FRAME_POS.RX), static_cast<int>(HP_FRAME_POS.RZ), frameImage, TRUE);
+	//HPバーの表示
+	DrawExtendGraph(HP_BAR_POS.x, HP_BAR_POS.y, HP_BAR_POS.x + nowHP.x, HP_BAR_POS.y + nowHP.y, hpImage, TRUE);
+}

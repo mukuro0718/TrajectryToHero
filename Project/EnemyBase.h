@@ -7,11 +7,10 @@
 #include"Common.h"
 //class EffectManager;
 //class CharacterStatus;
-
+class Timer;
 class EnemyBase:public CharacterBase 
 {
 public:
-	EnemyBase(){}						// コンストラクタ
 	EnemyBase(int _modelHandle);	// 引数ありコンストラクタ
 	virtual ~EnemyBase();				// デストラクタ
 
@@ -30,12 +29,11 @@ public:
 	const bool GetIsDeath()const { return isDeath; }
 	const bool GetIsAttack()const { return isAttack; }
 	//半径のsetter
-	const float GetRadius()const { return RADIUS; }
 	const int GetModelHandle()const { return modelHandle; }
 
 	const float GetHp()const { return status->GetHp(); }
 	const float GetAtk()const { return status->GetAtk(); }
-	float CalcHP(const float _atk);//HP計算
+	float CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void InitExpToGive();
 	void ChangeColor();//色の変更
 protected:
@@ -55,6 +53,7 @@ protected:
 	CharacterStatus* status;
 	float maxHP;						//最大体力
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
+	VECTOR bloodBaseDir;//血しぶきパーティクルを飛ばす方向のもとになる方向
 private:
 	/*定数*/
 	static const COLOR_F CHANGE_DIF_COLOR;//ディフューズカラー
@@ -65,15 +64,12 @@ private:
 	static constexpr int RANDOM_X_RANGE = 300;		//ｘ座標
 	static constexpr int RANDOM_Z_RANGE = 300;		//ｚ座標
 	static constexpr int RANDOM_SIGN_RANGE = 1;		//符号
-	static constexpr float RADIUS = 5.0f;	//カプセルの半径
-	static constexpr float HEIGHT = 30.0f;	//カプセルの高さ
-	static const int CAPSULE_COLOR;			//カプセルの色
-	static constexpr float SPHERE_RADIUS = 3.0f;	//球の半径
-	static const int SPHERE_COLOR;					//球の色
 
 	/*メンバ変数*/
+	bool isPrevColorChange;
 	bool isChangeColor;//色の変更をしているかどうか
 	int materialNum;//マテリアルの数
+	Timer* changeColorTimer;//色変更タイマー
 	std::vector<COLOR_F> difColorInfo;//ディフューズカラー情報
 	std::vector<COLOR_F> spcColorInfo;//スペキュラカラー情報
 	std::vector<COLOR_F> emiColorInfo;//エミッシブカラー情報

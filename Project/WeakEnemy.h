@@ -12,7 +12,6 @@ class Animation;
 class WeakEnemy :public EnemyBase
 {
 public:
-	WeakEnemy() {};							//コンストラクタ
 	WeakEnemy(const VECTOR _spawnPos,const int _modelHandle);				//引数ありコンストラクタ
 	~WeakEnemy();							//デストラクタ
 
@@ -20,7 +19,8 @@ public:
 	void Init()override;	//初期化
 	void Move(const VECTOR playerPos)override;	//移動
 
-	
+	const float GetRadius()const { return RADIUS; }
+
 private:
 	/*定数*/
 	enum class AnimationType
@@ -35,6 +35,11 @@ private:
 	static constexpr int RANDOM_X_RANGE = -100;		//敵の生成時に決めるX座標の範囲
 	static const VECTOR MODEL_SCALE;				//初期モデルの拡大率
 	static const VECTOR MODEL_ROTATE;				//初期モデルの回転値
+	static constexpr float HEIGHT = 30.0f;	//カプセルの高さ
+	static const int CAPSULE_COLOR;			//カプセルの色
+	static constexpr float SPHERE_RADIUS = 3.0f;	//球の半径
+	static const int SPHERE_COLOR;					//球の色
+
 	/*内部処理関数*/
 	void Create();//作成
 	void   Final();							//最終処理

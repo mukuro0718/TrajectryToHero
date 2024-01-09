@@ -9,7 +9,9 @@
 //モデル設定
  const VECTOR WeakEnemy::MODEL_SCALE = VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
  const VECTOR WeakEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
- 
+ const int    WeakEnemy::CAPSULE_COLOR = GetColor(0, 255, 0);
+ const int	  WeakEnemy::SPHERE_COLOR = GetColor(0, 200, 0);
+
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -71,7 +73,6 @@ void WeakEnemy::Init()
 	isHit		= false;
 	isRestTime	= false;
 	//最大HPの設定
-	//pos.y = 10.0f;
 	status->InitWeakEnemyStatus();
 	maxHP = status->GetHp();
 }
@@ -107,8 +108,13 @@ void WeakEnemy::Update()
 		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
+	//アニメーションの変更
 	ChangeAnim();
-	MV1SetPosition(modelHandle, pos);//位置の設定
+	//位置の設定
+	MV1SetPosition(modelHandle, pos);
+	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle, 57);
+	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
+	SetUpSphere(enemyLeftFootPos, SPHERE_RADIUS, SPHERE_COLOR, false);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
@@ -117,7 +123,7 @@ void WeakEnemy::Update()
 /// <summary>
 /// 移動
 /// </summary>
-void WeakEnemy::Move(VECTOR playerPos)
+void WeakEnemy::Move(VECTOR _playerPos)
 {
 	moveVec = ORIGIN_POS;
 	//目標までのベクトル
@@ -128,7 +134,7 @@ void WeakEnemy::Move(VECTOR playerPos)
 	VECTOR outPutPos = ORIGIN_POS;
 	float vectorSize = 0.0f;
 	//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
-	targetPos = VSub(pos, playerPos);
+	targetPos = VSub(pos, _playerPos);
 	//そのベクトルの大きさを求める
 	vectorSize = VSize(targetPos);
 	//目標までのベクトルを正規化する
@@ -197,7 +203,7 @@ void WeakEnemy::Move(VECTOR playerPos)
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
-		rotate = VGet(0.0f, (float)ChangeRotate(playerPos), 0.0f);
+		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
 }
 /// <summary>

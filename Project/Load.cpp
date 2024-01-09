@@ -52,6 +52,7 @@ void Load::LoadingData()
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/StrongEnemy.mv1"));
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/Mutant.mv1"));
+	enemyFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 35, 32, DX_FONTTYPE_NORMAL);
 	//ステージモデル
 	stageModel = MV1LoadModel("Data/Model/Map/stage.mv1");
 	//スカイドームモデル
@@ -82,9 +83,9 @@ void Load::LoadingData()
 	//影画像
 	shadowImage = LoadGraph("Data/Img/Game/Shadow/Shadow.tga");
 	//ゲームクリア画像
-	gameClearImage = LoadGraph("Data/Img/Result/Gameclear.png");
+	gameClearImage = LoadGraph("Data/Img/GameClear/Gameclear.png");
 	//ゲームクリア画像
-	gameOverImage = LoadGraph("Data/Img/Result/Gameover.png");
+	gameOverImage = LoadGraph("Data/Img/GameOver/Gameover.png");
 }
 /// <summary>
 /// オープニングデータのgetter
@@ -124,12 +125,15 @@ void Load::GetPlayerData(int* _model, int* _frameImage, int* _hpImage, int* _exp
 /// エネミーデータのgetter
 /// </summary>
 /// <param name="model">モデルハンドルを格納するvectorのポインタ</param>
-void Load::GetEnemyData(vector<int>* _model)
+void Load::GetEnemyData(vector<int>* _model, int* _frameImage, int* _hpImage, int* _font)
 {
 	for (int i = 0; i < ENEMY_MODEL_NUM; i++)
 	{
 		_model->push_back(enemyModel[i]);
 	}
+	*_font = enemyFont;
+	*_frameImage = barFrameGraph;
+	*_hpImage = hpBarGraph;
 }
 /// <summary>
 /// ステージデータのgetter

@@ -122,8 +122,6 @@ void SwordGirl::Update()
 	{
 		pos.z = PLAYER_RANGE_OF_ACTION.RZ;
 	}
-	//clsDx();
-	//printfDx("HP:%f", status->GetHp());
 	Death();
 	//コリジョン情報を更新
 	MV1RefreshCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex);
@@ -346,6 +344,11 @@ void SwordGirl::UpdateUI()
 	//指数化する（式：現在のHP/最大HP * 100）
 	nowHP.x = static_cast<int>(status->GetHp()/ status->GetMaxHP() * 300.0f);
 	nowEXP.x = static_cast<int>(status->GetExp() / status->GetNeedExp() * 300.0f);
+	if (nowHP.x < 0)
+	{
+		nowHP.x = 0;
+	}
+
 }
 /// <summary>
 /// UIの描画

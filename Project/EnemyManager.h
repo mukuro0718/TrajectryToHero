@@ -4,7 +4,7 @@
 
 #include"DxLib.h"
 #include<vector>
-#include"Boss.h"
+#include"BossEnemy.h"
 #include"StrongEnemy.h"
 #include"WeakEnemy.h"
 
@@ -61,9 +61,12 @@ public:
     const float GetIsAttackStrongEnemy()const { return strongEnemy->GetIsAttack(); }
     const float GetIsAttackBossEnemy()const { return bossEnemy->GetIsAttack(); }
     //無敵フラグのgetter
-    const bool GetIsInvincible(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
+    const bool GetIsInvincibleWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
+    const bool GetIsInvincibleBossEnemy()const { return bossEnemy->GetIsInvincible(); }
     //HP計算
-    float CalcHPWeakEnemy(const int _enemyNum,const float _atk);
+    float CalcHPWeakEnemy(const int _enemyNum,const float _atk,const VECTOR _attackerPos);
+    float CalcHPStrongEnemy(const float _atk, const VECTOR _attackerPos);
+    float CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos);
     //与える経験値の初期化
     void InitExpToGive(const int _enemyNum);
 private:
@@ -85,7 +88,7 @@ private:
     /*メンバ変数*/
     WeakEnemy* weakEnemy[MAX_WEAK_ENEMY_NUM];
     StrongEnemy* strongEnemy;
-    Boss* bossEnemy;                                   //ラスボス
+    BossEnemy* bossEnemy;                                   //ラスボス
     MV1_COLL_RESULT_POLY_DIM hitPolyDim;                    //コリジョン結果代入用ポリゴン配列
     vector<int>model;
     bool isStrongEnemy;                                     //中ボスが生成されているか
@@ -95,11 +98,10 @@ private:
     int nowEnemyIndex;                                      //現在いる敵の数
     int destroyEnemy;                                       //倒されたエネミーの数
     int deathStrongEnemyNum;
-    static const	 int   FONT_COLOR_GREEN;			//フォントの色
-    static constexpr int   HP_FONT_SIZE = 64;		//フォントのサイズ
-    static constexpr int   HP_FONT_THICK = 28;		//フォントの太さ
-    int   hpFontHandle;	//HPフォントハンドル
-    
+    int font;	//フォントハンドル
+    int frameImage;
+    int hpImage;
+
     //スポーンポイントの変数
     static constexpr int SPAWN_POINT_NUM = 8;
     static const VECTOR SPAWN_POINT[SPAWN_POINT_NUM];

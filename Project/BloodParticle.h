@@ -18,7 +18,7 @@ public:
 	void Draw();//描画
 private:
 	/*静的定数*/
-	static constexpr int PARTICLE_NUM = 50;//パーティクル数
+	static constexpr int PARTICLE_NUM = 100;//パーティクル数
 	static constexpr int MAX_FRAME_NUM = 15;//最大フレーム数
 	/*メンバ変数*/
 	VECTOR initPos;	//初期描画座標

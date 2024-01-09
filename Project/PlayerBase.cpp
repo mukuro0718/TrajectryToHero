@@ -25,6 +25,7 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	, cameraToPlayer(ORIGIN_POS)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
+	,bloodBaseDir(ORIGIN_POS)
 {
 	blood		  = new BloodParticle();
 	status		  = new CharacterStatus();
@@ -38,6 +39,8 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	{
 		printfDx("Playerデータ読み込みに失敗");
 	}
+	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR, false);
+	SetUpSphere(pos, SPHERE_RADIUS, SPHERE_COLOR, false);
 }
 /// <summary>
 /// デストラクタ
@@ -51,14 +54,19 @@ PlayerBase::~PlayerBase()
 /// </summary>
 void PlayerBase::Draw()
 {
+	if (status->GetHp() > 0)
+	{
+		blood->Draw();
+	}
 	// ３Ｄモデルの描画
 	MV1DrawModel(modelHandle);
-#ifdef _DEBUG
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR, false);
+	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
+#ifdef _DEBUG
 	DrawCapsule(capsuleInfo);
 	//VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 69);
-	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
 	DrawSphere3D(swordTopPos, 2.0f, 16, SPHERE_COLOR, SPHERE_COLOR, false);
+#endif // _DEBUG
 	//攻撃中であれば当たり判定用スフィアを描画する
 	if (isAttack)
 	{
@@ -79,16 +87,17 @@ void PlayerBase::Draw()
 			spherePos.y = 30.0f;
 			//スフィア情報の構築
 			SetUpSphere(spherePos, SPHERE_RADIUS, SPHERE_COLOR, false);
+#ifdef _DEBUG
 			//スフィアの描画
 			DrawSphere(sphereInfo);
+#endif
 		}
 	}
 	else
 	{
 		attackLatency->EndTimer();
 	}
-#endif // _DEBUG
-	blood->Draw();
+	
 	statusUI->Draw(static_cast<int>(status->GetAtk()) - 1, static_cast<int>(status->GetDef()) - 1, static_cast<int>(status->GetAgi()) - 1);
 	swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
 	swordTrail->Draw();
@@ -102,22 +111,11 @@ void PlayerBase::Delete()
 	MV1DeleteModel(modelHandle);
 }
 /// <summary>
-/// レベルアップメニューが表示されていたらほかの更新処理を止める
-/// </summary>
-/// <returns>true/false</returns>
-//bool PlayerBase::IsStoppingUpdate()
-//{
-//	if (statusManager->GetIsShowMenu())
-//	{
-//		return true;
-//	}
-//	return false;
-//}
-/// <summary>
 /// HP計算
 /// </summary>
-void PlayerBase::CalcHP( const float _atk)
+void PlayerBase::CalcHP( const float _atk, const VECTOR _attackerPos)
 {
+	bloodBaseDir = VSub(pos, _attackerPos);
 	//HP計算
 	status->CalcHP(_atk);
 	isInvincible = true;

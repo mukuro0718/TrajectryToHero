@@ -24,8 +24,7 @@ public:
 	virtual void Update() = 0;			//更新
 	virtual void Init() = 0;			//初期化
 
-	bool IsStoppingUpdate();
-	void CalcHP(const float _atk);//HP計算
+	void CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void CalcExp(const float _expToGive);//レベルアップ処理
 	const float GetAtk();
 	const float GetHp();
@@ -36,6 +35,7 @@ protected:
 	CharacterStatus* status;			//ステータス
 	VECTOR cameraToPlayer;
 	BloodParticle* blood;//血しぶきパーティクル
+	VECTOR bloodBaseDir;//血しぶきパーティクルの方向のもとになる方向
 private:
 	/*静的定数*/
 	static constexpr float	CAPSULE_HEIGHT		= 30.0f;//カプセルの高さ

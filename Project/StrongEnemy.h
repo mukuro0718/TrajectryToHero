@@ -10,7 +10,6 @@ class Animation;
 class StrongEnemy :public EnemyBase
 {
 public:
-	StrongEnemy() {};				//コンストラクタ
 	StrongEnemy(const VECTOR _spawnPos,const int modelHandle);	//引数ありコンストラクタ
 	~StrongEnemy();					//デストラクタ
 

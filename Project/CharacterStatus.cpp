@@ -112,7 +112,7 @@ void CharacterStatus::InitPlayerStatus()
 /// </summary>
 float CharacterStatus::CalcHP(const float _atk)
 {
-	hp -= atk * def * 0.05f;
+	hp -= _atk * def * 0.05f;
 	if (hp <= 0)
 	{
 		return expToGive;

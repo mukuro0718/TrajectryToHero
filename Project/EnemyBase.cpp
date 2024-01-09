@@ -3,10 +3,9 @@
 //===========================================================================
 #include"EnemyBase.h"
 #include"Common.h"
-//#include"EffectManager.h"
+#include"Timer.h"
+
 const VECTOR  EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
-const int     EnemyBase::CAPSULE_COLOR = GetColor(0,255,0);
-const int	  EnemyBase::SPHERE_COLOR = GetColor(0, 200, 0);
 const COLOR_F EnemyBase::CHANGE_DIF_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
 const COLOR_F EnemyBase::CHANGE_SPC_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
 const COLOR_F EnemyBase::CHANGE_EMI_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//エミッシブカラー
@@ -17,7 +16,16 @@ const COLOR_F EnemyBase::CHANGE_AMB_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//
 /// </summary>
 /// <param name="humanModelHandle">コピーするモデルハンドル</param>
 EnemyBase::EnemyBase(int _modelHandle)
+	:changeColorTimer(nullptr)
+	, status(nullptr)
+	, isChangeColor(false)
+	,isPrevColorChange(false)
+	,materialNum(0)
+	,spawnPos(ORIGIN_POS)
+	,bloodBaseDir(ORIGIN_POS)
 {
+	changeColorTimer = new Timer();
+	changeColorTimer->Init(2);
 	status = new CharacterStatus();
 	//effectManager = new EffectManager();
 	maxHP = 0;
@@ -52,11 +60,6 @@ void EnemyBase::Final()
 {
 	// モデルのアンロード.
 	MV1DeleteModel(modelHandle);
-	//if (effectManager)
-	//{
-	//	delete(effectManager);
-	//	effectManager = NULL;
-	//}
 }
 /// <summary>
 /// 描画
@@ -64,12 +67,8 @@ void EnemyBase::Final()
 void EnemyBase::Draw(VECTOR playerPos)
 {
 #ifdef _DEBUG
-	SetUpCapsule(pos, HEIGHT, RADIUS,CAPSULE_COLOR,false);
 	DrawCapsule(capsuleInfo);
-	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle,57);
-	SetUpSphere(enemyLeftFootPos,SPHERE_RADIUS,SPHERE_COLOR,false);
 	DrawSphere(sphereInfo);
-	printfDx("HP%f", status->GetHp());
 #endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
@@ -78,9 +77,10 @@ void EnemyBase::Draw(VECTOR playerPos)
 	MV1DrawModel(modelHandle);
 	//printfDx("X:%f Y:%f Z:%f\n", MV1GetPosition(modelHandle).x, MV1GetPosition(modelHandle).y, MV1GetPosition(modelHandle).z);
 }
-float EnemyBase::CalcHP(const float _atk)
+float EnemyBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {
 	isInvincible = true;
+	bloodBaseDir = VSub(pos, _attackerPos);
 	//HP計算
 	return status->CalcHP(_atk);
 }
@@ -95,8 +95,9 @@ void EnemyBase::ChangeColor()
 {
 	if (isInvincible)
 	{
-		if (!isChangeColor)
+		if (!isChangeColor && status->GetHp() > 0)
 		{
+			changeColorTimer->StartTimer();
 			//マテリアルの数を取得
 			materialNum = MV1GetMaterialNum(modelHandle);
 			//既存のマテリアルを保存しておく
@@ -121,24 +122,27 @@ void EnemyBase::ChangeColor()
 	}
 	else
 	{
-		//色を変更していたら
-		if (isChangeColor)
+		//フラグを下す
+		isChangeColor = false;
+		isPrevColorChange = false;
+		changeColorTimer->EndTimer();
+	}
+	//色を変更していたら
+	if (!isPrevColorChange && isChangeColor && changeColorTimer->CountTimer())
+	{
+		//マテリアルの色をもとに戻す
+		for (int i = 0; i < materialNum; i++)
 		{
-			//マテリアルの色をもとに戻す
-			for (int i = 0; i < materialNum; i++)
-			{
-				MV1SetMaterialDifColor(modelHandle, i, difColorInfo[i]);
-				MV1SetMaterialSpcColor(modelHandle, i, spcColorInfo[i]);
-				MV1SetMaterialEmiColor(modelHandle, i, emiColorInfo[i]);
-				MV1SetMaterialAmbColor(modelHandle, i, ambColorInfo[i]);
-			}
-			//ベクターの要素を０にする
-			difColorInfo.clear();
-			spcColorInfo.clear();
-			emiColorInfo.clear();
-			ambColorInfo.clear();
-			//フラグを下す
-			isChangeColor = false;
+			MV1SetMaterialDifColor(modelHandle, i, difColorInfo[i]);
+			MV1SetMaterialSpcColor(modelHandle, i, spcColorInfo[i]);
+			MV1SetMaterialEmiColor(modelHandle, i, emiColorInfo[i]);
+			MV1SetMaterialAmbColor(modelHandle, i, ambColorInfo[i]);
 		}
+		//ベクターの要素を０にする
+		difColorInfo.clear();
+		spcColorInfo.clear();
+		emiColorInfo.clear();
+		ambColorInfo.clear();
+		isPrevColorChange = true;
 	}
 }

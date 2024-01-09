@@ -37,7 +37,7 @@ public:
 	void GetOpeningData		(vector<int>* _image);	//オープニングデータのgetter
 	void GetTitleData		(vector<int>* _image);	//タイトルデータのgetter
 	void GetStageChangeData	(vector<int>* _image,int* _gate);	//ステージデータのgetter
-	void GetEnemyData		(vector<int>* _model);	//エネミーデータのgetter
+	void GetEnemyData		(vector<int>* _model, int* _frameImage, int* _hpImage, int* _font);	//エネミーデータのgetter
 	
 	void GetPlayerData		 (int* _model,int* _frameImage,int* _hpImage,int* _expImage,int* _font);	//プレイヤーデータのgetter
 	void GetStageData		 (int* _model);	//ステージデータのgetter
@@ -73,6 +73,7 @@ private:
 	/// </summary>
 	static constexpr int ENEMY_MODEL_NUM = 3;		//総エネミーモデル数
 	vector<int>enemyModel;			//エネミーモデルハンドル
+	int enemyFont;
 	/// <summary>
 	/// プレイヤー
 	/// </summary>

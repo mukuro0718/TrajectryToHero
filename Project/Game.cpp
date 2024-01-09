@@ -112,8 +112,6 @@ void Game::Update()
             stageChanger->DrawImageWhenSwitchingStage();
         }
         playerManager->StatusUpdate();
-        clsDx();
-        printfDx("pos X:%f,Y:%f,Z:%f", playerManager->GetPos().x, playerManager->GetPos().y, playerManager->GetPos().z);
         GameEnd(playerManager->GetIsDeath());
     }
     if (!stageChanger->GetIsBoss())
@@ -131,10 +129,10 @@ void Game::Draw()
         skydome->Draw();
         stageChanger->Draw();
         stageManager->Draw();
-        playerManager->Draw();
-        enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
         playerManager->DrawShadow(stageManager->GetModelHandle());
         enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+        playerManager->Draw();
+        enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
     }
     else
     {
@@ -149,26 +147,36 @@ void Game::Draw()
 /// </summary>
 void Game::FixMoveVec()
 {
-    //プレイヤーの補正
-    for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
+    if (stageChanger->GetIsFarm())
     {
-        VECTOR fixVec = collision->CapsuleToCapsuleCollision(playerManager->GetMoveVec(), playerManager->GetPos(), enemyManager->GetPosWeakEnemy(i),playerManager->GetCapsuleInfo().radius,enemyManager->GetCapsuleInfoWeakEnemy(i).radius);
-        playerManager->FixMoveVec(fixVec);
-    }
-
-    //エネミーの補正
-    for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
-    {
-        VECTOR fixVec = collision->CapsuleToCapsuleCollision(enemyManager->GetMoveVecWeakEnemy(i), enemyManager->GetPosWeakEnemy(i), playerManager->GetPos(), enemyManager->GetCapsuleInfoWeakEnemy(i).radius, playerManager->GetCapsuleInfo().radius);
-        enemyManager->FixMoveVecWeakEnemy(i, fixVec);
-        for (int j = 0; j < enemyManager->GetMaxWeakEnemy(); j++)
+        //プレイヤーの補正
+        for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
         {
-            if (i != j)
+            VECTOR fixVec = collision->CapsuleToCapsuleCollision(playerManager->GetMoveVec(), playerManager->GetPos(), enemyManager->GetPosWeakEnemy(i), playerManager->GetCapsuleInfo().radius, enemyManager->GetCapsuleInfoWeakEnemy(i).radius);
+            playerManager->FixMoveVec(fixVec);
+        }
+
+        //エネミーの補正
+        for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
+        {
+            VECTOR fixVec = collision->CapsuleToCapsuleCollision(enemyManager->GetMoveVecWeakEnemy(i), enemyManager->GetPosWeakEnemy(i), playerManager->GetPos(), enemyManager->GetCapsuleInfoWeakEnemy(i).radius, playerManager->GetCapsuleInfo().radius);
+            enemyManager->FixMoveVecWeakEnemy(i, fixVec);
+            for (int j = 0; j < enemyManager->GetMaxWeakEnemy(); j++)
             {
-                fixVec = collision->CapsuleToCapsuleCollision(enemyManager->GetMoveVecWeakEnemy(i), enemyManager->GetPosWeakEnemy(i), enemyManager->GetPosWeakEnemy(j), enemyManager->GetCapsuleInfoWeakEnemy(i).radius, enemyManager->GetCapsuleInfoWeakEnemy(j).radius);
-                enemyManager->FixMoveVecWeakEnemy(i, fixVec);
+                if (i != j)
+                {
+                    fixVec = collision->CapsuleToCapsuleCollision(enemyManager->GetMoveVecWeakEnemy(i), enemyManager->GetPosWeakEnemy(i), enemyManager->GetPosWeakEnemy(j), enemyManager->GetCapsuleInfoWeakEnemy(i).radius, enemyManager->GetCapsuleInfoWeakEnemy(j).radius);
+                    enemyManager->FixMoveVecWeakEnemy(i, fixVec);
+                }
             }
         }
+    }
+    else if (stageChanger->GetIsBoss())
+    {
+        VECTOR fixVec = collision->CapsuleToCapsuleCollision(playerManager->GetMoveVec(), playerManager->GetPos(), enemyManager->GetPosBossEnemy(), playerManager->GetCapsuleInfo().radius, enemyManager->GetCapsuleInfoBossEnemy().radius);
+        playerManager->FixMoveVec(fixVec);
+        fixVec = collision->CapsuleToCapsuleCollision(enemyManager->GetMoveVecBossEnemy(), enemyManager->GetPosBossEnemy(), playerManager->GetPos(), enemyManager->GetCapsuleInfoBossEnemy().radius, playerManager->GetCapsuleInfo().radius);
+        enemyManager->FixMoveVecBossEnemy(fixVec);
     }
 }
 /// <summary>
@@ -176,44 +184,77 @@ void Game::FixMoveVec()
 /// </summary>
 void Game::OnDamage()
 {
-    //エネミーへの攻撃
-    if (playerManager->GetIsAttack())
+    /*
+    攻撃をした側から受けた側へ向かうベクトルを取出す
+    ↑このベクトルをもとに、キャラクターごとに血の飛ぶ方向を決めればよい？
+    */
+    if (stageChanger->GetIsFarm())
     {
+        //エネミーへの攻撃
+        if (playerManager->GetIsAttack())
+        {
+            for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
+            {
+                //当たり判定チェック
+                bool isHitEnemy = collision->OnDamage(enemyManager->GetIsInvincibleWeakEnemy(i), enemyManager->GetIsDeathWeakEnemy(i), enemyManager->GetCapsuleInfoWeakEnemy(i), playerManager->GetSphereInfo());
+                //もし攻撃が当たっていたら
+                if (isHitEnemy)
+                {
+                    float exp = enemyManager->CalcHPWeakEnemy(i, playerManager->GetAtk(),playerManager->GetPos());
+                    if (exp > 0)
+                    {
+                        playerManager->CalcExp(exp);
+                        enemyManager->InitExpToGive(i);
+                    }
+                }
+            }
+
+        }
+        //プレイヤーへの攻撃
+        bool isHitPlayer = false;
         for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
         {
+            //もしエネミーが攻撃していたら
+            if (enemyManager->GetIsAttackWeakEnemy(i))
+            {
+                //攻撃が当たっているかのチェック
+                isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoWeakEnemy(i));
+                //もし攻撃が当たっていたら
+                if (isHitPlayer)
+                {
+                    //HP計算
+                    playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i),enemyManager->GetPosWeakEnemy(i));
+                }
+            }
+        }
+    }
+    if (stageChanger->GetIsBoss())
+    {
+        if (playerManager->GetIsAttack())
+        {
             //当たり判定チェック
-            bool isHitEnemy = collision->OnDamage(enemyManager->GetIsInvincible(i), enemyManager->GetIsDeathWeakEnemy(i), enemyManager->GetCapsuleInfoWeakEnemy(i), playerManager->GetSphereInfo());
+            bool isHitEnemy = collision->OnDamage(enemyManager->GetIsInvincibleBossEnemy(), enemyManager->GetIsDeathBossEnemy(), enemyManager->GetCapsuleInfoBossEnemy(), playerManager->GetSphereInfo());
             //もし攻撃が当たっていたら
             if (isHitEnemy)
             {
-                float exp = enemyManager->CalcHPWeakEnemy(i, playerManager->GetAtk());
+                float exp = enemyManager->CalcHPBossEnemy(playerManager->GetAtk(), playerManager->GetPos());
                 if (exp > 0)
                 {
                     playerManager->CalcExp(exp);
-                    enemyManager->InitExpToGive(i);
                 }
-                
             }
         }
-        
-
-    }
-    //プレイヤーへの攻撃
-    bool isHitPlayer = false;
-    for (int i = 0; i < enemyManager->GetMaxWeakEnemy(); i++)
-    {
-        //もしエネミーが攻撃していたら
-        if (enemyManager->GetIsAttackWeakEnemy(i))
+        if (enemyManager->GetIsAttackBossEnemy())
         {
-            //攻撃が当たっているかのチェック
-            isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoWeakEnemy(i));
+            bool isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoBossEnemy());
             //もし攻撃が当たっていたら
             if (isHitPlayer)
             {
                 //HP計算
-                playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i));
+                playerManager->CalcHP(enemyManager->GetAtkBossEnemy(),enemyManager->GetPosBossEnemy());
             }
         }
+        
     }
 }
 /// <summary>

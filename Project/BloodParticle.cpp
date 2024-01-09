@@ -17,7 +17,7 @@ BloodParticle::BloodParticle()
 {
 	auto& load = Load::GetInstance();
 	load.GetParticleData(&imageHandle);
-	//定数文クラスのインスタンスを作成する
+	//定数分クラスのインスタンスを作成する
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
 		particle.push_back(new BloodParticleBase(imageHandle));

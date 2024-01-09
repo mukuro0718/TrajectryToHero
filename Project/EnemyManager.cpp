@@ -1,11 +1,10 @@
 #include"EnemyManager.h"
 #include"WeakEnemy.h"
 #include"StrongEnemy.h"
-#include"Boss.h"
+#include"BossEnemy.h"
 #include"Collision.h"
 #include"Common.h"
 #include"Load.h"
-const int EnemyManager::FONT_COLOR_GREEN = GetColor(50, 255, 50);//モデルの回転値
 const VECTOR EnemyManager::SPAWN_POINT[] =
 {
 	VGet(-350.0f, 0.0f, 350.0f),
@@ -21,17 +20,22 @@ const VECTOR EnemyManager::SPAWN_POINT[] =
 /// コンストラクタ
 /// </summary>
 EnemyManager::EnemyManager()
+	:font(0)
+	,frameImage(0)
+	,hpImage(0)
+	,deathStrongEnemyNum(0)
+	,destroyEnemy(0)
+	,nowEnemyIndex(0)
+	,isHitCheckSetUp(false)
+	,isDrawImg(false)
+	,isBossEnemy(false)
+	,isStrongEnemy(false)
 {
-	isStrongEnemy = false;
-	isBossEnemy = false;
-	isHitCheckSetUp = false;
-	deathStrongEnemyNum = 0;
 	//モデルのロード
 	auto& load = Load::GetInstance();
-	load.GetEnemyData(&model);
+	load.GetEnemyData(&model,&frameImage,&hpImage,&font);
 	CreateAndInit();
 	//Init();
-	hpFontHandle = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", HP_FONT_SIZE, HP_FONT_THICK, DX_FONTTYPE_NORMAL);
 }
 /// <summary>
 /// デストラクタ
@@ -68,7 +72,7 @@ void EnemyManager::CreateAndInit()
 		weakEnemy[i] = new WeakEnemy(SPAWN_POINT[i],model[static_cast<int>(ModelType::WEAK_MODEL)]);
 	}
 	strongEnemy = new StrongEnemy(SPAWN_POINT[0],model[static_cast<int>(ModelType::STRONG_MODEL)]);
-	bossEnemy = new Boss(SPAWN_POINT[0],model[static_cast<int>(ModelType::BOSS_MODEL)]);
+	bossEnemy = new BossEnemy(SPAWN_POINT[1],model[static_cast<int>(ModelType::BOSS_MODEL)],frameImage,hpImage,font);
 }
 /// <summary>
 /// 更新
@@ -131,12 +135,22 @@ void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool
 				isStrongEnemy = false;
 			}
 		}
+		else
+		{
+			strongEnemy->Init();
+		}
 	}
 	else
 	{
+		if (!isBossEnemy)
+		{
+			bossEnemy->Init();
+			isBossEnemy = true;
+		}
 		if (!bossEnemy->GetIsDeath())
 		{
 			bossEnemy->Update();
+			bossEnemy->UpdateUI();
 		}
 	}
 }
@@ -167,11 +181,6 @@ void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool 
 		if (!bossEnemy->GetIsDeath())
 		{
 			bossEnemy->Move(_playerPos);
-			VECTOR framePos = MV1GetFramePosition(bossEnemy->GetModelHandle(), 6);
-			framePos.y += 30.0f;
-			VECTOR screenPos = ConvWorldPosToScreenPos(framePos);
-
-			DrawFormatStringToHandle(screenPos.x, screenPos.y, FONT_COLOR_GREEN, hpFontHandle, "HP:%d\n", static_cast<int>(bossEnemy->GetHp()) + 1);
 		}
 	}
 
@@ -203,11 +212,7 @@ void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBos
 		if (!bossEnemy->GetIsDeath())
 		{
 			bossEnemy->Draw(_playerPos);
-			VECTOR framePos = MV1GetFramePosition(bossEnemy->GetModelHandle(), 6);
-			framePos.y += 30.0f;
-			VECTOR screenPos = ConvWorldPosToScreenPos(framePos);
-
-			DrawFormatStringToHandle(screenPos.x, screenPos.y, FONT_COLOR_GREEN, hpFontHandle, "HP:%d\n",static_cast<int>(bossEnemy->GetHp()) + 1);
+			bossEnemy->DrawUI();
 		}
 	}
 }
@@ -237,10 +242,26 @@ bool EnemyManager::CountDestroyEnemy()
 ///<summary>
 /// HP計算
 /// </summary>
-float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk)
+float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
 {
 	//HP計算
-	return weakEnemy[_enemyNum]->CalcHP(_atk);
+	return weakEnemy[_enemyNum]->CalcHP(_atk, _attackerPos);
+}
+///<summary>
+/// HP計算
+/// </summary>
+float EnemyManager::CalcHPStrongEnemy(const float _atk, const VECTOR _attackerPos)
+{
+	//HP計算
+	return strongEnemy->CalcHP(_atk, _attackerPos);
+}
+///<summary>
+/// HP計算
+/// </summary>
+float EnemyManager::CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos)
+{
+	//HP計算
+	return bossEnemy->CalcHP(_atk, _attackerPos);
 }
 /// <summary>
 /// 必要な経験値の初期化
