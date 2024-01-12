@@ -4,6 +4,7 @@
 #include"EnemyBase.h"
 #include"Common.h"
 #include"Timer.h"
+#include"BloodParticle.h"
 
 const VECTOR  EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
 const COLOR_F EnemyBase::CHANGE_DIF_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
@@ -18,6 +19,7 @@ const COLOR_F EnemyBase::CHANGE_AMB_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//
 EnemyBase::EnemyBase(int _modelHandle)
 	:changeColorTimer(nullptr)
 	, status(nullptr)
+	, blood(nullptr)
 	, isChangeColor(false)
 	,isPrevColorChange(false)
 	,materialNum(0)
@@ -25,9 +27,10 @@ EnemyBase::EnemyBase(int _modelHandle)
 	,bloodBaseDir(ORIGIN_POS)
 {
 	changeColorTimer = new Timer();
-	changeColorTimer->Init(2);
 	status = new CharacterStatus();
-	//effectManager = new EffectManager();
+	blood = new BloodParticle();
+	changeColorTimer->Init(2);
+	
 	maxHP = 0;
 	//モデルのコピー
 	modelHandle = MV1DuplicateModel(_modelHandle);
@@ -72,10 +75,11 @@ void EnemyBase::Draw(VECTOR playerPos)
 #endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
-	//エフェクトの描画
-	//effectManager->SpreadEffectManager(pos, isInvincible);
 	MV1DrawModel(modelHandle);
-	//printfDx("X:%f Y:%f Z:%f\n", MV1GetPosition(modelHandle).x, MV1GetPosition(modelHandle).y, MV1GetPosition(modelHandle).z);
+	if (status->GetHp() >= 0)
+	{
+		blood->Draw();
+	}
 }
 float EnemyBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {

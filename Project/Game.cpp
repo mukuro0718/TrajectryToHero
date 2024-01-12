@@ -90,7 +90,6 @@ void Game::Delete()
 /// </summary>
 void Game::Update()
 {
-    clsDx();
     if (!stageChanger->GetIsChangeStage())
     {
         
@@ -207,6 +206,7 @@ void Game::OnDamage()
                         enemyManager->InitExpToGive(i);
                     }
                 }
+                
             }
 
         }
@@ -226,6 +226,7 @@ void Game::OnDamage()
                     playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i),enemyManager->GetPosWeakEnemy(i));
                 }
             }
+            
         }
     }
     if (stageChanger->GetIsBoss())
@@ -243,6 +244,10 @@ void Game::OnDamage()
                     playerManager->CalcExp(exp);
                 }
             }
+        }
+        else
+        {
+            enemyManager->FlaggingBossEnemy();
         }
         if (enemyManager->GetIsAttackBossEnemy())
         {

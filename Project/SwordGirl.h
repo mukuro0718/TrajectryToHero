@@ -64,10 +64,10 @@ private:
 	static const COLOR_F CHANGE_EMI_COLOR;//エミッシブカラー
 	static const COLOR_F CHANGE_AMB_COLOR;//アンビエントカラー
 	static const int FONT_COLOR;//フォントカラー
-	static constexpr RangeOfAction HP_FRAME_POS = { 70,10,370,40 };//HPフレーム座標
-	static constexpr RangeOfAction EXP_FRAME_POS = { 70,50,370,80 };//EXPフレーム座標
-	static constexpr VEC2D HP_BAR_POS = { 70,10 };//HPフレーム座標
-	static constexpr VEC2D EXP_BAR_POS = { 70,50, };//EXPフレーム座標
+	static constexpr RangeOfAction HP_FRAME_POS = { 90,20,390,50 };//HPフレーム座標
+	static constexpr RangeOfAction EXP_FRAME_POS = { 90,60,390,90 };//EXPフレーム座標
+	static constexpr VEC2D HP_BAR_POS = { 90,20 };//HPフレーム座標
+	static constexpr VEC2D EXP_BAR_POS = { 90,60, };//EXPフレーム座標
 	static constexpr CollisionSetUpInfo PLAYER_COLL_INFO			 = { 66,1,1,1 }			;//プレイヤーコリジョン情報
 	static constexpr RangeOfAction		PLAYER_RANGE_OF_ACTION		 = { 451,-450,510,-400 };//プレイヤー行動可能範囲
 	static constexpr InputAnalogStick	NONE_INPUT_VALUE			 = { 0,0 }				;//スティック入力がない

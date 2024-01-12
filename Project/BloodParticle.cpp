@@ -30,6 +30,14 @@ BloodParticle::~BloodParticle()
 {
 	particle.clear();
 }
+void BloodParticle::UpdateGravity()
+{
+	for (int i = 0; i < PARTICLE_NUM; i++)
+	{
+		particle[i]->UpdateGravity();
+	}
+}
+
 /// <summary>
 /// èâä˙âª
 /// </summary>
@@ -48,7 +56,7 @@ void BloodParticle::Init(const VECTOR _targetDir, const VECTOR _targetPos)
 /// <summary>
 /// çXêV
 /// </summary>
-void BloodParticle::Update()
+void BloodParticle::Update(const int _maxFrameNum)
 {
 	if (isDraw)
 	{
@@ -57,7 +65,7 @@ void BloodParticle::Update()
 			particle[i]->Update();
 		}
 	}
-	if (frameCount > MAX_FRAME_NUM)
+	if (frameCount > _maxFrameNum)
 	{
 		isDraw = false;
 	}

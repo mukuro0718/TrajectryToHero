@@ -18,7 +18,7 @@ public:
 	void Move  (const VECTOR _playerPos)override;		//移動
 	void UpdateUI();//UIの更新
 	void DrawUI();//UIの描画
-
+	void Flagging() { isInvincible = false; }//フラグを下す
 	const float GetRadius()const { return RADIUS; }
 
 private:

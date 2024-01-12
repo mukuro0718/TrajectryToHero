@@ -5,9 +5,9 @@
 #include"CharacterBase.h"
 #include"CharacterStatus.h"
 #include"Common.h"
-//class EffectManager;
-//class CharacterStatus;
 class Timer;
+class BloodParticle;
+
 class EnemyBase:public CharacterBase 
 {
 public:
@@ -49,7 +49,7 @@ protected:
 	//内部処理関数
 	void RandomWalk();
 	/*メンバ変数*/
-
+	BloodParticle* blood;//血しぶきパーティクル
 	CharacterStatus* status;
 	float maxHP;						//最大体力
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか

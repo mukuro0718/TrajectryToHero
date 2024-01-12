@@ -4,7 +4,22 @@
 #include"StageChanger.h"
 #include"Timer.h"
 #include"Load.h"
-const VECTOR StageChanger::DRAW_GATEIMAGE_POS = { 0.0f,0.0f,500.0f };
+const VECTOR StageChanger::DRAW_GATEIMAGE_POS = { 0.0f,30.0f,0.0f };
+const VECTOR StageChanger::VERTEX_NORM = VGet(0.0f, 0.0f, -1.0f);
+const COLOR_U8 StageChanger::TRAIL_COLOR = GetColorU8(255, 255, 255, 255);
+
+const VERTEX3D StageChanger::INIT_VERTEX =
+{
+	ORIGIN_POS,	//座標
+	VERTEX_NORM,//法線
+	TRAIL_COLOR,//ディフューズカラー
+	TRAIL_COLOR,//スペキュラカラー
+	0.0f,		//テクスチャ座標
+	0.0f,		//テクスチャ座標
+	0.0f,		//補助テクスチャ座標
+	0.0f		//補助テクスチャ座標
+};
+
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -14,8 +29,8 @@ StageChanger::StageChanger()
 	, backGroundAlpha(0)
 	, alphaValue(6)
 	, gateImageAngle(0.0f)
-	, isFarm(false)
-	, isBoss(true)
+	, isFarm(true)
+	, isBoss(false)
 	, isChangeStage(true)
 	, isGameOver(false)
 	, isGameClear(false)
@@ -44,7 +59,16 @@ void StageChanger::Init()
 	StayMaxAlphaTimer = new Timer();
 	//目標時間のセット
 	StayMaxAlphaTimer->Init(SET_STAY_TIMER);
-	
+	for (int i = 0; i < 4; i++)
+	{
+		vertexInfo.push_back(INIT_VERTEX);
+	}
+	vertexIndexAd.push_back(0);
+	vertexIndexAd.push_back(1);
+	vertexIndexAd.push_back(2);
+	vertexIndexAd.push_back(0);
+	vertexIndexAd.push_back(0);
+	vertexIndexAd.push_back(0);
 }
 /// <summary>
 /// ステージ切り替え時の画像(FARM、BOSS)の表示
@@ -109,7 +133,8 @@ void StageChanger::DrawGameClear()
 /// </summary>
 void StageChanger::Draw()
 {
-	DrawBillboard3D(DRAW_GATEIMAGE_POS, 0.5f, 0.5f, IMG_SIZE, gateImageAngle * (DX_PI_F / 180), gateImage, TRUE);
+	DrawGraph(0, 30, gateImage, true);
+	//DrawBillboard3D(DRAW_GATEIMAGE_POS, 0.5f, 0.5f, IMG_SIZE, gateImageAngle * (DX_PI_F / 180), gateImage, TRUE);
 	++gateImageAngle;
 }
 /// <summary>

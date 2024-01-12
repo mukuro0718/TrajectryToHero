@@ -238,6 +238,10 @@ bool EnemyManager::CountDestroyEnemy()
 	}
 	return false;
 }
+void EnemyManager::FlaggingBossEnemy()
+{
+	bossEnemy->Flagging();
+}
 
 ///<summary>
 /// HPŒvZ

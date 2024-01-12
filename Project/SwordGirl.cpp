@@ -98,9 +98,10 @@ void SwordGirl::FixMoveVec(const VECTOR _fixVec)
 /// </summary>
 void SwordGirl::Update()
 {
+	blood->UpdateGravity();
 	if (isInvincible)
 	{
-		blood->Init(playerDir,pos);
+		blood->Init(bloodBaseDir,pos);
 	}
 	//移動量を座標に足す
 	pos = VAdd(pos, moveVec);
@@ -128,7 +129,7 @@ void SwordGirl::Update()
 	//モデルの設定
 	MV1SetRotationXYZ(modelHandle, rotate);
 	MV1SetPosition(modelHandle, pos);
-	blood->Update();
+	blood->Update(15);
 	ChangeColor();//モデルの色を変える
 	//アニメーションの再生
 	anim->Play(&modelHandle);
@@ -356,8 +357,8 @@ void SwordGirl::UpdateUI()
 void SwordGirl::DrawUI()
 {
 	//テキストの表示
-	DrawStringToHandle(0, 10, "HP", FONT_COLOR, font);
-	DrawStringToHandle(0, 50, "EXP", FONT_COLOR, font);
+	DrawStringToHandle(20, 20, "HP", FONT_COLOR, font);
+	DrawStringToHandle(20, 60, "EXP", FONT_COLOR, font);
 	//フレームの描画
 	DrawExtendGraph(static_cast<int>(HP_FRAME_POS.LX),  static_cast<int>(HP_FRAME_POS.LZ),  static_cast<int>(HP_FRAME_POS.RX),  static_cast<int>(HP_FRAME_POS.RZ),  frameImage, TRUE);
 	DrawExtendGraph(static_cast<int>(EXP_FRAME_POS.LX), static_cast<int>(EXP_FRAME_POS.LZ), static_cast<int>(EXP_FRAME_POS.RX), static_cast<int>(EXP_FRAME_POS.RZ), frameImage, TRUE);

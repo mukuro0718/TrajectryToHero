@@ -6,6 +6,8 @@
 #include<math.h>
 #include"Animation.h"
 #include"Timer.h"
+#include"BloodParticle.h"
+
 //モデル設定
 const VECTOR BossEnemy::MODEL_SCALE = VGet(0.4f, 0.4f, 0.4f);//モデルの拡大率
 const VECTOR BossEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
@@ -76,7 +78,7 @@ void BossEnemy::Init()
 	waitBeforeJumpAttack  ->Init(30);
 	waitBeforeRotateAttack->Init(10);
 	rotateAttackLoopTime  ->Init(50);
-	invincibleTimer		  ->Init(9);	
+	invincibleTimer		  ->Init(7);	
 	restTimeAfterAttack   ->Init(50);
 	//最大HPの設定
 	status->InitBossEnemyStatus();
@@ -140,7 +142,11 @@ void BossEnemy::Final()
 /// </summary>
 void BossEnemy::Update()
 {
-	printfDx("BOSS X:%f,Y:%f,Z:%f",pos.x,pos.y,pos.z);
+	blood->UpdateGravity();
+	if (isInvincible)
+	{
+		blood->Init(bloodBaseDir, pos);
+	}
 	//無敵フラグが立っていたら
 	if (isInvincible)
 	{
@@ -149,7 +155,7 @@ void BossEnemy::Update()
 		if (invincibleTimer->CountTimer())
 		{
 			invincibleTimer->EndTimer();
-			isInvincible = false;
+			//isInvincible = false;
 		}
 	}
 	//もしプレイヤーに当たっていたら
@@ -172,6 +178,7 @@ void BossEnemy::Update()
 	MV1SetPosition(modelHandle, pos);
 	SetUpCapsule(pos, HEIGHT, RADIUS,CAPSULE_COLOR,false);
 	SetUpSphere(spherePos, 10.0f, CAPSULE_COLOR, false);
+	blood->Update(45);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
@@ -195,7 +202,7 @@ void BossEnemy::Move(const VECTOR _playerPos)
 	targetPos = VSub(pos, _playerPos);
 	//そのベクトルの大きさを求める
 	vectorSize = VSize(targetPos);
-	printfDx("size %f", vectorSize);
+	//printfDx("size %f", vectorSize);
 	//目標までのベクトルを正規化する
 	normalizePos = VNorm(targetPos);
 	//攻撃も休憩もしていなかったら

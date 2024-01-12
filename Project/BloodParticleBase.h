@@ -18,6 +18,7 @@ public:
 	void Init(const VECTOR _targetDir, const VECTOR _targetPos);//初期化
 	void Update();//更新
 	void Draw();//描画
+	void UpdateGravity();
 private:
 	/*静的定数*/
 	enum class Sign
@@ -28,12 +29,12 @@ private:
 	static constexpr float Y_DEG = 150.0f;//Y軸回転度数
 	static constexpr float Z_DEG = 45.0f;//z軸回転度数
 	static constexpr int SIGN_RANGE = 1;//符号の範囲
-	static constexpr int RANDOM_SPEED_RANGE = 10;//ランダムで出すスピードの範囲
+	static constexpr int RANDOM_SPEED_RANGE = 5;//ランダムで出すスピードの範囲
 	static constexpr int RANDOM_DIR_RANGE = 10;
 	static constexpr int RANDOM_SCALE_RANGE = 5;//ランダムで出すスケールの範囲
 	static constexpr int MAX_ALPHA = 255;
-	static constexpr int ALPHA_REDUCED_VALUE = 10;
-	static constexpr float GRAVITY = 0.5f;//重力
+	static constexpr int ALPHA_REDUCED_VALUE = 5;
+	static constexpr float GRAVITY = 0.065f;//重力
 	/*内部処理関数*/
 	void SetScale();						//スケールの設定
 	void SetSpeed();						//速さの設定
@@ -46,6 +47,8 @@ private:
 	float  speed;		//パーティクルの飛ぶ速さ
 	int imageHandle;	//画像ハンドル
 	int alpha;//アルファ
+	bool isUpdateGrav = false;
+	int framecount = 0;
 };
 //class BloodParticleBase
 //{

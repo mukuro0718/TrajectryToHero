@@ -51,10 +51,18 @@ private:
     static constexpr float SET_GAMEOVER_TIMER   = 10.0f;    //タイマー目標時間
     static constexpr float SET_STAY_TIMER       = 10.0f;    //タイマー目標時間
     static const VECTOR DRAW_GATEIMAGE_POS;
+    static const VERTEX3D INIT_VERTEX;			//初期頂点情報
+    static const VECTOR VERTEX_NORM;			//法線ベクトル
+    static const COLOR_U8 TRAIL_COLOR;			//軌跡の色
+    static constexpr int VERTEX_POS_NUM = 4;	//頂点座標数
+
     //クラス・構造体
     Timer* StayMaxAlphaTimer;//アルファ値が最大の時に描画する時間
     VEC2D DrawImagePos;
     //変数
+    std::vector<VERTEX3D> vertexInfo;		//頂点座標
+    std::vector<WORD> vertexIndexAd;
+
     vector<int> image;      //画像ハンドル
     int gateImage;          //ゲート画像
     int  alpha;             //アルファ値

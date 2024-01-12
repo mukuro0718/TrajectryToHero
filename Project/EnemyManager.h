@@ -63,6 +63,8 @@ public:
     //無敵フラグのgetter
     const bool GetIsInvincibleWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
     const bool GetIsInvincibleBossEnemy()const { return bossEnemy->GetIsInvincible(); }
+    //無敵フラグを下す
+    void FlaggingBossEnemy();//フラグを下す
     //HP計算
     float CalcHPWeakEnemy(const int _enemyNum,const float _atk,const VECTOR _attackerPos);
     float CalcHPStrongEnemy(const float _atk, const VECTOR _attackerPos);
@@ -77,7 +79,7 @@ private:
         STRONG_MODEL,   //中ボス
         BOSS_MODEL,     //ボス
     };
-    static constexpr int    MAX_WEAK_ENEMY_NUM = 8;         //雑魚敵の数
+    static constexpr int    MAX_WEAK_ENEMY_NUM = 1;         //雑魚敵の数
     static constexpr float  weakEnemyRadius = 5.0f;         //雑魚敵の当たり判定用スフィア半径
     static constexpr float  strongEnemyRadius = 5.0f;       //中ボスの当たり判定用スフィア半径
     static constexpr float  bossEnemyRadius = 5.0f;         //ボスの当たり判定用スフィア半径

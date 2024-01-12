@@ -6,6 +6,8 @@
 #include<math.h>
 #include"Animation.h"
 #include"Timer.h"
+#include"BloodParticle.h"
+
 //モデル設定
  const VECTOR WeakEnemy::MODEL_SCALE = VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
  const VECTOR WeakEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
@@ -44,9 +46,11 @@ void WeakEnemy::Create()
 	invincibleTimer		= nullptr;
 	restTimeAfterAttack = nullptr;
 	anim				= nullptr;
+	randomRest = nullptr;
 	//インスタンスの生成
 	invincibleTimer		= new Timer();
 	restTimeAfterAttack = new Timer();
+	randomRest = new Timer();
 	anim				= new Animation();
 }
 /// <summary>
@@ -64,6 +68,7 @@ void WeakEnemy::Init()
 	//必要なInitクラスの呼び出し
 	invincibleTimer->Init(9);
 	restTimeAfterAttack->Init(20);
+	randomRest->Init(20);
 	//新しい座標の生成
 	pos			= spawnPos;
 	rotate		= MODEL_ROTATE;
@@ -72,15 +77,24 @@ void WeakEnemy::Init()
 	isDeath		= false;
 	isHit		= false;
 	isRestTime	= false;
+	isRandomWalk = false;
+	isRandomRest = false;
 	//最大HPの設定
 	status->InitWeakEnemyStatus();
 	maxHP = status->GetHp();
 }
+
 /// <summary>
 /// 更新
 /// </summary>
 void WeakEnemy::Update()
 {
+	blood->UpdateGravity();
+	if (isInvincible)
+	{
+		blood->Init(bloodBaseDir, pos);
+	}
+
 	//無敵フラグが立っていたら
 	if (isInvincible)
 	{
@@ -115,6 +129,7 @@ void WeakEnemy::Update()
 	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle, 57);
 	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
 	SetUpSphere(enemyLeftFootPos, SPHERE_RADIUS, SPHERE_COLOR, false);
+	blood->Update(60);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
@@ -148,6 +163,8 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			attackAnimLoopCount = 100;
 			isAttack = true;
 			isMove = false;
+			isRandomWalk = false;
+			isRandomRest = false;
 		}
 	}
 	//80以上だったら
@@ -161,10 +178,13 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			{
 				isMove = true;
 				isAttack = false;
+				isRandomWalk = false;
+				isRandomRest = false;
 			}
 			//それより離れていたら
 			else
 			{
+				RandomWalk();
 				isMove = false;
 				isAttack = false;
 			}
@@ -180,6 +200,7 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			restTimeAfterAttack->StartTimer();
 			isAttack = false;
 			isMove = false;
+			isRandomWalk = false;
 			isRestTime = true;
 		}
 		//0じゃなければ攻撃回数を減らす
@@ -207,6 +228,53 @@ void WeakEnemy::Move(VECTOR _playerPos)
 	}
 }
 /// <summary>
+/// ランダムに歩く
+/// </summary>
+void WeakEnemy::RandomWalk()
+{
+	//目標までのベクトル
+	VECTOR targetVec = ORIGIN_POS;
+	//正規化したベクトル
+	VECTOR normalizeVec = ORIGIN_POS;
+	//ベクトルのサイズ
+	float vectorSize = 0.0f;
+	targetVec = VSub(randomWalkTargetPos, pos);
+	if (isRandomWalk == false)
+	{
+		randomWalkTargetPos = spawnPos;
+		/*TODO*/
+		//もしスポーン位置から定数以上離れていたらスポーン位置スポーン位置に向かって進む
+		//そうでなければランダムで座標を出して、進む方向を決める、ベクトルのサイズを出して、０になるまで進む
+		// ランダムで出す座標はスポーン位置からX,Z座標方向に＋定数の範囲で出す
+		//もし進んでいる途中にスポーン位置から定数以上離れたら止まる
+		randomWalkTargetPos.x += static_cast<float>(GetRand(200) - 100);
+		randomWalkTargetPos.z += static_cast<float>(GetRand(200) - 100);
+		isRandomWalk = true;
+		targetVec = VSub(randomWalkTargetPos, pos);
+	}
+	//そのベクトルの大きさを求める
+	else if (VSize(targetVec) < 10.0f)
+	{
+		randomRest->StartTimer();
+		isRandomRest = true;
+	}
+	if (randomRest->CountTimer())
+	{
+		randomRest->EndTimer();
+		isRandomWalk = false;
+		isRandomRest = false;
+	}
+	if (!randomRest->getIsStartTimer())
+	{
+		normalizeVec = VNorm(targetVec);
+		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
+		moveVec = VScale(normalizeVec, status->GetAgi());
+		moveVec.y = 0.0f;
+		//角度を変える
+		rotate = VGet(0.0f, (float)ChangeRotate(randomWalkTargetPos), 0.0f);
+	}
+}
+/// <summary>
 ///	角度の変更(モデルが向いている初期方向がz＝０)
 /// </summary>
 double WeakEnemy::ChangeRotate(VECTOR playerPos)
@@ -222,7 +290,7 @@ double WeakEnemy::ChangeRotate(VECTOR playerPos)
 void WeakEnemy::ChangeAnim()
 {
 	//攻撃も移動もしていないまたは休憩中だったら
-	if (!isAttack && !isMove || isRestTime)
+	if (!isAttack && !isMove && !isRandomWalk || isRestTime || isRandomRest)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	}
@@ -232,7 +300,7 @@ void WeakEnemy::ChangeAnim()
 		anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
 	}
 	//移動中だったら
-	else if (!isAttack && isMove && !isRestTime)
+	else if (!isAttack && isMove && !isRestTime || !isAttack && isRandomWalk && !isRestTime)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::RUN));
 	}

@@ -1,6 +1,5 @@
 #include"BloodParticleBase.h"
 #include"Common.h"
-
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -40,7 +39,35 @@ void BloodParticleBase::Update()
 {
 	//座標の更新
 	pos = VAdd(pos, moveDir);
-	pos.y -= GRAVITY;
+	
+	moveDir.y -= GRAVITY;
+}
+void BloodParticleBase::UpdateGravity()
+{
+	//if (!isUpdateGrav)
+	//{
+	//	if (CheckHitKey(KEY_INPUT_U))
+	//	{
+	//		GRAVITY += 0.001f;
+	//		isUpdateGrav = true;
+	//	}
+	//	if (CheckHitKey(KEY_INPUT_J))
+	//	{
+	//		GRAVITY -= 0.001f;
+	//		isUpdateGrav = true;
+	//	}
+	//}
+	//else
+	//{
+	//	framecount++;
+	//}
+	//if (isUpdateGrav && framecount == 60)
+	//{
+	//	isUpdateGrav = false;
+	//	framecount = 0;
+	//}
+	//clsDx();
+	//printfDx("GRAVITY %f", BloodParticleBase::GRAVITY);
 }
 /// <summary>
 /// スケールの設定
@@ -54,7 +81,7 @@ void BloodParticleBase::SetScale()
 /// </summary>
 void BloodParticleBase::SetSpeed()
 {
-	speed = ReturnRandomFloatValue(RANDOM_SPEED_RANGE, false) * 0.1f;
+	speed = ReturnRandomFloatValue(RANDOM_SPEED_RANGE, false) / 5;
 }
 /// <summary>
 /// 方向の設定

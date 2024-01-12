@@ -25,7 +25,7 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	, cameraToPlayer(ORIGIN_POS)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
-	,bloodBaseDir(ORIGIN_POS)
+	, bloodBaseDir(ORIGIN_POS)
 {
 	blood		  = new BloodParticle();
 	status		  = new CharacterStatus();
@@ -54,12 +54,12 @@ PlayerBase::~PlayerBase()
 /// </summary>
 void PlayerBase::Draw()
 {
-	if (status->GetHp() > 0)
-	{
-		blood->Draw();
-	}
 	// ‚R‚cƒ‚ƒfƒ‹‚Ì•`‰æ
 	MV1DrawModel(modelHandle);
+	if (status->GetHp() > 0)
+	{
+		//blood->Draw();
+	}
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR, false);
 	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
 #ifdef _DEBUG
@@ -117,7 +117,7 @@ void PlayerBase::CalcHP( const float _atk, const VECTOR _attackerPos)
 {
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HPŒvŽZ
-	status->CalcHP(_atk);
+	//status->CalcHP(_atk);
 	isInvincible = true;
 }
 /// <summary>

@@ -3,6 +3,8 @@
 #include"Animation.h"
 #include"CharacterStatus.h"
 #include"Timer.h"
+#include"BloodParticle.h"
+
 //モデル設定
 const VECTOR StrongEnemy::MODEL_SCALE = VGet(0.3f, 0.3f, 0.3f);//モデルの拡大率
 const VECTOR StrongEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
@@ -72,6 +74,12 @@ void StrongEnemy::Init()
 /// </summary>
 void StrongEnemy::Update()
 {
+	blood->UpdateGravity();
+	if (isInvincible)
+	{
+		blood->Init(bloodBaseDir, pos);
+	}
+
 	//無敵フラグが立っていたら
 	if (isInvincible)
 	{
@@ -107,6 +115,8 @@ void StrongEnemy::Update()
 	}
 	pos.y = 10.0f;
 	MV1SetPosition(modelHandle, pos);//位置の設定
+	blood->Update(45);
+
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle);
 }
