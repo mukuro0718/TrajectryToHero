@@ -48,7 +48,6 @@ void Game::Init()
 {
     playerManager->Init();
     camera->Init(playerManager->GetPos());
-    stageManager->Update();
     stageChanger->Init();
     enemyManager->Init();
 }
@@ -90,9 +89,10 @@ void Game::Delete()
 /// </summary>
 void Game::Update()
 {
+    stageManager->Update();
+
     if (!stageChanger->GetIsChangeStage())
     {
-        
         if (!playerManager->GetIsShowStatusMenu())
         {
             /*ƒJƒƒ‰‚Ì‚İXV*/

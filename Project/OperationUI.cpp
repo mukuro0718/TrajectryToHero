@@ -35,11 +35,7 @@ void OperationUI::Update(const bool _isMove)
 	}
 	else
 	{
-		alpha -= ADD_ALPHA_VALUE;
-		if (alpha < MIN_ALPHA)
-		{
-			alpha = MIN_ALPHA;
-		}
+		alpha = MIN_ALPHA;
 	}
 }
 /// <summary>

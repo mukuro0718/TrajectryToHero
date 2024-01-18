@@ -4,7 +4,9 @@
 
 #pragma once
 #include"DxLib.h"
-#include"StageBase.h"
+#include<vector>
+
+class FarmStage;
 
 class StageManager
 {
@@ -15,11 +17,11 @@ public:
     void Update();          //更新
     void Create();     //生成
     void Delete();    //削除
-    const int GetModelHandle()const { return ground->GetModelHandle(); }
+    const int GetModelHandle()const;
 private:
     //クラス
-    StageBase* ground;      //マップ
+    FarmStage* farm;      //マップ
     //変数
-    int model;
+    std::vector<int> farmStageData;
 };
 

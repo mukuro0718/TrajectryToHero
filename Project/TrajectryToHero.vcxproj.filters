@@ -133,9 +133,6 @@
     <Filter Include="Object\Scene\Game\Stage\StageBase">
       <UniqueIdentifier>{e424f208-105a-4c83-9b14-9326118598a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Stage\Ground">
-      <UniqueIdentifier>{70590f87-e87a-4af5-b315-a1f8138ce58e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Stage\StageManager">
       <UniqueIdentifier>{abdcd726-d910-45f6-b6da-4f5a11302090}</UniqueIdentifier>
     </Filter>
@@ -165,6 +162,24 @@
     </Filter>
     <Filter Include="Object\Scene\Game\UI\OperationUI">
       <UniqueIdentifier>{8b7e11df-f993-45e2-bcf4-f6f32179f35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Tutorial">
+      <UniqueIdentifier>{2fe37573-d245-4f9f-b9ff-77c9e2dc30db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\TutorialScene">
+      <UniqueIdentifier>{561f859a-c7ee-40c5-8de7-a8593bd050e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageType">
+      <UniqueIdentifier>{6c092823-a3d8-4f54-839f-eff84c6e3d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageType\TutorialStage">
+      <UniqueIdentifier>{8f00f8d7-31a5-4f98-969f-948e011f22f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageType\FarmStage">
+      <UniqueIdentifier>{70590f87-e87a-4af5-b315-a1f8138ce58e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\StageType\BossStage">
+      <UniqueIdentifier>{b1407668-87c3-498d-9d99-ccd163880613}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,8 +285,8 @@
     <ClCompile Include="StageBase.cpp">
       <Filter>Object\Scene\Game\Stage\StageBase</Filter>
     </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>Object\Scene\Game\Stage\Ground</Filter>
+    <ClCompile Include="FarmStage.cpp">
+      <Filter>Object\Scene\Game\Stage\StageType\FarmStage</Filter>
     </ClCompile>
     <ClCompile Include="StageManager.cpp">
       <Filter>Object\Scene\Game\Stage\StageManager</Filter>
@@ -296,6 +311,12 @@
     </ClCompile>
     <ClCompile Include="OperationUI.cpp">
       <Filter>Object\Scene\Game\UI\OperationUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialScene.cpp">
+      <Filter>System\Scene\SceneType\TutorialScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>Object\Scene\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,8 +416,8 @@
     <ClInclude Include="StageBase.h">
       <Filter>Object\Scene\Game\Stage\StageBase</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>Object\Scene\Game\Stage\Ground</Filter>
+    <ClInclude Include="FarmStage.h">
+      <Filter>Object\Scene\Game\Stage\StageType\FarmStage</Filter>
     </ClInclude>
     <ClInclude Include="StageManager.h">
       <Filter>Object\Scene\Game\Stage\StageManager</Filter>
@@ -424,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="OperationUI.h">
       <Filter>Object\Scene\Game\UI\OperationUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialScene.h">
+      <Filter>System\Scene\SceneType\TutorialScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Object\Scene\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

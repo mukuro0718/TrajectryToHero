@@ -156,7 +156,7 @@
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="FarmStage.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Opening.cpp" />
@@ -181,6 +181,8 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TItleScene.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +203,7 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Ground.h" />
+    <ClInclude Include="FarmStage.h" />
     <ClInclude Include="Load.h" />
     <ClInclude Include="Opening.h" />
     <ClInclude Include="OpeningScene.h" />
@@ -225,6 +227,8 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="WeakEnemy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

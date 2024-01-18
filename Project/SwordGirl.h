@@ -13,7 +13,6 @@ class Timer;
 class SwordGirl :public PlayerBase
 {
 public:
-	SwordGirl(){};						//コンストラクタ
 	SwordGirl(const int _modelHandle,const int _frameImage,const int _hpImage,const int _expImage, const int _font);	//引数ありコンストラクタ
 	~SwordGirl();						//デストラクタ
 	void Update()override;				//更新

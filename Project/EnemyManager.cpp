@@ -20,22 +20,20 @@ const VECTOR EnemyManager::SPAWN_POINT[] =
 /// コンストラクタ
 /// </summary>
 EnemyManager::EnemyManager()
-	:font(0)
-	,frameImage(0)
-	,hpImage(0)
-	,deathStrongEnemyNum(0)
-	,destroyEnemy(0)
-	,nowEnemyIndex(0)
-	,isHitCheckSetUp(false)
-	,isDrawImg(false)
-	,isBossEnemy(false)
-	,isStrongEnemy(false)
+	:font				(0)
+	,frameImage			(0)
+	,hpImage			(0)
+	,nowWeakEnemyNum	(3)
+	,nowStrongEnemyNum	(1)
+	,isHitCheckSetUp	(false)
+	,isDrawImg			(false)
+	,isBossEnemy		(false)
+	,isStrongEnemy		(false)
 {
 	//モデルのロード
 	auto& load = Load::GetInstance();
 	load.GetEnemyData(&model,&frameImage,&hpImage,&font);
 	CreateAndInit();
-	//Init();
 }
 /// <summary>
 /// デストラクタ
@@ -49,9 +47,13 @@ EnemyManager::~EnemyManager()
 /// </summary>
 void EnemyManager::Init()
 {
-	for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+	for (int i = 0; i < nowWeakEnemyNum; i++)
 	{
 		weakEnemy[i]->Init();
+	}
+	for (int i = 0; i < nowStrongEnemyNum; i++)
+	{
+		strongEnemy[i]->Init();
 	}
 }
 /// <summary>
@@ -60,18 +62,16 @@ void EnemyManager::Init()
 void EnemyManager::CreateAndInit()
 {
 	//インスタンスのNULL初期化
-	for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
-	{
-		weakEnemy[i] = NULL;
-	}
-	bossEnemy = NULL;
-	strongEnemy = NULL;
+	bossEnemy = nullptr;
 	//インスタンスの作成
 	for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
 	{
-		weakEnemy[i] = new WeakEnemy(SPAWN_POINT[i],model[static_cast<int>(ModelType::WEAK_MODEL)]);
+		weakEnemy.push_back(new WeakEnemy(SPAWN_POINT[i], model[static_cast<int>(ModelType::WEAK_MODEL)]));
 	}
-	strongEnemy = new StrongEnemy(SPAWN_POINT[0],model[static_cast<int>(ModelType::STRONG_MODEL)]);
+	for (int i = 0; i < MAX_STRONG_ENEMY_NUM; i++)
+	{
+		strongEnemy.push_back(new StrongEnemy(SPAWN_POINT[i], model[static_cast<int>(ModelType::STRONG_MODEL)]));
+	}
 	bossEnemy = new BossEnemy(SPAWN_POINT[1],model[static_cast<int>(ModelType::BOSS_MODEL)],frameImage,hpImage,font);
 }
 /// <summary>
@@ -82,7 +82,7 @@ void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool
 {
 	if (_isFarm && !_isBoss)
 	{
-		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		for (int i = 0; i < nowWeakEnemyNum; i++)
 		{			
 			//もし死亡フラグが立っていなかったらUpdate処理を行う
 			if (!weakEnemy[i]->GetIsDeath())
@@ -92,53 +92,37 @@ void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool
 			//死亡していたら
 			else
 			{
-				//ランダムで０が出た時
-				if (GetRand(10) == 0)
+				VECTOR spawnPos = RandomSpawnPos();
+				//スポーン地点とプレイヤーとの距離を測る
+				float playerToSpawnPoint = VSize(VSub(_playerPos, spawnPos));
+				//もし距離が定数以上離れていたらスポーンさせる
+				if (playerToSpawnPoint >= 200.0f)
 				{
-					if (isStrongEnemy)
-					{
-						//中ボスをスポーンさせる
-						isStrongEnemy = true;
-						//初期化
-						strongEnemy->Init();
-					}
-					else
-					{
-						float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
-						if (playerToSpawnPoint >= 200.0f)
-						{
-							weakEnemy[i]->Init();
-						}
-					}
-				}
-				else
-				{
-					float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
-					if (playerToSpawnPoint >= 100.0f)
-					{
-						weakEnemy[i]->Init();
-					}
+					weakEnemy[i]->SetSpawnPos(spawnPos);
+					weakEnemy[i]->Init();
 				}
 			}
 			//もしプレイヤーが攻撃していなかったら
 		}
-		if (isStrongEnemy)
-		{
-			//もし死亡フラグが立っていなかったらUpdate処理を行う
-			if (!strongEnemy->GetIsDeath())
-			{
-				strongEnemy->Update();
-			}
-			//もし死亡フラグが立っていたら
-			else
-			{
-				isStrongEnemy = false;
-			}
-		}
-		else
-		{
-			strongEnemy->Init();
-		}
+		//for (int i = 0; i < nowStrongEnemyNum; i++)
+		//{
+		//	//もし死亡フラグが立っていなかったらUpdate処理を行う
+		//	if (!strongEnemy[i]->GetIsDeath())
+		//	{
+		//		strongEnemy[i]->Update();
+		//	}
+		//	//もし死亡フラグが立っていたら
+		//	else
+		//	{
+		//		//スポーン地点とプレイヤーとの距離を測る
+		//		float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
+		//		//もし距離が定数以上離れていたらスポーンさせる
+		//		if (playerToSpawnPoint >= 200.0f)
+		//		{
+		//			strongEnemy[i]->Init();
+		//		}
+		//	}
+		//}
 	}
 	else
 	{
@@ -161,20 +145,20 @@ void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool 
 {
 	if (_isFarm && !_isBoss)
 	{
-		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		for (int i = 0; i < nowWeakEnemyNum; i++)
 		{
 			if (!weakEnemy[i]->GetIsDeath())
 			{
 				weakEnemy[i]->Move(_playerPos);
 			}
 		}
-		if (isStrongEnemy)
+		/*for (int i = 0; i < nowStrongEnemyNum; i++)
 		{
-			if (!strongEnemy->GetIsDeath())
+			if (!strongEnemy[i]->GetIsDeath())
 			{
-				strongEnemy->Move(_playerPos);
+				strongEnemy[i]->Move(_playerPos);
 			}
-		}
+		}*/
 	}
 	else
 	{
@@ -192,20 +176,20 @@ void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBos
 {
 	if (_isFarm && !_isBoss)
 	{
-		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		for (int i = 0; i < nowWeakEnemyNum; i++)
 		{
 			if (!weakEnemy[i]->GetIsDeath())
 			{
 				weakEnemy[i]->Draw(_playerPos);
 			}
 		}
-		if (isStrongEnemy)
-		{
-			if (!strongEnemy->GetIsDeath())
-			{
-				strongEnemy->Draw(_playerPos);
-			}
-		}
+		//for (int i = 0; i < nowStrongEnemyNum; i++)
+		//{
+		//	if (!strongEnemy[i]->GetIsDeath())
+		//	{
+		//		strongEnemy[i]->Draw(_playerPos);
+		//	}
+		//}
 	}
 	else
 	{
@@ -226,23 +210,18 @@ void EnemyManager::AllDestroy()
 	{
 		delete(weakEnemy[i]);
 	}
-	delete(strongEnemy);
+	//for (int i = 0; i < MAX_STRONG_ENEMY_NUM; i++)
+	//{
+	//	delete(strongEnemy[i]);
+	//}
 	delete(bossEnemy);
-}
-
-bool EnemyManager::CountDestroyEnemy()
-{
-	if (destroyEnemy >= nowEnemyIndex)
-	{
-		return true;
-	}
-	return false;
+	weakEnemy.clear();
+	strongEnemy.clear();
 }
 void EnemyManager::FlaggingBossEnemy()
 {
 	bossEnemy->Flagging();
 }
-
 ///<summary>
 /// HP計算
 /// </summary>
@@ -254,10 +233,10 @@ float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk, const
 ///<summary>
 /// HP計算
 /// </summary>
-float EnemyManager::CalcHPStrongEnemy(const float _atk, const VECTOR _attackerPos)
+float EnemyManager::CalcHPStrongEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
 {
 	//HP計算
-	return strongEnemy->CalcHP(_atk, _attackerPos);
+	return strongEnemy[_enemyNum]->CalcHP(_atk, _attackerPos);
 }
 ///<summary>
 /// HP計算
@@ -281,9 +260,9 @@ void EnemyManager::FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec)
 {
 	weakEnemy[_enemyNum]->FixMoveVec(_fixVec);
 }
-void EnemyManager::FixMoveVecStrongEnemy(const VECTOR _fixVec)
+void EnemyManager::FixMoveVecStrongEnemy(const int _enemyNum, const VECTOR _fixVec)
 {
-	strongEnemy->FixMoveVec(_fixVec);
+	strongEnemy[_enemyNum]->FixMoveVec(_fixVec);
 }
 void EnemyManager::FixMoveVecBossEnemy(const VECTOR _fixVec)
 {
@@ -293,14 +272,17 @@ void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, c
 {
 	if (_isFarm && !_isBoss)
 	{
-		for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
+		for (int i = 0; i < nowWeakEnemyNum; i++)
 		{
-			weakEnemy[i]->DrawShadow(_stageModelHandle, weakEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+			if (!weakEnemy[i]->GetIsDeath())
+			{
+				weakEnemy[i]->DrawShadow(_stageModelHandle, weakEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+			}
 		}
-		if (isStrongEnemy)
-		{
-			strongEnemy->DrawShadow(_stageModelHandle, strongEnemy->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
-		}
+		//for (int i = 0; i < nowStrongEnemyNum; i++)
+		//{
+		//	strongEnemy[i]->DrawShadow(_stageModelHandle, strongEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+		//}
 	}
 	else
 	{
@@ -309,5 +291,57 @@ void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, c
 			bossEnemy->DrawShadow(_stageModelHandle, bossEnemy->GetPos(), BOSS_ENEMY_SHADOW_HEIGHT, BOSS_ENEMY_SHADOW_SIZE);
 		}
 	}
+}
+void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
+{
+	switch (_playerLv)
+	{
+	case 1:
+		nowWeakEnemyNum = 3;
+		nowStrongEnemyNum = 1;
+		break;
+	case 3:
+		nowWeakEnemyNum = 6;
+		nowStrongEnemyNum = 1;
+		break;
+	case 5:
+		nowWeakEnemyNum = 7;
+		nowStrongEnemyNum = 1;
+		break;
+	case 7:
+		nowWeakEnemyNum = 6;
+		nowStrongEnemyNum = 2;
+		break;
+	case 9:
+		nowWeakEnemyNum = 4;
+		nowStrongEnemyNum = 4;
+		break;
+	case 12:
+		nowWeakEnemyNum = 2;
+		nowStrongEnemyNum = 6;
+		break;
+	case 15:
+		nowWeakEnemyNum = 1;
+		nowStrongEnemyNum = 7;
+		break;
+	default:
+		break;
+	}
+}
+VECTOR EnemyManager::RandomSpawnPos()
+{
+	VECTOR outPutPos = ORIGIN_POS;
 
+	outPutPos.x = static_cast<float>(GetRand(350));
+	if (GetRand(1) == 0)
+	{
+		outPutPos.x *= -1;
+	}
+	outPutPos.z = static_cast<float>(GetRand(350));
+	if (GetRand(1) == 0)
+	{
+		outPutPos.z *= -1;
+	}
+
+	return outPutPos;
 }

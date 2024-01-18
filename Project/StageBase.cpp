@@ -1,23 +1,20 @@
 #include"StageBase.h"
 #include"Common.h"
 const VECTOR StageBase::SCALE = VGet(0.3f, 0.2f, 0.3f);
-const VECTOR StageBase::INIT_STAGE_POS = VGet(0.0f,-9.0f,-150.0f);
+const VECTOR StageBase::INIT_STAGE_POS = VGet(0.0f,0.0f,-150.0f);
 /// <summary>
 /// コンストラクタ
 /// </summary>
 /// <param name="humanModelHandle">モデルハンドル</param>
-StageBase::StageBase(int _modelHandle)
+StageBase::StageBase(std::vector<int> _data)
 {
-	//モデルハンドルの初期化
-	modelHandle = 0;
 	//モデルのロード
-	modelHandle = MV1DuplicateModel(_modelHandle);
-	if (modelHandle < 0)
-	{
-		printfDx("stageデータ読み込みに失敗");
-	}
+	model.push_back(MV1DuplicateModel(_data[static_cast<int>(FARM::GROUND)]));
+	model.push_back(MV1DuplicateModel(_data[static_cast<int>(FARM::VILLAGE)]));
+	model.push_back(MV1DuplicateModel(_data[static_cast<int>(FARM::GATE)]));
+	model.push_back(MV1DuplicateModel(_data[static_cast<int>(FARM::PORTAL)]));
 	//モデルの拡大率の大きさ
-	MV1SetScale(modelHandle, SCALE);
+	MV1SetScale(model[static_cast<int>(FARM::GROUND)], SCALE);
 	//座標の初期化
 	pos = INIT_STAGE_POS;
 }
@@ -34,20 +31,20 @@ StageBase::~StageBase()
 void StageBase::Delete()
 {
 	// モデルのアンロード.
-	MV1DeleteModel(modelHandle);
+	MV1DeleteModel(model[static_cast<int>(FARM::GROUND)]);
 }
 /// <summary>
 /// 描画
 /// </summary>
 void StageBase::Update()
 {
-	MV1SetPosition(modelHandle, pos);
+	MV1SetPosition(model[static_cast<int>(FARM::GROUND)], pos);
 }
 /// <summary>
 /// 描画
 /// </summary>
 void StageBase::Draw()
 {
-	MV1DrawModel(modelHandle);
+	MV1DrawModel(model[static_cast<int>(FARM::GROUND)]);
 }
 

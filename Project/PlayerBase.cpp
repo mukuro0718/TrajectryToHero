@@ -58,14 +58,14 @@ void PlayerBase::Draw()
 	MV1DrawModel(modelHandle);
 	if (status->GetHp() > 0)
 	{
-		//blood->Draw();
+		blood->Draw();
 	}
 	SetUpCapsule(pos, CAPSULE_HEIGHT, CAPSULE_RADIUS, CAPSULE_COLOR, false);
 	VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 67);
 #ifdef _DEBUG
-	DrawCapsule(capsuleInfo);
-	//VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 69);
-	DrawSphere3D(swordTopPos, 2.0f, 16, SPHERE_COLOR, SPHERE_COLOR, false);
+	//DrawCapsule(capsuleInfo);
+	////VECTOR swordTopPos = MV1GetFramePosition(modelHandle, 69);
+	//DrawSphere3D(swordTopPos, 2.0f, 16, SPHERE_COLOR, SPHERE_COLOR, false);
 #endif // _DEBUG
 	//攻撃中であれば当たり判定用スフィアを描画する
 	if (isAttack)
@@ -88,8 +88,8 @@ void PlayerBase::Draw()
 			//スフィア情報の構築
 			SetUpSphere(spherePos, SPHERE_RADIUS, SPHERE_COLOR, false);
 #ifdef _DEBUG
-			//スフィアの描画
-			DrawSphere(sphereInfo);
+			////スフィアの描画
+			//DrawSphere(sphereInfo);
 #endif
 		}
 	}

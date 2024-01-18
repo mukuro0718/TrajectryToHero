@@ -69,6 +69,7 @@ void StageChanger::Init()
 	vertexIndexAd.push_back(0);
 	vertexIndexAd.push_back(0);
 	vertexIndexAd.push_back(0);
+	SetFontSize(180);
 }
 /// <summary>
 /// ステージ切り替え時の画像(FARM、BOSS)の表示
@@ -104,7 +105,9 @@ void StageChanger::DrawImageWhenSwitchingStage()
 		//描画画像切り替え
 		if (isFarm)
 		{
-			DrawGraph(0, 0, image[static_cast<int>(ImageType::FARM_STAGE)], TRUE);
+			DrawString(400, 300,"FARM STAGE", GetColor(200, 200, 200));
+			DrawLine(300, 480, 1500, 480, GetColor(200, 200, 200),2);
+			//DrawGraph(0, 0, image[static_cast<int>(ImageType::FARM_STAGE)], TRUE);
 		}
 		else if (isBoss)
 		{
@@ -133,7 +136,7 @@ void StageChanger::DrawGameClear()
 /// </summary>
 void StageChanger::Draw()
 {
-	DrawGraph(0, 30, gateImage, true);
+	//DrawGraph(0, 30, gateImage, true);
 	//DrawBillboard3D(DRAW_GATEIMAGE_POS, 0.5f, 0.5f, IMG_SIZE, gateImageAngle * (DX_PI_F / 180), gateImage, TRUE);
 	++gateImageAngle;
 }

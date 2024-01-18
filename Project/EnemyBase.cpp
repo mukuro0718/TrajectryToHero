@@ -69,10 +69,10 @@ void EnemyBase::Final()
 /// </summary>
 void EnemyBase::Draw(VECTOR playerPos)
 {
-#ifdef _DEBUG
-	DrawCapsule(capsuleInfo);
-	DrawSphere(sphereInfo);
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	DrawCapsule(capsuleInfo);
+//	DrawSphere(sphereInfo);
+//#endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
 	MV1DrawModel(modelHandle);

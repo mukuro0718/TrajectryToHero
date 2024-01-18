@@ -40,7 +40,7 @@ public:
 	void GetEnemyData		(vector<int>* _model, int* _frameImage, int* _hpImage, int* _font);	//エネミーデータのgetter
 	
 	void GetPlayerData		 (int* _model,int* _frameImage,int* _hpImage,int* _expImage,int* _font);	//プレイヤーデータのgetter
-	void GetStageData		 (int* _model);	//ステージデータのgetter
+	void GetStageData		 (vector<int>* _farmData);	//ステージデータのgetter
 	void GetCharacterStatusData(int* _image,int* _font);	//メニューデータのgetter
 	void GetShadowData		 (int* _image);	//シャドウデータのgetter
 	void GetSkydomeData		 (int* _skydomeModel);	//スカイドームデータのgetter
@@ -82,7 +82,8 @@ private:
 	/// <summary>
 	/// ステージ
 	/// </summary>
-	int stageModel;					//ステージモデルハンドル
+	static constexpr int FARM_STAGE_MODEL_NUM = 4;
+	vector<int> farmStageData;
 	/// <summary>
 	/// ステージチェンジ
 	/// </summary>

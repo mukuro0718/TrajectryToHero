@@ -17,8 +17,8 @@ public:
 
 	void Update()override;	//XV
 	void Init()override;	//‰Šú‰»
-	void Move(const VECTOR playerPos)override;	//ˆÚ“®
-
+	void Move(const VECTOR _playerPos)override;	//ˆÚ“®
+	void SetSpawnPos(const VECTOR _spawnPos) { spawnPos = _spawnPos; }
 	const float GetRadius()const { return RADIUS; }
 
 private:

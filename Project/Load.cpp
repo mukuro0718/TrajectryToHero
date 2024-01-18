@@ -16,6 +16,47 @@ Load::Load()
 /// </summary>
 Load::~Load()
 {
+	/*オープニング*/
+	openingImage.clear();
+	/*タイトル*/
+	titleImage.clear();
+	//プレイヤーモデル
+	playerModel = 0;
+	playerFont = 0;
+	//エネミーモデル
+	enemyModel.clear();
+	enemyFont = 0;
+	//ステージモデル
+	farmStageData.clear();
+	//スカイドームモデル
+	skydomeModel = 0;
+	//メニュー画像
+	characterStatusImage = 0;
+	characterStatusFont = 0;
+	//ステージチェンジ画像
+	stageChangeImage.clear();
+	gateImage = 0;
+	//UI画像
+	hpBarGraph = 0;
+	expBarGraph = 0;
+	prevBarGraph = 0;
+	barFrameGraph = 0;
+	atkUIImage = 0;
+	defUIImage = 0;
+	agiUIImage = 0;
+	statusUIFont = 0;
+	moveOpeUIImage = 0;
+	menuOpeUIImage = 0;
+	attackOpeUIImage = 0;
+	cameraOpeUIImage = 0;
+	//パーティクル画像
+	bloodParticleImage = 0;
+	//影画像
+	shadowImage = 0;
+	//ゲームクリア画像
+	gameClearImage = 0;
+	//ゲームクリア画像
+	gameOverImage = 0;
 }
 /// <summary>
 /// データのロード
@@ -45,7 +86,6 @@ void Load::LoadingData()
 	titleImage.push_back(LoadGraph("Data/Img/Title/1.png"));
 	/*ゲーム*/
 	//プレイヤーモデル
-	//playerModel = MV1LoadModel("Data/Model/Player/Player.mv1");
 	playerModel = MV1LoadModel("Data/Model/Player/Player_test2.mv1");
 	playerFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 35, 32, DX_FONTTYPE_NORMAL);
 	//エネミーモデル
@@ -54,7 +94,10 @@ void Load::LoadingData()
 	enemyModel.push_back(MV1LoadModel("Data/Model/Enemy/Mutant.mv1"));
 	enemyFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 35, 32, DX_FONTTYPE_NORMAL);
 	//ステージモデル
-	stageModel = MV1LoadModel("Data/Model/Map/stage.mv1");
+	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Ground.mv1"));
+	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Village.mv1"));
+	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Gate.mv1"));
+	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Portal.mv1"));
 	//スカイドームモデル
 	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
 	//メニュー画像
@@ -139,9 +182,12 @@ void Load::GetEnemyData(vector<int>* _model, int* _frameImage, int* _hpImage, in
 /// ステージデータのgetter
 /// </summary>
 /// <param name="image">モデルハンドルを格納するvectorのポインタ</param>
-void Load::GetStageData(int* _model)
+void Load::GetStageData(vector<int>* _farmData)
 {
-	*_model = stageModel;
+	for (int i = 0; i < FARM_STAGE_MODEL_NUM; i++)
+	{
+		_farmData->push_back(farmStageData[i]);
+	}
 }
 /// <summary>
 /// ウェーブデータのgetter

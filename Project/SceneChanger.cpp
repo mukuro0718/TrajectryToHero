@@ -12,7 +12,6 @@ SceneChanger* SceneChanger::sceneChange = NULL;
 SceneChanger::SceneChanger()
 {
 	nowSceneType	 = SceneType::OPENING;		//現在のシーンの種類
-	//nowSceneType = GAMEOVER;		//現在のシーンの種類
 	isSceneChanger	 = false;		//切り替えフラグ
 	sceneChangeTimer = FIRST_TIMER;	//シーン切り替え時間
 }

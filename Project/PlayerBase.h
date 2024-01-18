@@ -15,7 +15,6 @@ class StatusUI;
 class PlayerBase :public CharacterBase
 {
 public:
-	PlayerBase(){};						//コンストラクタ
 	PlayerBase(const int _modelHandle);	// 引数ありコンストラクタ
 	virtual ~PlayerBase();				// デストラクタ
 	void Draw();						//描画
