@@ -20,7 +20,7 @@ public:
 	void DrawUI();//UIの描画
 	void Flagging() { isInvincible = false; }//フラグを下す
 	const float GetRadius()const { return RADIUS; }
-
+	const void PhysicalRecovery();
 private:
 	struct RangeOfAction//行動可能範囲
 	{
@@ -39,6 +39,7 @@ private:
 		JUMP_IDLE,		//ジャンプ後待機アニメーション
 		IDLE,			//待機アニメーション
 		DEATH,			//死亡アニメーション
+		BEFORE_ATTACK,
 	};
 	/*静的定数*/
 	static constexpr float	RADIUS		   = 15.0f;	//半径
@@ -58,6 +59,8 @@ private:
 	Timer*		waitBeforeJumpAttack;	//ジャンプ攻撃待機時間
 	Timer*		waitBeforeRotateAttack;	//回転攻撃待機時間
 	Timer*		rotateAttackLoopTime;	//回転攻撃ループ時間
+	Timer* preliminaryOperation;
+
 	/*内部処理関数*/
 	void Create();//作成
 	float ChangeRotate(VECTOR _playerPos);	//角度の変更
@@ -77,6 +80,7 @@ private:
 	int font;	//フォントハンドル
 	int frameImage;
 	int hpImage;
+	bool isPreliminaryOperation;
 
 };
 

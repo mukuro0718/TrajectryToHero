@@ -27,11 +27,14 @@ public:
 	const bool GetIsMove()const { return isMove; }//移動フラグのgetter
 	void DrawMenu();//ステータスメニューの表示
 	const bool GetIsShowStatusMenu();//ステータスクラスのisShowMenuを返す
-	void StatusUpdate();//ステータスの更新
+	void StatusUpdate(const VECTOR _bonfirePos);//ステータスの更新
 	void FixMoveVec(const VECTOR _fixVec);//移動修正
 	void UpdateUI();//UIの更新
 	void DrawUI();//UIの描画
 	void ChangeColor();//色の変更
+	void ReSpawn();//リスポーン
+	void PhysicalRecovery();//体力回復
+	const void InitPos() { pos = ORIGIN_POS; }
 private:
 	/*定数*/
 	enum class AnimationType//アニメーションの種類
@@ -63,12 +66,12 @@ private:
 	static const COLOR_F CHANGE_EMI_COLOR;//エミッシブカラー
 	static const COLOR_F CHANGE_AMB_COLOR;//アンビエントカラー
 	static const int FONT_COLOR;//フォントカラー
-	static constexpr RangeOfAction HP_FRAME_POS = { 90,20,390,50 };//HPフレーム座標
-	static constexpr RangeOfAction EXP_FRAME_POS = { 90,60,390,90 };//EXPフレーム座標
-	static constexpr VEC2D HP_BAR_POS = { 90,20 };//HPフレーム座標
-	static constexpr VEC2D EXP_BAR_POS = { 90,60, };//EXPフレーム座標
+	static constexpr RangeOfAction HP_FRAME_POS = { 90,60,390,90 };//HPフレーム座標
+	static constexpr RangeOfAction EXP_FRAME_POS = { 90,100,390,130 };//EXPフレーム座標
+	static constexpr VEC2D HP_BAR_POS = { 90,60 };//HPフレーム座標
+	static constexpr VEC2D EXP_BAR_POS = { 90,100, };//EXPフレーム座標
 	static constexpr CollisionSetUpInfo PLAYER_COLL_INFO			 = { 66,1,1,1 }			;//プレイヤーコリジョン情報
-	static constexpr RangeOfAction		PLAYER_RANGE_OF_ACTION		 = { 451,-450,510,-400 };//プレイヤー行動可能範囲
+	static constexpr RangeOfAction		PLAYER_RANGE_OF_ACTION		 = { 451,510, -450,-840 };//プレイヤー行動可能範囲
 	static constexpr InputAnalogStick	NONE_INPUT_VALUE			 = { 0,0 }				;//スティック入力がない
 	static constexpr int				STAY_TIMER_TARGET_TIME		 = 3000					;//待機時間
 	static constexpr int				INVINCIBLE_TIMER_TARGET_TIME = 2					;//無敵時間
@@ -77,6 +80,7 @@ private:
 	static constexpr float				PLAYETR_Y_POS				 = 10.0f				;//プレイヤーY座標
 	static constexpr float				LV_MULT_VALUE				 = 10.0f				;//レベル倍率
 	static constexpr float				FIRST_ANIM_PLAY_TIME		 = 0.0f					;//アニメーション初期再生時間
+	
 	/*内部処理関数*/
 	void Create();	//生成
 	/*メンバ変数*/

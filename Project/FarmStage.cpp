@@ -12,6 +12,7 @@ const VECTOR FarmStage::ROTATE_VILLAGE = VGet(0.0f, 180.0f * (DX_PI_F / 180.0f),
 /// <param name="humanModelHandle">モデルハンドル</param>
 FarmStage::FarmStage(std::vector<int> _data)
 	:portalRotate(0.0f)
+	,isShowGate(false)
 {
 	//モデルのロード
 	for (int i = 0; i < MODEL_NUM; i++)
@@ -66,8 +67,12 @@ void FarmStage::Delete()
 /// <summary>
 /// 描画
 /// </summary>
-void FarmStage::Update()
+void FarmStage::Update(const int _playerLv)
 {
+	if (_playerLv > 5)
+	{
+		isShowGate = true;
+	}
 	portalRotate += 1.0f;
 	rotate[static_cast<int>(FARM::PORTAL)] = VGet( 0.0f, 0.0f,portalRotate * (DX_PI_F / 180.0f));
 	MV1SetRotationXYZ(model[static_cast<int>(FARM::PORTAL)], rotate[static_cast<int>(FARM::PORTAL)]);
@@ -75,11 +80,17 @@ void FarmStage::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void FarmStage::Draw()
+void FarmStage::Draw(const bool _isFarm)
 {
-	for (int i = 0; i < MODEL_NUM; i++)
+	MV1DrawModel(model[static_cast<int>(FARM::GROUND)]);
+	if (_isFarm)
 	{
-		MV1DrawModel(model[i]);
+		MV1DrawModel(model[static_cast<int>(FARM::VILLAGE)]);
+		if (isShowGate)
+		{
+			MV1DrawModel(model[static_cast<int>(FARM::GATE)]);
+			MV1DrawModel(model[static_cast<int>(FARM::PORTAL)]);
+		}
 	}
 }
 

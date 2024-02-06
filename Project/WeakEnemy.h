@@ -20,7 +20,7 @@ public:
 	void Move(const VECTOR _playerPos)override;	//移動
 	void SetSpawnPos(const VECTOR _spawnPos) { spawnPos = _spawnPos; }
 	const float GetRadius()const { return RADIUS; }
-
+	const void NewStatus(const float _playerLv);
 private:
 	/*定数*/
 	enum class AnimationType
@@ -29,10 +29,10 @@ private:
 		ATTACK,		//攻撃アニメーション
 		IDLE,       //待機アニメーション
 		DEATH,      //死亡アニメーション
+		BEFORE_ATTACK,
 	};
 	/*静的定数*/
 	static constexpr float	RADIUS		   = 10.0f;	//半径
-	static constexpr int	RANDOM_X_RANGE = -100;	//敵の生成時に決めるX座標の範囲
 	static constexpr float	HEIGHT		   = 30.0f;	//カプセルの高さ
 	static constexpr float	SPHERE_RADIUS  = 3.0f;	//球の半径
 	static const	 VECTOR MODEL_SCALE;			//初期モデルの拡大率
@@ -51,10 +51,12 @@ private:
 	Animation*	anim;					//アニメーションクラス
 	Timer*		invincibleTimer;		//無敵時間
 	Timer*		restTimeAfterAttack;	//攻撃後休憩時間
+	Timer* preliminaryOperation;
 
 	int  attackAnimLoopCount;	//攻撃追従可能時間
 	bool isRestTime;			//休憩に入るかどうか
 
+	bool isPreliminaryOperation;
 	bool isRandomWalk;
 	bool isRandomRest;
 	VECTOR randomWalkTargetPos;

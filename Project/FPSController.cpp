@@ -65,7 +65,7 @@ void FPSController::Draw()
 {
 #if _DEBUG
 	//FPS‚Ì•`‰æ
-	DrawFormatString(1650, 0, FONT_COLOR, "FPS:%lg", fps);
+	//DrawFormatString(1650, 0, FONT_COLOR, "FPS:%lg", fps);
 #endif // _DEBUG
 }
 /// <summary>

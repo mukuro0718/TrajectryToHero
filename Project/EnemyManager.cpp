@@ -23,8 +23,8 @@ EnemyManager::EnemyManager()
 	:font				(0)
 	,frameImage			(0)
 	,hpImage			(0)
-	,nowWeakEnemyNum	(3)
-	,nowStrongEnemyNum	(1)
+	,nowWeakEnemyNum	(0)
+	,nowStrongEnemyNum	(0)
 	,isHitCheckSetUp	(false)
 	,isDrawImg			(false)
 	,isBossEnemy		(false)
@@ -78,7 +78,7 @@ void EnemyManager::CreateAndInit()
 /// 更新
 /// </summary>
 /// <param name="isDrawImg">画像を描画していたら処理を止める</param>
-void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool _isBoss)
+void EnemyManager::Update(const VECTOR _playerPos, const float _playerLv,const bool _isFarm, const bool _isBoss)
 {
 	if (_isFarm && !_isBoss)
 	{
@@ -99,30 +99,34 @@ void EnemyManager::Update(const VECTOR _playerPos,const bool _isFarm, const bool
 				if (playerToSpawnPoint >= 200.0f)
 				{
 					weakEnemy[i]->SetSpawnPos(spawnPos);
+					weakEnemy[i]->NewStatus(_playerLv);
 					weakEnemy[i]->Init();
 				}
 			}
 			//もしプレイヤーが攻撃していなかったら
 		}
-		//for (int i = 0; i < nowStrongEnemyNum; i++)
-		//{
-		//	//もし死亡フラグが立っていなかったらUpdate処理を行う
-		//	if (!strongEnemy[i]->GetIsDeath())
-		//	{
-		//		strongEnemy[i]->Update();
-		//	}
-		//	//もし死亡フラグが立っていたら
-		//	else
-		//	{
-		//		//スポーン地点とプレイヤーとの距離を測る
-		//		float playerToSpawnPoint = VSize(VSub(_playerPos, SPAWN_POINT[i]));
-		//		//もし距離が定数以上離れていたらスポーンさせる
-		//		if (playerToSpawnPoint >= 200.0f)
-		//		{
-		//			strongEnemy[i]->Init();
-		//		}
-		//	}
-		//}
+		for (int i = 0; i < nowStrongEnemyNum; i++)
+		{
+			//もし死亡フラグが立っていなかったらUpdate処理を行う
+			if (!strongEnemy[i]->GetIsDeath())
+			{
+				strongEnemy[i]->Update();
+			}
+			//もし死亡フラグが立っていたら
+			else
+			{
+				VECTOR spawnPos = RandomSpawnPos();
+				//スポーン地点とプレイヤーとの距離を測る
+				float playerToSpawnPoint = VSize(VSub(_playerPos, spawnPos));
+				//もし距離が定数以上離れていたらスポーンさせる
+				if (playerToSpawnPoint >= 200.0f)
+				{
+					strongEnemy[i]->SetSpawnPos(spawnPos);
+					strongEnemy[i]->NewStatus(_playerLv);
+					strongEnemy[i]->Init();
+				}
+			}
+		}
 	}
 	else
 	{
@@ -152,13 +156,13 @@ void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool 
 				weakEnemy[i]->Move(_playerPos);
 			}
 		}
-		/*for (int i = 0; i < nowStrongEnemyNum; i++)
+		for (int i = 0; i < nowStrongEnemyNum; i++)
 		{
 			if (!strongEnemy[i]->GetIsDeath())
 			{
 				strongEnemy[i]->Move(_playerPos);
 			}
-		}*/
+		}
 	}
 	else
 	{
@@ -183,13 +187,13 @@ void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBos
 				weakEnemy[i]->Draw(_playerPos);
 			}
 		}
-		//for (int i = 0; i < nowStrongEnemyNum; i++)
-		//{
-		//	if (!strongEnemy[i]->GetIsDeath())
-		//	{
-		//		strongEnemy[i]->Draw(_playerPos);
-		//	}
-		//}
+		for (int i = 0; i < nowStrongEnemyNum; i++)
+		{
+			if (!strongEnemy[i]->GetIsDeath())
+			{
+				strongEnemy[i]->Draw(_playerPos);
+			}
+		}
 	}
 	else
 	{
@@ -210,10 +214,10 @@ void EnemyManager::AllDestroy()
 	{
 		delete(weakEnemy[i]);
 	}
-	//for (int i = 0; i < MAX_STRONG_ENEMY_NUM; i++)
-	//{
-	//	delete(strongEnemy[i]);
-	//}
+	for (int i = 0; i < MAX_STRONG_ENEMY_NUM; i++)
+	{
+		delete(strongEnemy[i]);
+	}
 	delete(bossEnemy);
 	weakEnemy.clear();
 	strongEnemy.clear();
@@ -279,10 +283,10 @@ void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, c
 				weakEnemy[i]->DrawShadow(_stageModelHandle, weakEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
 			}
 		}
-		//for (int i = 0; i < nowStrongEnemyNum; i++)
-		//{
-		//	strongEnemy[i]->DrawShadow(_stageModelHandle, strongEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
-		//}
+		for (int i = 0; i < nowStrongEnemyNum; i++)
+		{
+			strongEnemy[i]->DrawShadow(_stageModelHandle, strongEnemy[i]->GetPos(), NORMAL_ENEMY_SHADOW_HEIGHT, NORMAL_ENEMY_SHADOW_SIZE);
+		}
 	}
 	else
 	{
@@ -301,26 +305,22 @@ void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
 		nowStrongEnemyNum = 1;
 		break;
 	case 3:
-		nowWeakEnemyNum = 6;
+		nowWeakEnemyNum = 4;
 		nowStrongEnemyNum = 1;
 		break;
 	case 5:
-		nowWeakEnemyNum = 7;
-		nowStrongEnemyNum = 1;
-		break;
-	case 7:
 		nowWeakEnemyNum = 6;
 		nowStrongEnemyNum = 2;
 		break;
-	case 9:
+	case 7:
 		nowWeakEnemyNum = 4;
 		nowStrongEnemyNum = 4;
 		break;
-	case 12:
+	case 9:
 		nowWeakEnemyNum = 2;
 		nowStrongEnemyNum = 6;
 		break;
-	case 15:
+	case 12:
 		nowWeakEnemyNum = 1;
 		nowStrongEnemyNum = 7;
 		break;
@@ -344,4 +344,8 @@ VECTOR EnemyManager::RandomSpawnPos()
 	}
 
 	return outPutPos;
+}
+const void EnemyManager::PhysicalRecoveryBossEnemy()
+{
+	bossEnemy->PhysicalRecovery();
 }

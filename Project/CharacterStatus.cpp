@@ -9,26 +9,63 @@
 const VECTOR CharacterStatus::SET_DRAW_POS		= VGet(50.0f,50.0f,0.0f);
 const int	 CharacterStatus::FONT_COLOR_WHITE	= GetColor(210, 210, 210);
 const int	 CharacterStatus::FONT_COLOR_RED	= GetColor(255, 50, 50);
+const int CharacterStatus::FONT_COLOR = GetColor(200, 200, 150);
+const int CharacterStatus::PREV_FONT_COLOR = GetColor(200, 200, 250);
+const VECTOR CharacterStatus::BONFIRE_POS = VGet(0.0f, 5.0f, -850.0f);
+
 /// <summary>
 /// コンストラクタ
 /// </summary>
 CharacterStatus::CharacterStatus()
-	:isInputPad(false)
-	,isLvUP(false)
-	,isShowMenu(false)
-	,isFinalSelectStatus(false)
-	,lvUpCount(0)
-	,prevLv(1.0f)
-	,backGroundImage(0)
-	,nowSelectStatus(static_cast<int>(SelectStatus::ATK))
-	,statusFontHandle(0)
+	: lv(1.0f)
+	, hp(0.0f)
+	, atk(0.0f)
+	, def(0.0f)
+	, agi(0.0f)
+	, expToGive(0.0f)
+	, exp(0.0f)
+	, needExp(0.0f)
+	, maxHp(0.0f)
+	, prevLv(0.0f)
+	, isInputPad(false)
+	, isLvUP(false)
+	, isShowBonfireMenu(false)
+	, isShowLevelUpMenu(false)
+	, isFinalSelectStatus(false)
+	, lvUpCount(0)
+	, backGroundImage(0)
+	, nowSelectStatus(static_cast<int>(SelectStatus::ATK))
+	, statusFontHandle(0)
 	, inputWaitTimer(nullptr)
+	, menuImage(0)
+	, cursorImage(0)
+	, rectImage(0)
+	, frameCount(0)
+	, nowSelectMenu(0)
+	, isFinalSelectMenu(false)
+	, isBonfireMenu(false)
+	, atkImage(0)
+	, agiImage(0)
+	, defImage(0)
+	, atkUpCount(0)
+	, agiUpCount(0)
+	, defUpCount(0)
+	, prevAtkUpCount(0)
+	, prevAgiUpCount(0)
+	, prevDefUpCount(0)
+	, isLevelUp(false)
+	, statusUpPoint(5)
+	, prevStatusUpPoint(5)
+	, isShowMenu(false)
 {
 	auto& load = Load::GetInstance();
 	inputWaitTimer = new Timer();
 	//初期化
 	Init();
-	load.GetCharacterStatusData(&backGroundImage,&statusFontHandle);
+	load.GetCharacterStatusData(&data);
+	rectPos = { 200,200 };
+	nowHighCursorPos = ATK_HIGH_CURSOR_POS;
+	nowLowCursorPos = ATK_LOW_CURSOR_POS;
 }
 /// <summary>
 /// 初期化
@@ -45,35 +82,127 @@ CharacterStatus::~CharacterStatus()
 {
 	Delete();
 }
+void CharacterStatus::InitTutorialStatus(const int _showCount)
+{
+	if (_showCount == 0)
+	{
+		lv = 1.0f;
+		hp = 1.0f;//体力のセット
+		atk = 0.0f;//攻撃力のセット
+		def = 1.0f;//防御力のセット
+		agi = 1.0f;	//素早さのセット
+		expToGive = 20.0f;	//倒されたとき与える経験値のセット(Enemy用)
+		exp = 20.0f;	//経験値のセット
+		needExp = 0.0f;	//レベルアップに必要な経験値（Player用）
+		maxHp = hp;	//最大ＨＰ
+		prevLv = lv;	//前のレベル
+	}
+	else
+	{
+		lv = 3.0f;
+		hp = 1.0f;//体力のセット
+		atk = 0.0f;//攻撃力のセット
+		def = 1.0f;//防御力のセット
+		agi = 1.0f;	//素早さのセット
+		expToGive = 20.0f;	//倒されたとき与える経験値のセット(Enemy用)
+		exp = 20.0f;	//経験値のセット
+		needExp = 0.0f;	//レベルアップに必要な経験値（Player用）
+		maxHp = hp;	//最大ＨＰ
+		prevLv = lv;	//前のレベル
+	}
+}
 /// <summary>
 /// 雑魚敵ステータスの初期設定
 /// </summary>
-void CharacterStatus::InitWeakEnemyStatus()
+void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 {
-	lv = 10.0f;			//レベルのセット
-	hp = 50.0f;		//体力のセット
-	atk = 10.0f;			//攻撃力のセット
-	def = 50.0f;			//防御力のセット
-	agi = 1.0f;			//素早さのセット
-	expToGive = 5.0f;	//倒されたとき与える経験値のセット
-	exp = 0.0f;			//経験値のセット
-	needExp = 0.0f;
-	maxHp = hp;
+	/*プレイヤーのレベルをもとに、ステータスを調整する*/
+	//もしプレイヤーレベルが2以下だったら
+	if (_playerLv <= 2.0f)
+	{
+		lv = 1.0f;
+	}
+	else if (_playerLv <= 3.0f)
+	{
+		lv = 2.0f;
+	}
+	else if (_playerLv <= 4.0f)
+	{
+		lv = 3.0f;
+	}
+	//前回のレベルと今のレベルの差を求める
+	int lvDif = static_cast<int>(lv - prevLv);
+	//もしレベルが１（スタート時）だったら
+	if (lv == 1)
+	{
+		//ステータスの初期設定をする
+		hp			= 10.0f;//体力のセット
+		atk			= 3.0f;//攻撃力のセット
+		def			= 2.0f;//防御力のセット
+		agi			= 1.0f;	//素早さのセット
+		expToGive	= 20.0f;	//倒されたとき与える経験値のセット(Enemy用)
+		exp			= 0.0f;	//経験値のセット
+		needExp		= 0.0f;	//レベルアップに必要な経験値（Player用）
+		maxHp		= hp;	//最大ＨＰ
+		prevLv		= lv;	//前のレベル
+	}
+	else if (lvDif == 1)
+	{
+		hp = maxHp;
+		//ステータスを1.75倍する
+		hp *= 1.5f ;//体力のセット
+		atk *= 1.5f;//攻撃力のセット
+		def *= 1.5f;//防御力のセット
+		expToGive *= 1.5f;	//倒されたとき与える経験値のセット(Enemy用)
+		maxHp = hp;	//最大ＨＰ
+		prevLv = lv;	//前のレベル
+	}
 }
 /// <summary>
 /// 中ボスステータスの初期設定
 /// </summary>
-void CharacterStatus::InitStrongEnemyStatus()
+void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 {
-	lv = 10.0f;			//レベルのセット
-	hp = 100.0f;		//体力のセット
-	atk = 20.0f;			//攻撃力のセット
-	def = 60.0f;			//防御力のセット
-	agi = 2.0f;			//素早さのセット
-	expToGive = 15.0f;	//倒されたとき与える経験値のセット
-	exp = 0;			//経験値のセット
-	needExp = 0.0f;
-	maxHp = hp;
+	/*プレイヤーのレベルをもとに、ステータスを調整する*/
+	//もしプレイヤーレベルが8以下だったら
+	if (_playerLv <= 8.0f)
+	{
+		lv = 10.0f;
+	}
+	else if (_playerLv <= 12.0f)
+	{
+		lv = 12.0f;
+	}
+	else if (_playerLv <= 15.0f)
+	{
+		lv = 13.0f;
+	}
+	//前回のレベルと今のレベルの差を求める
+	int lvDif = static_cast<int>(lv - prevLv);
+	//もしレベルが１（スタート時）だったら
+	if (lv == 10)
+	{
+		hp = 20.0f;		//体力のセット
+		atk = 6.0f;			//攻撃力のセット
+		def = 5.0f;			//防御力のセット
+		agi = 2.0f;			//素早さのセット
+		expToGive = 80.0f;	//倒されたとき与える経験値のセット
+		exp = 0;			//経験値のセット
+		needExp = 0.0f;
+		maxHp = hp;
+	}
+	else if (lvDif == 1)
+	{
+		hp = maxHp;
+		//ステータスを1.75倍する
+		hp *= 1.5f;//体力のセット
+		atk *= 1.5f;//攻撃力のセット
+		def *= 1.5f;//防御力のセット
+		expToGive *= 1.5f;	//倒されたとき与える経験値のセット(Enemy用)
+		maxHp = hp;	//最大ＨＰ
+		prevLv = lv;	//前のレベル
+	}
+
 }
 /// <summary>
 /// ボスステータスの初期設定
@@ -81,14 +210,14 @@ void CharacterStatus::InitStrongEnemyStatus()
 void CharacterStatus::InitBossEnemyStatus()
 {
 	lv			= 10.0f;	//レベルのセット
-	hp			= 300.0f;	//体力のセット
-	atk			= 30.0f;	//攻撃力のセット
-	def			= 70.0f;	//防御力のセット
-	agi			=2.0f;		//素早さのセット
-	expToGive = 10.0f;		//倒されたとき与える経験値のセット
+	hp			= 30.0f;	//体力のセット
+	atk			= 15.0f;	//攻撃力のセット
+	def			= 10.0f;	//防御力のセット
+	agi			= 2.0f;		//素早さのセット
+	expToGive   = 10.0f;		//倒されたとき与える経験値のセット
 	exp			= 0.0f;		//経験値のセット
-	needExp = 0.0f;
-	maxHp = hp;
+	needExp     = 0.0f;
+	maxHp       = hp;
 }
 
 /// <summary>
@@ -96,23 +225,30 @@ void CharacterStatus::InitBossEnemyStatus()
 /// </summary>
 void CharacterStatus::InitPlayerStatus()
 {
-	lv			 = 1.0f;	//レベルのセット
-	hp			 = 30.0f;	//体力のセット
-	atk		 = 3.0f;	//攻撃力のセット
-	def		 = 1.0f;	//防御力のセット
-	agi		 = 1.5f;	//素早さのセット
-	expToGive = 0.0f;	//倒されたとき与える経験値のセット
-	exp		 = 0.0f;	//経験値のセット
-	needExp = 10.0f;
-	maxHp = hp;
+	lv			= 1.0f;	//レベルのセット
+	hp			= 30.0f;//体力のセット
+	atk			= 2.0f;	//攻撃力のセット
+	def			= 2.0f;	//防御力のセット
+	agi			= 1.5f;	//素早さのセット
+	expToGive	= 0.0f;	//倒されたとき与える経験値のセット
+	exp			= 0.0f;	//経験値のセット
+	needExp		= 10.0f;//必要な経験値のセット
+	maxHp		= hp;	//最大HPのセット
+	prevLv		= lv;	//前のレベルの設定
 }
-
+/// <summary>
+/// 体力回復
+/// </summary>
+void CharacterStatus::PhysicalRecovery()
+{
+	hp = maxHp;
+}
 /// <summary>
 /// HP計算
 /// </summary>
 float CharacterStatus::CalcHP(const float _atk)
 {
-	hp -= _atk * def * 0.05f;
+	hp -= _atk / def;
 	if (hp <= 0)
 	{
 		return expToGive;
@@ -159,68 +295,146 @@ void CharacterStatus::Delete()
 		inputWaitTimer = nullptr;
 	}
 }
+void CharacterStatus::BonfireMenu(const float _playerToBonfire)
+{
+	// キーの入力状態をとる
+	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
+	if (_playerToBonfire < 30.0f && isShowBonfireMenu)
+	{
+	}
+}
 /// <summary>
 /// 更新
 /// </summary>
-void CharacterStatus::Update()
+void CharacterStatus::Update(const bool _isShowMenu)
 {
-	lvUpCount = static_cast<int>(lv) - static_cast<int>(prevLv);
-	//レベルアップをしていたら
-	if (lvUpCount > 0)
+	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	
+	if (_isShowMenu && !isShowMenu)
 	{
-		isShowMenu = true;
-		//選択ステータスの変更
-		ChangeSelectStatus();
-		//選択しているステータスの上昇
-		UpSelectStatus();
+		statusUpPoint = static_cast<int>(lv) - static_cast<int>(prevLv);
+		if (!isInputPad)
+		{
+			if (input & PAD_INPUT_1)
+			{
+				isShowMenu = true;
+				isBonfireMenu = true;
+				isLevelUp = false;
+				isInputPad = true;
+			}
+		}
 	}
-	else
-	{
-		nowSelectStatus = static_cast<int>(SelectStatus::ATK);
-		isShowMenu = false;
-	}
+		UpdateBonfireMenu();
+		UpdateLevelUpMenu();
 }
 /// <summary>
 /// 描画
 /// </summary>
 void CharacterStatus::Draw()
 {
-	// メニューが開いているとき
-	if (isShowMenu)
+	DrawBonfireMenu();
+	DrawLevelUpMenu();
+}
+void CharacterStatus::UpdateBonfireMenu()
+{
+	//キーボードまたはXInputのゲームパットの入力を受け付ける
+	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	//かがり火メニューの表示
+	if (isBonfireMenu)
 	{
-		DrawExtendGraph(BACKGROUND_POS.x, BACKGROUND_POS.y, BACKGROUND_POS.x + BACKGROUND_WIDTH, BACKGROUND_POS.y + BACKGROUND_HEIGHT, backGroundImage, TRUE);
-		DrawStringToHandle(STATUS_UP_TEXT_POS.x, STATUS_UP_TEXT_POS.y, "STATUS UP!", FONT_COLOR_WHITE, statusFontHandle);
-		//選択されいないアイコンは少し暗くする
-		ChangeBlendRateDrawText(nowSelectStatus, static_cast<int>(SelectStatus::ATK));	//攻撃力
-		ChangeBlendRateDrawText(nowSelectStatus, static_cast<int>(SelectStatus::DEF));	//防御力
-		ChangeBlendRateDrawText(nowSelectStatus, static_cast<int>(SelectStatus::AGI));	//素早さ
+		//もし入力フラグが立っていなかったら
+		if (!isInputPad)
+		{
+			//もし上入力を受け付けたら
+			if (input & PAD_INPUT_UP)
+			{
+				//現在選択しているメニューを切り替える
+				switch (nowSelectMenu)
+				{
+				case static_cast<int>(SelectBonfireMenu::BACK_TO_THE_GAME):
+					//現在選択しているメニューを変更する
+					nowSelectMenu = static_cast<int>(SelectBonfireMenu::BACK_TO_THE_GAME);
+					//強調表示用座標を変更する
+					rectPos = GAME_POS;
+					break;
+				case static_cast<int>(SelectBonfireMenu::LEVEL_UP):
+					nowSelectMenu = static_cast<int>(SelectBonfireMenu::BACK_TO_THE_GAME);
+					rectPos = GAME_POS;
+					break;
+				}
+				isInputPad = true;
+			}
+			// 下に
+			if (input & PAD_INPUT_DOWN)
+			{
+				switch (nowSelectMenu)
+				{
+				case static_cast<int>(SelectBonfireMenu::BACK_TO_THE_GAME):
+					nowSelectMenu = static_cast<int>(SelectBonfireMenu::LEVEL_UP);
+					rectPos = LEVEL_POS;
+					break;
+				case static_cast<int>(SelectBonfireMenu::LEVEL_UP):
+					nowSelectMenu = static_cast<int>(SelectBonfireMenu::LEVEL_UP);
+					rectPos = LEVEL_POS;
+					break;
+				}
+				isInputPad = true;
+			}
+			//もしAボタンが押されたら
+			if (input & PAD_INPUT_1)
+			{
+				//最終入力フラグを立てる
+				isFinalSelectMenu = true;
+			}
+			if (input & PAD_INPUT_2)
+			{
+				isLevelUp = false;
+				isBonfireMenu = false;
+				isFinalSelectMenu = false;
+				isShowMenu = false;
+				isInputPad = true;
+			}
+		}
+	}
+	//もし何も入力を受け付けていなかったら
+	if (input == 0)
+	{
+		//入力フラグを下す
+		isInputPad = false;
+	}
+	//もし最終入力フラグが立っていたら
+	if (isFinalSelectMenu)
+	{
+		switch (nowSelectMenu)
+		{
+		case static_cast<int>(SelectBonfireMenu::BACK_TO_THE_GAME):
+			isLevelUp = false;
+			isBonfireMenu = false;
+			isFinalSelectMenu = false;
+			isShowMenu = false;
+			isInputPad = true;
+			break;
+		case static_cast<int>(SelectBonfireMenu::LEVEL_UP):
+			isLevelUp = true;
+			isBonfireMenu = false;
+			isFinalSelectMenu = false;
+			break;
+		}
+		isInputPad = true;
 	}
 }
 /// <summary>
 /// 選択しているステータスの上昇
 /// </summary>
-void CharacterStatus::UpSelectStatus()
+void CharacterStatus::DrawBonfireMenu()
 {
-	//最終決定されていたら
-	if (isFinalSelectStatus && lvUpCount != 0)
+	if (isBonfireMenu)
 	{
-		//選択しているステータスの上昇
-		switch (nowSelectStatus)
-		{
-		case static_cast<int>(SelectStatus::ATK):
-			atk += LV_UP_ADD_VALUE;
-			break;
-		case static_cast<int>(SelectStatus::DEF):
-			def += LV_UP_ADD_VALUE;
-			break;
-		case static_cast<int>(SelectStatus::AGI):
-			agi += LV_UP_ADD_VALUE;
-			break;
-		}
-		//フラグを折る
-		isFinalSelectStatus = false;
-		prevLv++;
+		DrawGraph(menuPos.x, menuPos.y, data[static_cast<int>(DataType::BONFIRE_MENU)], TRUE);
+		DrawGraph(highCursorPos.x, highCursorPos.y, data[static_cast<int>(DataType::CURSOR)], TRUE);
+		DrawRotaGraph(lowCursorPos.x, lowCursorPos.y, 1.0, DX_PI_F, data[static_cast<int>(DataType::CURSOR)], TRUE);
+		DrawGraph(rectPos.x, rectPos.y, data[static_cast<int>(DataType::SELECT_RECT)], TRUE);
 	}
 }
 /// <summary>
@@ -260,65 +474,185 @@ void CharacterStatus::ChangeBlendRateDrawText(const int currentSelectStatus, con
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 }
+void CharacterStatus::TutorialStatusReset()
+{
+	if (atk < 2.0f)
+	{
+		statusUpPoint = 1;
+		atk = 1.0f;
+		agi = 1.0f;
+		def = 1.0f;
+		atkUpCount = 0;
+		agiUpCount = 0;
+		defUpCount = 0;
+		prevAtkUpCount = atkUpCount;
+		prevAgiUpCount = agiUpCount;
+		prevDefUpCount = defUpCount;
+		prevStatusUpPoint = statusUpPoint;
+	}
+}
+void CharacterStatus::UpdateLevelUpMenu()
+{
+	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
+	if (isLevelUp)
+	{
+		if (!isInputPad)
+		{
+			if (input & PAD_INPUT_RIGHT)
+			{
+				switch (nowSelectStatus)
+				{
+				case static_cast<int>(SelectStatus::ATK):
+					nowSelectStatus = static_cast<int>(SelectStatus::AGI);
+					nowHighCursorPos = AGI_HIGH_CURSOR_POS;
+					nowLowCursorPos = AGI_LOW_CURSOR_POS;
+					break;
+				case static_cast<int>(SelectStatus::AGI):
+					nowSelectStatus = static_cast<int>(SelectStatus::DEF);
+					nowHighCursorPos = DEF_HIGH_CURSOR_POS;
+					nowLowCursorPos = DEF_LOW_CURSOR_POS;
+					break;
+				case static_cast<int>(SelectStatus::DEF):
+					nowSelectStatus = static_cast<int>(SelectStatus::DEF);
+					nowHighCursorPos = DEF_HIGH_CURSOR_POS;
+					nowLowCursorPos = DEF_LOW_CURSOR_POS;
+					break;
+				}
+				isInputPad = true;
+			}
+			if (input & PAD_INPUT_LEFT)
+			{
+				switch (nowSelectStatus)
+				{
+				case static_cast<int>(SelectStatus::ATK):
+					nowSelectStatus = static_cast<int>(SelectStatus::ATK);
+					nowHighCursorPos = ATK_HIGH_CURSOR_POS;
+					nowLowCursorPos = ATK_LOW_CURSOR_POS;
+					break;
+				case static_cast<int>(SelectStatus::AGI):
+					nowSelectStatus = static_cast<int>(SelectStatus::ATK);
+					nowHighCursorPos = ATK_HIGH_CURSOR_POS;
+					nowLowCursorPos = ATK_LOW_CURSOR_POS;
+					break;
+				case static_cast<int>(SelectStatus::DEF):
+					nowSelectStatus = static_cast<int>(SelectStatus::AGI);
+					nowHighCursorPos = AGI_HIGH_CURSOR_POS;
+					nowLowCursorPos = AGI_LOW_CURSOR_POS;
+					break;
+				}
+				isInputPad = true;
+			}
+			if (statusUpPoint != 0)
+			{
+				if (input & PAD_INPUT_UP)
+				{
+					switch (nowSelectStatus)
+					{
+					case static_cast<int>(SelectStatus::ATK):
+						atkUpCount++;
+						statusUpPoint--;
+						break;
+					case static_cast<int>(SelectStatus::AGI):
+						agiUpCount++;
+						statusUpPoint--;
+						break;
+					case static_cast<int>(SelectStatus::DEF):
+						defUpCount++;
+						statusUpPoint--;
+						break;
+					}
+					isInputPad = true;
+				}
+			}
+			if (input & PAD_INPUT_DOWN)
+			{
+				switch (nowSelectStatus)
+				{
+				case static_cast<int>(SelectStatus::ATK):
+					if (atkUpCount != prevAtkUpCount)
+					{
+						atkUpCount--;
+						statusUpPoint++;
+					}
+					break;
+				case static_cast<int>(SelectStatus::AGI):
+					if (agiUpCount != prevAgiUpCount)
+					{
+						agiUpCount--;
+						statusUpPoint++;
+					}
+					break;
+				case static_cast<int>(SelectStatus::DEF):
+					if (defUpCount != prevDefUpCount)
+					{
+						defUpCount--;
+						statusUpPoint++;
+					}
+					break;
+				}
+				isInputPad = true;
+			}
+		}
+		//決定
+		if (input & PAD_INPUT_1)
+		{
+			for (int i = 0; i < atkUpCount - prevAtkUpCount; i++)
+			{
+				atk += 1.0f;
+			}
+			for (int i = 0; i < agiUpCount - prevAgiUpCount; i++)
+			{
+				agi += 1.0f;
+			}
+			for (int i = 0; i < defUpCount - prevDefUpCount; i++)
+			{
+				def += 1.0f;
+			}
+			prevAtkUpCount = atkUpCount;
+			prevAgiUpCount = agiUpCount;
+			prevDefUpCount = defUpCount;
+			prevStatusUpPoint = statusUpPoint;
+			prevLv = lv;
+		}
+		//戻る
+		if (input & PAD_INPUT_2)
+		{
+			statusUpPoint = prevStatusUpPoint;
+			atkUpCount = prevAtkUpCount;
+			agiUpCount = prevAgiUpCount;
+			defUpCount = prevDefUpCount;
+			isLevelUp = false;
+			isBonfireMenu = true;
+			isInputPad = true;
+		}
+	}
+}
 /// <summary>
 /// アイコンの選択（カーソルの番号を切り替える）
 /// </summary>
-void CharacterStatus::ChangeSelectStatus()
+void CharacterStatus::DrawLevelUpMenu()
 {
-	// キーの入力状態をとる
-	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	//上に
-	if (!isInputPad)
+	if (isLevelUp)
 	{
-		if (input & PAD_INPUT_UP)
-		{
-			switch (nowSelectStatus)
-			{
-			case static_cast<int>(SelectStatus::ATK):
-				nowSelectStatus = static_cast<int>(SelectStatus::ATK);
-				break;
-			case static_cast<int>(SelectStatus::DEF):
-				nowSelectStatus = static_cast<int>(SelectStatus::ATK);
-				break;
-			case static_cast<int>(SelectStatus::AGI):
-				nowSelectStatus = static_cast<int>(SelectStatus::DEF);
-				break;
-			}
-			isInputPad = true;
-		}
-		// 下に
-		if (input & PAD_INPUT_DOWN)
-		{
-			switch (nowSelectStatus)
-			{
-			case static_cast<int>(SelectStatus::ATK):
-				nowSelectStatus = static_cast<int>(SelectStatus::DEF);
-				break;
-			case static_cast<int>(SelectStatus::DEF):
-				nowSelectStatus = static_cast<int>(SelectStatus::AGI);
-				break;
-			case static_cast<int>(SelectStatus::AGI):
-				nowSelectStatus = static_cast<int>(SelectStatus::AGI);
-				break;
-			}
-			isInputPad = true;
-		}
-	}
-	else
-	{
-		inputWaitTimer->StartTimer();
-	}
-	if (inputWaitTimer->CountTimer())
-	{
-		isInputPad = false;
-		inputWaitTimer->EndTimer();
-	}
-	// 最終選択
-	if (input & PAD_INPUT_2)
-	{
-		isFinalSelectStatus = true;
-		isInputPad = true;
+		DrawExtendGraph(BACKGROUND_POS.lx, BACKGROUND_POS.ly, BACKGROUND_POS.rx, BACKGROUND_POS.ry,data[static_cast<int>(DataType::BACK_GROUND)],TRUE);
+
+		DrawFormatString(TEXT_POS.x, TEXT_POS.y,  FONT_COLOR, "レベルアップ          ステータスポイント:%d\n上昇させるステータスを選んでください",statusUpPoint );
+		DrawExtendGraph(ATK_POS.lx, ATK_POS.ly, ATK_POS.rx, ATK_POS.ry, data[static_cast<int>(DataType::ATK)], TRUE);
+		DrawExtendGraph(AGI_POS.lx, AGI_POS.ly, AGI_POS.rx, AGI_POS.ry, data[static_cast<int>(DataType::AGI)], TRUE);
+		DrawExtendGraph(DEF_POS.lx, DEF_POS.ly, DEF_POS.rx, DEF_POS.ry, data[static_cast<int>(DataType::DEF)], TRUE);
+
+		SetFontSize(30);
+		DrawString(ATK_TEXT_POS.x, ATK_TEXT_POS.y, "攻撃力", FONT_COLOR);
+		DrawString(AGI_TEXT_POS.x, AGI_TEXT_POS.y, "素早さ", FONT_COLOR);
+		DrawString(DEF_TEXT_POS.x, DEF_TEXT_POS.y, "防御力", FONT_COLOR);
+
+		DrawFormatString(ATK_UP_COUNT_POS.x, ATK_UP_COUNT_POS.y, FONT_COLOR, "x%d", atkUpCount);
+		DrawFormatString(AGI_UP_COUNT_POS.x, AGI_UP_COUNT_POS.y, FONT_COLOR, "x%d", agiUpCount);
+		DrawFormatString(DEF_UP_COUNT_POS.x, DEF_UP_COUNT_POS.y, FONT_COLOR, "x%d", defUpCount);
+
+		DrawExtendGraph(nowHighCursorPos.lx, nowHighCursorPos.ly, nowHighCursorPos.rx, nowHighCursorPos.ry, data[static_cast<int>(DataType::CURSOR)], TRUE);
+		DrawExtendGraph(nowLowCursorPos.lx, nowLowCursorPos.ly, nowLowCursorPos.rx, nowLowCursorPos.ry, data[static_cast<int>(DataType::CURSOR)], TRUE);
 	}
 }
 /// <summary>

@@ -9,18 +9,16 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-BloodParticle::BloodParticle()
+BloodParticle::BloodParticle(const int _imageHandle)
 	:initPos(ORIGIN_POS)
 	, imageHandle(0)
 	, frameCount(0)
 	, isDraw(false)
 {
-	auto& load = Load::GetInstance();
-	load.GetParticleData(&imageHandle);
 	//定数分クラスのインスタンスを作成する
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
-		particle.push_back(new BloodParticleBase(imageHandle));
+		particle.push_back(new BloodParticleBase(_imageHandle));
 	}
 }
 /// <summary>

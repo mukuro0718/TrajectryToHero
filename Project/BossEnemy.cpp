@@ -23,6 +23,8 @@ BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle, const int _f
 	,font(_font)
 	,frameImage(_frameImage)
 	,hpImage(_hpImage)
+	, preliminaryOperation(nullptr)
+	, isPreliminaryOperation(false)
 {
 	Create();
 	spawnPos = _spawnPos;
@@ -40,6 +42,7 @@ BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle, const int _f
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/JumpIdleAnim.mv1"), 0);			//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/IdleAnim.mv1"), 0);			//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/DeathAnim.mv1"), 0);			//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Boss/BeforeAttackAnim.mv1"), 0);//攻撃前モーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ（最初は明示的に呼び出してアニメーションをアタッチする必要がある）
@@ -68,6 +71,8 @@ void BossEnemy::Create()
 	waitBeforeJumpAttack	= new Timer();
 	waitBeforeRotateAttack	= new Timer();
 	rotateAttackLoopTime	= new Timer();
+	preliminaryOperation = new Timer();
+
 }
 /// <summary>
 /// 初期化
@@ -80,6 +85,7 @@ void BossEnemy::Init()
 	rotateAttackLoopTime  ->Init(50);
 	invincibleTimer		  ->Init(7);	
 	restTimeAfterAttack   ->Init(50);
+	preliminaryOperation->Init(12);
 	//最大HPの設定
 	status->InitBossEnemyStatus();
 	maxHP = status->GetHp();
@@ -232,6 +238,7 @@ void BossEnemy::Move(const VECTOR _playerPos)
 				//休憩タイマーをスタートさせる
 				restTimeAfterAttack->StartTimer();
 				isRestTime = true;
+				isPreliminaryOperation = false;
 				isAttack = false;
 				//回転攻撃タイマーを終わらせる
 				rotateAttackLoopTime->EndTimer();
@@ -299,54 +306,78 @@ void BossEnemy::Move(const VECTOR _playerPos)
 /// </summary>
 void BossEnemy::ChangeAnim()
 {
-	if (isAttack && !isRestTime)
-	{
-		switch (attackType)
-		{
-		case 1://通常
-			anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
-			spherePos = MV1GetFramePosition(modelHandle,11);
-			attackAnimLoopCount = 1;
-			break;
-		case 2://回転
-			anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
-			spherePos = MV1GetFramePosition(modelHandle, 31);
-			rotateAttackLoopTime->StartTimer();
-			break;
-		case 3://ジャンプ
-			anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
-			spherePos = MV1GetFramePosition(modelHandle, 7);
-			if (!isJumpAttack)
-			{
-				waitBeforeJumpAttack->StartTimer();
-			}
-			break;
-		default:
-			break;
-		}
-	}
 	//死亡アニメーション
-	if (status->GetHp() < 0 && !isDeath)
+	if (status->GetHp() < 0)
 	{
+		if (!isDeath)
+		{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
+
+		}
 	}
-	if (isRestTime)
+	else
 	{
-		spherePos = MV1GetFramePosition(modelHandle, 7);
-		if (anim->GetAnim() == static_cast<int>(AnimationType::JUMP_IDLE) && anim->GetPlayTime() == 0.0f)
+		if (isAttack && !isRestTime)
 		{
-			anim->SetAnim(static_cast<int>(AnimationType::IDLE));
-			attackType = 0;
-			isJumpAttack = false;
+			switch (attackType)
+			{
+			case 1://通常
+				anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
+				spherePos = MV1GetFramePosition(modelHandle, 11);
+				attackAnimLoopCount = 1;
+				break;
+			case 2://回転
+				if (!isPreliminaryOperation)
+				{
+					preliminaryOperation->StartTimer();
+				}
+				else
+				{
+					anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
+					spherePos = MV1GetFramePosition(modelHandle, 31);
+					rotateAttackLoopTime->StartTimer();
+				}
+				if (preliminaryOperation->getIsStartTimer())
+				{
+					anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
+					if (preliminaryOperation->CountTimer())
+					{
+						preliminaryOperation->EndTimer();
+						isPreliminaryOperation = true;
+					}
+				}
+
+				break;
+			case 3://ジャンプ
+				anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
+				spherePos = MV1GetFramePosition(modelHandle, 7);
+				if (!isJumpAttack)
+				{
+					waitBeforeJumpAttack->StartTimer();
+				}
+				break;
+			default:
+				break;
+			}
 		}
-		//アニメーションがジャンプアタックだったら
-		else if (attackType == static_cast<int>(AnimationType::JUMP_ATTACK))
+		if (isRestTime)
 		{
-			anim->SetAnim(static_cast<int>(AnimationType::JUMP_IDLE));
-		}
-		else
-		{
-			anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+			spherePos = MV1GetFramePosition(modelHandle, 7);
+			if (anim->GetAnim() == static_cast<int>(AnimationType::JUMP_IDLE) && anim->GetPlayTime() == 0.0f)
+			{
+				anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+				attackType = 0;
+				isJumpAttack = false;
+			}
+			//アニメーションがジャンプアタックだったら
+			else if (attackType == static_cast<int>(AnimationType::JUMP_ATTACK))
+			{
+				anim->SetAnim(static_cast<int>(AnimationType::JUMP_IDLE));
+			}
+			else
+			{
+				anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+			}
 		}
 	}
 }
@@ -385,4 +416,8 @@ void BossEnemy::DrawUI()
 	DrawExtendGraph(static_cast<int>(HP_FRAME_POS.LX), static_cast<int>(HP_FRAME_POS.LZ), static_cast<int>(HP_FRAME_POS.RX), static_cast<int>(HP_FRAME_POS.RZ), frameImage, TRUE);
 	//HPバーの表示
 	DrawExtendGraph(HP_BAR_POS.x, HP_BAR_POS.y, HP_BAR_POS.x + nowHP.x, HP_BAR_POS.y + nowHP.y, hpImage, TRUE);
+}
+const void BossEnemy::PhysicalRecovery()
+{
+	status->PhysicalRecovery();
 }

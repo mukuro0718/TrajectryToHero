@@ -17,8 +17,14 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-WeakEnemy::WeakEnemy(const VECTOR _spawnPos,const int _modelHandle)
- :EnemyBase(_modelHandle)
+ WeakEnemy::WeakEnemy(const VECTOR _spawnPos, const int _modelHandle)
+	 : EnemyBase(_modelHandle)
+	 , invincibleTimer(nullptr)
+	 , restTimeAfterAttack(nullptr)
+	 , anim(nullptr)
+	 , randomRest(nullptr)
+	 , preliminaryOperation(nullptr)
+	 , isPreliminaryOperation(false)
 {
 	Create();
 	spawnPos = _spawnPos;
@@ -32,6 +38,7 @@ WeakEnemy::WeakEnemy(const VECTOR _spawnPos,const int _modelHandle)
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/AttackAnim.mv1"), 1);		//攻撃アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1"), 1);			//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);		//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/BeforeAttackAnim.mv1"), 1);//攻撃前モーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
@@ -42,15 +49,11 @@ WeakEnemy::WeakEnemy(const VECTOR _spawnPos,const int _modelHandle)
 /// </summary>
 void WeakEnemy::Create()
 {
-	//インスタンスの初期化
-	invincibleTimer		= nullptr;
-	restTimeAfterAttack = nullptr;
-	anim				= nullptr;
-	randomRest = nullptr;
 	//インスタンスの生成
 	invincibleTimer		= new Timer();
 	restTimeAfterAttack = new Timer();
-	randomRest = new Timer();
+	randomRest			= new Timer();
+	preliminaryOperation= new Timer();
 	anim				= new Animation();
 }
 /// <summary>
@@ -69,6 +72,7 @@ void WeakEnemy::Init()
 	invincibleTimer->Init(9);
 	restTimeAfterAttack->Init(20);
 	randomRest->Init(20);
+	preliminaryOperation->Init(12);
 	//新しい座標の生成
 	pos			= spawnPos;
 	rotate		= MODEL_ROTATE;
@@ -80,10 +84,14 @@ void WeakEnemy::Init()
 	isRandomWalk = false;
 	isRandomRest = false;
 	//最大HPの設定
-	status->InitWeakEnemyStatus();
+	status->InitWeakEnemyStatus(1.0f);
 	maxHP = status->GetHp();
 }
-
+const void WeakEnemy::NewStatus(const float _playerLv)
+{
+	status->InitWeakEnemyStatus(_playerLv);
+	maxHP = status->GetHp();
+}
 /// <summary>
 /// 更新
 /// </summary>
@@ -160,11 +168,18 @@ void WeakEnemy::Move(VECTOR _playerPos)
 		//すでに攻撃していない、休憩中ではない
 		if (!isAttack && !isRestTime)
 		{
-			attackAnimLoopCount = 100;
-			isAttack = true;
-			isMove = false;
-			isRandomWalk = false;
-			isRandomRest = false;
+			if (!isPreliminaryOperation)
+			{
+				preliminaryOperation->StartTimer();
+			}
+			else
+			{
+				attackAnimLoopCount = 100;
+				isAttack = true;
+				isMove = false;
+				isRandomWalk = false;
+				isRandomRest = false;
+			}
 		}
 	}
 	//80以上だったら
@@ -201,6 +216,7 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			isAttack = false;
 			isMove = false;
 			isRandomWalk = false;
+			isPreliminaryOperation = false;
 			isRestTime = true;
 		}
 		//0じゃなければ攻撃回数を減らす
@@ -225,6 +241,14 @@ void WeakEnemy::Move(VECTOR _playerPos)
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
+	}
+	if (preliminaryOperation->getIsStartTimer())
+	{
+		if (preliminaryOperation->CountTimer())
+		{
+			preliminaryOperation->EndTimer();
+			isPreliminaryOperation = true;
+		}
 	}
 }
 /// <summary>
@@ -308,6 +332,10 @@ void WeakEnemy::ChangeAnim()
 	if (status->GetHp() <= 0)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
+	}
+	else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
 	}
 }
 /// <summary>

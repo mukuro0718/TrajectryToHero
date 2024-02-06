@@ -5,7 +5,7 @@
 #include"Common.h"
 #include"Timer.h"
 #include"BloodParticle.h"
-
+#include"Load.h"
 const VECTOR  EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
 const COLOR_F EnemyBase::CHANGE_DIF_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
 const COLOR_F EnemyBase::CHANGE_SPC_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
@@ -26,9 +26,12 @@ EnemyBase::EnemyBase(int _modelHandle)
 	,spawnPos(ORIGIN_POS)
 	,bloodBaseDir(ORIGIN_POS)
 {
+	int bloodParticle = 0;
+	auto& load = Load::GetInstance();
+	load.GetEnemyParticleData(&bloodParticle);
 	changeColorTimer = new Timer();
 	status = new CharacterStatus();
-	blood = new BloodParticle();
+	blood = new BloodParticle(bloodParticle);
 	changeColorTimer->Init(2);
 	
 	maxHP = 0;

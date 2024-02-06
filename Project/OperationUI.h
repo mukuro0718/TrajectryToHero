@@ -13,7 +13,7 @@ public:
 	~OperationUI();//デストラクタ
 
 	void Update(const bool _isMove);//更新
-	void Draw();//描画
+	void Draw(const VECTOR _bonfirePos, const VECTOR _playerPos);//描画
 private:
 	struct DrawRect
 	{
@@ -24,9 +24,9 @@ private:
 	};
 	/*静的定数*/
 	static constexpr DrawRect MOVE_UI_DRAW_RECT = { 1670,800,1870,850 };//移動UI描画範囲
-	static constexpr DrawRect MENU_UI_DRAW_RECT = { 1620,860,1870,910 };//メニューUI描画範囲
-	static constexpr DrawRect ATTACK_UI_DRAW_RECT = { 1670,920,1870,970 };//攻撃UI描画範囲
-	static constexpr DrawRect CAMERA_UI_DRAW_RECT = { 1670,980,1870,1030 };//カメラUI描画範囲
+	static constexpr DrawRect ATTACK_UI_DRAW_RECT = { 1670,860,1870,910 };//攻撃UI描画範囲
+	static constexpr DrawRect CAMERA_UI_DRAW_RECT = { 1670,920,1870,970 };//カメラUI描画範囲
+	static constexpr DrawRect BONFIRE_MENU_UI_DRAW_RECT = { 1120,660,1320,700 };
 	static constexpr int ADD_ALPHA_VALUE = 5;
 	static constexpr int MAX_ALPHA = 255;
 	static constexpr int MIN_ALPHA = 0;

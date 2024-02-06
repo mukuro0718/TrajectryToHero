@@ -19,7 +19,11 @@ Load::~Load()
 	/*オープニング*/
 	openingImage.clear();
 	/*タイトル*/
-	titleImage.clear();
+	titleData.clear();
+	titleFontData.clear();
+	titleplayerData.clear();
+	titleEnemyData.clear();
+	titleStageData.clear();
 	//プレイヤーモデル
 	playerModel = 0;
 	playerFont = 0;
@@ -30,9 +34,6 @@ Load::~Load()
 	farmStageData.clear();
 	//スカイドームモデル
 	skydomeModel = 0;
-	//メニュー画像
-	characterStatusImage = 0;
-	characterStatusFont = 0;
 	//ステージチェンジ画像
 	stageChangeImage.clear();
 	gateImage = 0;
@@ -50,13 +51,16 @@ Load::~Load()
 	attackOpeUIImage = 0;
 	cameraOpeUIImage = 0;
 	//パーティクル画像
-	bloodParticleImage = 0;
+	playerBloodParticleImage = 0;
+	enemyBloodParticleImage = 0;
 	//影画像
 	shadowImage = 0;
 	//ゲームクリア画像
 	gameClearImage = 0;
 	//ゲームクリア画像
 	gameOverImage = 0;
+
+	victoryImage = 0;
 }
 /// <summary>
 /// データのロード
@@ -70,20 +74,35 @@ void Load::LoadingData()
 	openingImage.push_back(LoadGraph("Data/Img/Opening/Img4.png"));
 
 	/*タイトル*/
-	titleImage.push_back(LoadGraph("Data/Img/Title/Icon1.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/Icon2.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/Icon3.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/Title.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/Cursor.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/BackGround.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/BriefingData.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/7.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/6.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/5.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/4.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/3.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/2.png"));
-	titleImage.push_back(LoadGraph("Data/Img/Title/1.png"));
+	//タイトルデータ
+	titleData.push_back(LoadGraph("Data/Img/Title/Title.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/Menu/backGround.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/リザルトGreenButton.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/リザルトRedButton.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/AttackButton.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/CameraButton.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/MoveButton.png"));
+	titleData.push_back(LoadGraph("Data/Img/Game/UI/GoBossStage.png"));
+	//フォントデータ
+	titleFontData.push_back(CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 70, 32, DX_FONTTYPE_NORMAL));
+	titleFontData.push_back(CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 200, 24, DX_FONTTYPE_NORMAL));
+	titleFontData.push_back(CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 40, 32, DX_FONTTYPE_NORMAL));
+	//プレイヤー
+	titleplayerData.push_back(MV1LoadModel("Data/Model/Player/Player_test2.mv1"));
+	titleplayerData.push_back(LoadGraph("Data/Img/Game/UI/HPBar.png"));
+	titleplayerData.push_back(LoadGraph("Data/Img/Game/UI/EXPBar.png"));
+	titleplayerData.push_back(LoadGraph("Data/Img/Game/UI/UIBar.png"));
+	//エネミー
+	titleEnemyData.push_back(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
+	strongerUIData = LoadGraph("Data/Img/Game/UI/StrongerEnemy.png");
+	//ステージ
+	titleStageData.push_back(MV1LoadModel("Data/Model/Map/Ground.mv1"));
+	titleStageData.push_back(MV1LoadModel("Data/Model/Map/Gate.mv1"));
+	titleStageData.push_back(MV1LoadModel("Data/Model/Map/Portal.mv1"));
+	titleStageData.push_back(MV1LoadModel("Data/Model/Skydome/Skydome.mv1"));
+	titleStageData.push_back(MV1LoadModel("Data/Model/Map/Campfire.mv1"));
+	titleStageData.push_back(LoadGraph("Data/Img/Game/Particle/Flame.png"));
+
 	/*ゲーム*/
 	//プレイヤーモデル
 	playerModel = MV1LoadModel("Data/Model/Player/Player_test2.mv1");
@@ -98,15 +117,25 @@ void Load::LoadingData()
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Village.mv1"));
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Gate.mv1"));
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Portal.mv1"));
+	//かがり火
+	bonfireData.push_back(MV1LoadModel("Data/Model/Map/Campfire.mv1"));
+	bonfireData.push_back(LoadGraph("Data/Img/Game/Particle/Flame.png"));
 	//スカイドームモデル
 	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
 	//メニュー画像
-	characterStatusImage = LoadGraph("Data/Img/Game/Menu/backGround.png");
-	characterStatusFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 128, 64, DX_FONTTYPE_NORMAL);
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/backGround.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/BonfireMenu.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/Cursor.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/SelectRect.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/ATK.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/AGI.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/Menu/DEF.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/UI/リザルトGreenButton.png"));
+	statusData.push_back(LoadGraph("Data/Img/Game/UI/リザルトRedButton.png"));
 	//ステージチェンジ画像
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Farm_ロゴ.png"));
 	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/Boss_ロゴ.png"));
-	stageChangeImage.push_back(LoadGraph("Data/Img/Game/StageChange/警告.png"));
+	stageChangeImage.push_back(LoadGraph("Data/Img/Game/UI/GoBossStage.png"));
 	gateImage = LoadGraph("Data/Img/Game/StageChange/Gate.png");
 	//UI画像
 	hpBarGraph	  = LoadGraph("Data/Img/Game/UI/HPBar.png");
@@ -118,17 +147,19 @@ void Load::LoadingData()
 	agiUIImage = LoadGraph("Data/Img/Game/UI/AGI.png");
 	statusUIFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 60, 16, DX_FONTTYPE_NORMAL);
 	moveOpeUIImage	 = LoadGraph("Data/Img/Game/UI/MoveUI.png");
-	menuOpeUIImage   = LoadGraph("Data/Img/Game/UI/MenuUI.png");
+	menuOpeUIImage   = LoadGraph("Data/Img/Game/UI/リザルトBonfireMenuButton.png");
 	attackOpeUIImage = LoadGraph("Data/Img/Game/UI/AttackUI.png");
 	cameraOpeUIImage = LoadGraph("Data/Img/Game/UI/CameraUI.png");
 	//パーティクル画像
-	bloodParticleImage = LoadGraph("Data/Img/Game/Particle/Blood.png");
+	enemyBloodParticleImage = LoadGraph("Data/Img/Game/Particle/BloodEnemy.png");
+	playerBloodParticleImage = LoadGraph("Data/Img/Game/Particle/Blood.png");
 	//影画像
 	shadowImage = LoadGraph("Data/Img/Game/Shadow/Shadow.tga");
 	//ゲームクリア画像
 	gameClearImage = LoadGraph("Data/Img/GameClear/Gameclear.png");
 	//ゲームクリア画像
 	gameOverImage = LoadGraph("Data/Img/GameOver/Gameover.png");
+	victoryImage = LoadGraph("Data/Img/Game/StageChange/VICTORY.png");
 }
 /// <summary>
 /// オープニングデータのgetter
@@ -145,11 +176,27 @@ void Load::GetOpeningData(vector<int>* _image)
 /// タイトルデータのgetter
 /// </summary>
 /// <param name="image">画像ハンドルを格納するvectorのポインタ</param>
-void Load::GetTitleData(vector<int>* _image)
+void Load::GetTitleData(vector<int>* _title, vector<int>* _font, vector<int>* _player, vector<int>* _enemy, vector<int>* _stage)
 {
-	for (int i = 0; i < TITLE_IMAGE_NUM; i++)
+	for (int i = 0; i < TITLE_DATA_NUM; i++)
 	{
-		_image->push_back(titleImage[i]);
+		_title->push_back(titleData[i]);
+	}
+	for (int i = 0; i < TITLE_FONT_DATA_NUM; i++)
+	{
+		_font->push_back(titleFontData[i]);
+	}
+	for (int i = 0; i < TITLE_PLAYER_DATA_NUM; i++)
+	{
+		_player->push_back(titleplayerData[i]);
+	}
+	for (int i = 0; i < TITLE_ENEMY_DATA_NUM; i++)
+	{
+		_enemy->push_back(titleEnemyData[i]);
+	}
+	for (int i = 0; i < TITLE_STAGE_DATA_NUM; i++)
+	{
+		_stage->push_back(titleStageData[i]);
 	}
 }
 /// <summary>
@@ -205,10 +252,12 @@ void Load::GetStageChangeData(vector<int>* _image, int* _gate)
 /// メニューデータのgetter
 /// </summary>
 /// <param name="image">画像ハンドルを格納するvectorのポインタ</param>
-void Load::GetCharacterStatusData(int* _image, int* _font)
+void Load::GetCharacterStatusData(vector<int>* _data)
 {
-	*_image = characterStatusImage;
-	*_font = characterStatusFont;
+	for (int i = 0; i < STATUS_DATA; i++)
+	{
+		_data->push_back(statusData[i]);
+	}
 }
 /// <summary>
 /// スカイドームデータのgetter
@@ -243,9 +292,16 @@ void Load::GetGameOverData(int* _image)
 /// <summary>
 /// パーティクルデータのgetter
 /// </summary>
-void Load::GetParticleData(int* _image)
+void Load::GetEnemyParticleData(int* _image)
 {
-	*_image = bloodParticleImage;
+	*_image = enemyBloodParticleImage;
+}
+/// <summary>
+/// パーティクルデータのgetter
+/// </summary>
+void Load::GetPlayerParticleData(int* _image)
+{
+	*_image = playerBloodParticleImage;
 }
 /// <summary>
 /// ステータスUIデータのgetter
@@ -266,4 +322,19 @@ void Load::GetOpeUIData(int* _moveImage, int* _menuImage, int* _attackImage, int
 	*_menuImage = menuOpeUIImage;
 	*_attackImage = attackOpeUIImage;
 	*_cameraImage = cameraOpeUIImage;
+}
+void Load::GetBonfireData(vector<int>* _bonfireData)
+{
+	for (int i = 0; i < BONFIRE_DATA_NUM; i++)
+	{
+		_bonfireData->push_back(bonfireData[i]);
+	}
+}
+void Load::GetStrongerUIData(int* _data)
+{
+	*_data = strongerUIData;
+}
+void Load::GetVictoryData(int* _victoryData)
+{
+	*_victoryData = victoryImage;
 }

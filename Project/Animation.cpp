@@ -22,7 +22,8 @@ Animation::Animation()
 /// </summary>
 Animation::~Animation()
 {
-
+	animModelHandle.clear();
+	useAnimIndex.clear();
 }
 /// <summary>
 /// アニメーションの追加

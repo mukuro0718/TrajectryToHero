@@ -16,7 +16,7 @@ public:
     void Init();                           //初期化
     void Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss);                            //描画
     void Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss);//移動
-    void Update(const VECTOR _playerPos, const bool _isFarm,const bool _isBoss);       //更新
+    void Update(const VECTOR _playerPos,const float _playerLv, const bool _isFarm,const bool _isBoss);       //更新
     void CreateAndInit();                                          //生成
     void AllDestroy();//すべての削除
     void DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss);//影の描画
@@ -62,6 +62,7 @@ public:
     const float GetIsAttackBossEnemy()const { return bossEnemy->GetIsAttack(); }
     //無敵フラグのgetter
     const bool GetIsInvincibleWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
+    const bool GetIsInvincibleStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetIsInvincible(); }
     const bool GetIsInvincibleBossEnemy()const { return bossEnemy->GetIsInvincible(); }
     //無敵フラグを下す
     void FlaggingBossEnemy();//フラグを下す
@@ -71,6 +72,8 @@ public:
     float CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos);
     //与える経験値の初期化
     void InitExpToGive(const int _enemyNum);
+    const void PhysicalRecoveryBossEnemy();
+
 private:
     /*定数*/
     enum class ModelType//モデル変数

@@ -8,6 +8,7 @@
 #include"SwordTrail.h"
 #include"BloodParticle.h"
 #include"StatusUI.h"
+#include"Load.h"
 const int	 PlayerBase::CAPSULE_COLOR		= GetColor(255, 0, 0);
 const int	 PlayerBase::SPHERE_COLOR		= GetColor(200, 0, 0);
 const VECTOR PlayerBase::SPHERE_POS_OFFSET	= VGet(-10.0f,30.0f,0.0f);
@@ -27,7 +28,10 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	, centerPos(ORIGIN_POS)
 	, bloodBaseDir(ORIGIN_POS)
 {
-	blood		  = new BloodParticle();
+	int bloodParticle = 0;
+	auto& load = Load::GetInstance();
+	load.GetPlayerParticleData(&bloodParticle);
+	blood		  = new BloodParticle(bloodParticle);
 	status		  = new CharacterStatus();
 	statusUI	  = new StatusUI();
 	swordTrail	  = new SwordTrail();
@@ -98,7 +102,7 @@ void PlayerBase::Draw()
 		attackLatency->EndTimer();
 	}
 	
-	statusUI->Draw(static_cast<int>(status->GetAtk()) - 1, static_cast<int>(status->GetDef()) - 1, static_cast<int>(status->GetAgi()) - 1);
+	statusUI->Draw(static_cast<int>(status->GetAtk())-1 , static_cast<int>(status->GetDef()) - 1, static_cast<int>(status->GetAgi()) - 1);
 	swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
 	swordTrail->Draw();
 }
@@ -117,7 +121,7 @@ void PlayerBase::CalcHP( const float _atk, const VECTOR _attackerPos)
 {
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HPŒvŽZ
-	//status->CalcHP(_atk);
+	status->CalcHP(_atk);
 	isInvincible = true;
 }
 /// <summary>
@@ -134,4 +138,12 @@ const float PlayerBase::GetAtk()
 const float PlayerBase::GetHp()
 {
 	return status->GetHp();
+}
+const float PlayerBase::GetLv()
+{
+	return status->GetLv();
+}
+void PlayerBase::TutorialStatusReset()
+{
+	status->TutorialStatusReset();
 }

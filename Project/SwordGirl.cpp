@@ -111,18 +111,21 @@ void SwordGirl::Update()
 	{
 		pos.x = PLAYER_RANGE_OF_ACTION.LX;
 	}
-	if (pos.x <= PLAYER_RANGE_OF_ACTION.LZ)
+	if (pos.x <= PLAYER_RANGE_OF_ACTION.RX)
 	{
-		pos.x = PLAYER_RANGE_OF_ACTION.LZ;
+		pos.x = PLAYER_RANGE_OF_ACTION.RX;
 	}
-	if (pos.z >= PLAYER_RANGE_OF_ACTION.RX)
+	if (pos.z >= PLAYER_RANGE_OF_ACTION.LZ)
 	{
-		pos.z = PLAYER_RANGE_OF_ACTION.RX;
+		pos.z = PLAYER_RANGE_OF_ACTION.LZ;
 	}
 	if (pos.z <= PLAYER_RANGE_OF_ACTION.RZ)
 	{
 		pos.z = PLAYER_RANGE_OF_ACTION.RZ;
 	}
+	//体力の回復
+	//status->CalcExp
+	//死亡判定
 	Death();
 	//コリジョン情報を更新
 	MV1RefreshCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex);
@@ -137,9 +140,16 @@ void SwordGirl::Update()
 /// <summary>
 /// ステータス更新
 /// </summary>
-void SwordGirl::StatusUpdate()
+void SwordGirl::StatusUpdate(const VECTOR _bonfirePos)
 {
-	status->Update();
+	VECTOR fireToPlayer = VSub(_bonfirePos,pos);
+	float vecSize = VSize(fireToPlayer);
+	bool isShowMenu = false;
+	if(vecSize < 30.0f)
+	{
+		isShowMenu = true;
+	}
+	status->Update(isShowMenu);
 	status->ShowInfo();
 }
 /// <summary>
@@ -221,37 +231,40 @@ void SwordGirl::ChangeColor()
 /// </summary>
 void SwordGirl::Move(const VECTOR _cameraToPlayer)
 {
-	cameraToPlayer = _cameraToPlayer;
-	moveVec = ORIGIN_POS;
-	/////////////////////////////////////////////////////////
-	// 回転と移動
-	/////////////////////////////////////////////////////////
-	// 攻撃をしていなかったら
-	if (!isAttack)
+	if (status->GetHp() > 0)
 	{
-		//左スティックの傾きを取得
-		GetJoypadAnalogInput(&inputLeftStick.XBuf, &inputLeftStick.YBuf, DX_INPUT_KEY_PAD1);
-		//変数に入れる
-		VECTOR stickDirection = ORIGIN_POS;
-		stickDirection.x = static_cast<float>(-inputLeftStick.XBuf);
-		stickDirection.z = static_cast<float>(inputLeftStick.YBuf);
-		//スティック入力があればこの後の処理を行う
-		if (inputLeftStick.YBuf != NONE_INPUT_VALUE.XBuf || inputLeftStick.XBuf != NONE_INPUT_VALUE.YBuf)
+		cameraToPlayer = _cameraToPlayer;
+		moveVec = ORIGIN_POS;
+		/////////////////////////////////////////////////////////
+		// 回転と移動
+		/////////////////////////////////////////////////////////
+		// 攻撃をしていなかったら
+		if (!isAttack)
 		{
-			//ムーブフラグを立てる
-			isMove = true;
-			//正規化する
-			const VECTOR stickDirectionNormalize = VNorm(stickDirection);
-			//モデル角度の計算
-			rotate.y = (-atan2(cameraToPlayer.z, cameraToPlayer.x) - atan2(stickDirectionNormalize.z, stickDirectionNormalize.x)) - DX_PI_F;
-			//座標計算
-			moveVec.x += -sinf(rotate.y) * status->GetAgi();
-			moveVec.z += -cosf(rotate.y) * status->GetAgi();
-			playerDir = VNorm(playerDir);
-		}
-		else
-		{
-			isMove = false;
+			//左スティックの傾きを取得
+			GetJoypadAnalogInput(&inputLeftStick.XBuf, &inputLeftStick.YBuf, DX_INPUT_KEY_PAD1);
+			//変数に入れる
+			VECTOR stickDirection = ORIGIN_POS;
+			stickDirection.x = static_cast<float>(-inputLeftStick.XBuf);
+			stickDirection.z = static_cast<float>(inputLeftStick.YBuf);
+			//スティック入力があればこの後の処理を行う
+			if (inputLeftStick.YBuf != NONE_INPUT_VALUE.XBuf || inputLeftStick.XBuf != NONE_INPUT_VALUE.YBuf)
+			{
+				//ムーブフラグを立てる
+				isMove = true;
+				//正規化する
+				const VECTOR stickDirectionNormalize = VNorm(stickDirection);
+				//モデル角度の計算
+				rotate.y = (-atan2(cameraToPlayer.z, cameraToPlayer.x) - atan2(stickDirectionNormalize.z, stickDirectionNormalize.x)) - DX_PI_F;
+				//座標計算
+				moveVec.x += -sinf(rotate.y) * status->GetAgi();
+				moveVec.z += -cosf(rotate.y) * status->GetAgi();
+				playerDir = VNorm(playerDir);
+			}
+			else
+			{
+				isMove = false;
+			}
 		}
 	}
 }
@@ -357,12 +370,23 @@ void SwordGirl::UpdateUI()
 void SwordGirl::DrawUI()
 {
 	//テキストの表示
-	DrawStringToHandle(20, 20, "HP", FONT_COLOR, font);
-	DrawStringToHandle(20, 60, "EXP", FONT_COLOR, font);
+	DrawFormatStringToHandle(25, 20, FONT_COLOR, font, "LV %d", static_cast<int>(status->GetLv()));
+	DrawStringToHandle(20, 60, "HP", FONT_COLOR, font);
+	DrawStringToHandle(20, 100, "EXP", FONT_COLOR, font);
 	//フレームの描画
 	DrawExtendGraph(static_cast<int>(HP_FRAME_POS.LX),  static_cast<int>(HP_FRAME_POS.LZ),  static_cast<int>(HP_FRAME_POS.RX),  static_cast<int>(HP_FRAME_POS.RZ),  frameImage, TRUE);
 	DrawExtendGraph(static_cast<int>(EXP_FRAME_POS.LX), static_cast<int>(EXP_FRAME_POS.LZ), static_cast<int>(EXP_FRAME_POS.RX), static_cast<int>(EXP_FRAME_POS.RZ), frameImage, TRUE);
 	//HPバーの表示
 	DrawExtendGraph(HP_BAR_POS.x, HP_BAR_POS.y, HP_BAR_POS.x + nowHP.x, HP_BAR_POS.y + nowHP.y, hpImage, TRUE);
 	DrawExtendGraph(EXP_BAR_POS.x, EXP_BAR_POS.y, EXP_BAR_POS.x + nowEXP.x, EXP_BAR_POS.y + nowEXP.y, expImage, TRUE);
+}
+void SwordGirl::ReSpawn()
+{
+	pos = ORIGIN_POS;
+	status->PhysicalRecovery();
+	isDeath = false;
+}
+void SwordGirl::PhysicalRecovery()
+{
+	status->PhysicalRecovery();
 }

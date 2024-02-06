@@ -64,12 +64,12 @@ void PlayerManager::Attack()
 /// <summary>
 /// 描画
 /// </summary>
-void PlayerManager::Draw()
+void PlayerManager::Draw(const VECTOR _bonfirePos)
 {
 	player->Draw();
-	player->DrawMenu();
 	player->DrawUI();
-	opeUI->Draw();
+	opeUI->Draw(_bonfirePos,player->GetPos());
+	player->DrawMenu();
 }
 /// <summary>
 /// 削除
@@ -104,11 +104,23 @@ void PlayerManager::CalcExp(const float _expToGive)
 /// <summary>
 /// ステータス更新
 /// </summary>
-void PlayerManager::StatusUpdate()
+void PlayerManager::StatusUpdate(const VECTOR _bonfirePos)
 {
-	player->StatusUpdate();
+	player->StatusUpdate(_bonfirePos);
 }
 void PlayerManager::DrawShadow(const int _stageModelHandle)
 {
 	player->DrawShadow(_stageModelHandle,player->GetPos(),SHADOW_HEIGHT,SHADOW_SIZE);
+}
+void PlayerManager::ReSpawn()
+{
+	player->ReSpawn();
+}
+void PlayerManager::PhysicalRecovery()
+{
+	player->PhysicalRecovery();
+}
+const void PlayerManager::InitPos() const
+{
+	player->InitPos();
 }

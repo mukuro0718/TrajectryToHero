@@ -4,6 +4,7 @@
 //===========================================================================
 #pragma once
 #include"DxLib.h"
+#include"Common.h"
 class Camera;
 class PlayerManager;
 class Skydome;
@@ -11,7 +12,6 @@ class StageManager;
 class StageChanger;
 class EnemyManager;
 class Collision;
-
 using namespace std;
 
 class Game final
@@ -26,7 +26,7 @@ public:
 	void Draw();//描画
 	void OnDamage();//ダメージ判定
 	void FixMoveVec();//移動量補正
-	void GameEnd(const bool _playerIsDeath/*,const float _bossHP*/);//ゲーム終了処理
+	void GameEnd(const bool _playerIsDeath_, const bool _bossIsDeath);//ゲーム終了処理
 	const bool GetIsGameOver()const { return isGameOver; }//ゲーム終了フラグのgetter
 	const bool GetIsGameClear()const { return isGameClear; }
 private:
@@ -42,5 +42,24 @@ private:
 	StageChanger* stageChanger;//ステージ切り替え
 	EnemyManager* enemyManager;//エネミー
 	Collision* collision;
+	static constexpr DrawRect VICTORY_LOGO_POS = { 200, 200, 1720, 700 };
+	int victoryImage;
+	int alpha;
+	int frameCount;
+	bool isFrameCount;
+	static constexpr int MAX_FRAME_COUNT = 180;
+	static constexpr int MAX_ALPHA_VALUE = 255;
+	static constexpr int ADD_ALPHA_VALUE = 5;
+	static constexpr int MIN_ALPHA_VALUE = 0;
+	static constexpr VECTOR MOVE_RANGE_POS_LTB = {  451,0  ,-840 };//左上下
+	static constexpr VECTOR MOVE_RANGE_POS_LBB = { -450,0  ,-840 };//左下下
+	static constexpr VECTOR MOVE_RANGE_POS_RTB = {  451,0  , 510 };//右上下
+	static constexpr VECTOR MOVE_RANGE_POS_RBB = { -450,0  , 510 };//右下下
+	static constexpr VECTOR MOVE_RANGE_POS_LTT = {  451,10 ,-840 };//左上上
+	static constexpr VECTOR MOVE_RANGE_POS_LBT = { -450,10 ,-840 };//左下上
+	static constexpr VECTOR MOVE_RANGE_POS_RTT = {  451,10 , 510 };//右上上
+	static constexpr VECTOR MOVE_RANGE_POS_RBT = { -450,10 , 510 };//右下上
+	static const int MOVE_RANGE_COLOR;
+	const void DrawMoveRange()const;
 };
 

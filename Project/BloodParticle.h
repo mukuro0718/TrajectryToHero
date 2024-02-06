@@ -11,7 +11,7 @@ class BloodParticleBase;
 class BloodParticle
 {
 public:
-	BloodParticle();				//コンストラクタ
+	BloodParticle(const int _imageHandle);				//コンストラクタ
 	~BloodParticle();				//デストラクタ
 	void Init(const VECTOR _targetDir, const VECTOR _targetPos);//初期化
 	void Update(const int _maxFrameNum);//更新

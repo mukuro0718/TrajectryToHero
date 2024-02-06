@@ -107,11 +107,11 @@ void StageChanger::DrawImageWhenSwitchingStage()
 		{
 			DrawString(400, 300,"FARM STAGE", GetColor(200, 200, 200));
 			DrawLine(300, 480, 1500, 480, GetColor(200, 200, 200),2);
-			//DrawGraph(0, 0, image[static_cast<int>(ImageType::FARM_STAGE)], TRUE);
 		}
 		else if (isBoss)
 		{
-			DrawGraph(0, 0, image[static_cast<int>(ImageType::BOSS_STAGE)], TRUE);
+			DrawString(400, 300, "BOSS STAGE", GetColor(200, 200, 200));
+			DrawLine(300, 480, 1500, 480, GetColor(200, 200, 200), 2);
 		}
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
@@ -144,29 +144,28 @@ void StageChanger::Draw()
 /// ステージ移動を行うかどうか
 /// </summary>
 /// <param name="playerPos">変更したプレイヤー座標</param>
-VECTOR StageChanger::DrawAlert(VECTOR playerPos)
+bool StageChanger::DrawAlert(const VECTOR _playerPos, const VECTOR _gatePos, const bool _isShowGate)
 {
-	VECTOR outPutPos = playerPos;
-	if (-100.0f <= playerPos.x && playerPos.x <= 40 && 500.0f <= playerPos.z)
+	VECTOR playerToGate = VSub(_playerPos,_gatePos);
+	float vecSize = VSize(playerToGate);
+	if (_isShowGate)
 	{
-		isChangeStage = true;
-		isDrawAlert = true;
-		DrawGraph(0, 0, image[static_cast<int>(ImageType::ALERT)], TRUE);
-		int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-
-		if (input & PAD_INPUT_2)
+		if (vecSize <= 30.0f)
 		{
-			outPutPos = ORIGIN_POS;
-			isFarm = false;
-			isBoss = true;
-			isDrawAlert = false;
-		}
-		else if (input & PAD_INPUT_3)
-		{
-			outPutPos.z = 450.0f;
-			isChangeStage = false;
-			isDrawAlert = false;
+			DrawExtendGraph(BOSS_UI_DRAW_RECT.lx, BOSS_UI_DRAW_RECT.ly, BOSS_UI_DRAW_RECT.rx, BOSS_UI_DRAW_RECT.ry, image[static_cast<int>(ImageType::ALERT)], TRUE);
+			int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+			if (input & PAD_INPUT_1)
+			{
+				isFarm = false;
+				isBoss = true;
+				return true;
+			}
 		}
 	}
-	return outPutPos;
+	return false;
+}
+const void StageChanger::ChangeStage()
+{
+	isFarm = true;
+	isBoss = false;
 }

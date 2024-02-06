@@ -6,42 +6,56 @@
 #include"BloodParticle.h"
 
 //モデル設定
-const VECTOR StrongEnemy::MODEL_SCALE = VGet(0.3f, 0.3f, 0.3f);//モデルの拡大率
-const VECTOR StrongEnemy::MODEL_ROTATE = VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
-
+const VECTOR StrongEnemy::MODEL_SCALE	= VGet(0.3f, 0.3f, 0.3f);//モデルの拡大率
+const VECTOR StrongEnemy::MODEL_ROTATE	= VGet(0.0f, 90 * DX_PI_F / 180.0f, 0.0f);//モデルの回転値
+const int    StrongEnemy::CAPSULE_COLOR = GetColor(0, 255, 0);
+const int	 StrongEnemy::SPHERE_COLOR	= GetColor(0, 200, 0);
 
 /// <summary>
 /// コンストラクタ
 /// </summary>
 StrongEnemy::StrongEnemy(const VECTOR _spawnPos,const int _modelHandle)
-	:EnemyBase(_modelHandle)
+	: EnemyBase(_modelHandle)
+	, invincibleTimer(nullptr)
+	, restTimeAfterAttack(nullptr)
+	, anim(nullptr)
+	, randomRest(nullptr)
+	, preliminaryOperation(nullptr)
+	, isPreliminaryOperation(false)
 {
-	//インスタンスの初期化
-	invincibleTimer = NULL;
-	restTimeAfterAttack = NULL;
-	anim = NULL;
 	//インスタンスの生成
-	invincibleTimer = new Timer();
-	restTimeAfterAttack = new Timer();
-	anim = new Animation();
+	Create();
 	spawnPos = _spawnPos;
 	Init();
 	//モデル設定
 	MV1SetScale(modelHandle, scale);
 	//回転値のセット
 	MV1SetRotationXYZ(modelHandle, rotate);
-	//コリジョン情報を構築
-	MV1SetupCollInfo(modelHandle, -1, 1, 1, 1);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/StrongEnemy_RunAnim.mv1"), 0);			//走りアニメーション
-	anim->Add(MV1LoadModel("Data/Animation/WeakEnemy_StrongAttack.mv1"), 1);		//攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/StrongEnemy_IdleAnim.mv1"), 0);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy_DeathAnim_public.mv1"), 0);		//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Strong/RunAnim.mv1")	, 0);			//走りアニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Strong/AttackAnim.mv1"), 1);		//攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Strong/IdleAnim.mv1")	, 0);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Strong/DeathAnim.mv1")	, 1);		//死亡アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/BeforeAttackAnim.mv1"), 1);//攻撃前モーション
+
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
 	anim->Attach(&modelHandle);
 }
+/// <summary>
+/// 作成
+/// </summary>
+void StrongEnemy::Create()
+{
+	//インスタンスの生成
+	invincibleTimer		= new Timer();
+	restTimeAfterAttack = new Timer();
+	randomRest			= new Timer();
+	preliminaryOperation = new Timer();
+	anim				= new Animation();
+}
+
 /// <summary>
 /// デストラクタ
 /// </summary>
@@ -57,18 +71,28 @@ void StrongEnemy::Init()
 	//必要なInitクラスの呼び出し
 	invincibleTimer->Init(9);
 	restTimeAfterAttack->Init(20);
-	status->InitStrongEnemyStatus();
+	randomRest->Init(20);
+	preliminaryOperation->Init(9);
+	status->InitStrongEnemyStatus(1.0f);
 	//新しい座標の生成
 	pos = spawnPos;
-	rotate		= MODEL_ROTATE;
-	scale		= MODEL_SCALE;
-	isAttack	= false;
-	isDeath	= false;
-	isHit		= false;
-	isRestTime		= false;
+	rotate = MODEL_ROTATE;
+	scale = MODEL_SCALE;
+	isAttack = false;
+	isDeath = false;
+	isHit = false;
+	isRestTime = false;
+	isRandomWalk = false;
+	isRandomRest = false;
 	//最大HPの設定
 	maxHP = status->GetHp();
 }
+const void StrongEnemy::NewStatus(const float _playerLv)
+{
+	status->InitStrongEnemyStatus(_playerLv);
+	maxHP = status->GetHp();
+}
+
 /// <summary>
 /// 更新
 /// </summary>
@@ -91,17 +115,11 @@ void StrongEnemy::Update()
 			isInvincible = false;
 		}
 	}
-	//コリジョン情報を更新
-	MV1RefreshCollInfo(modelHandle, -1);
 
-	//もしプレイヤーに当たっていたら（後々HPをつけてHPが０になったら）
-	if (status->GetHp() < 0)
+	//もしHPをつけてHPが０になったら
+	if (status->GetHp() <= 0)
 	{
 		//現在のアニメーションをやられたアニメーションにする
-		if (!isDeath)
-		{
-			anim->SetAnim(static_cast<int>(AnimationType::DEATH));
-		}
 		if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
 		{
 			isDeath = true;
@@ -113,10 +131,16 @@ void StrongEnemy::Update()
 		pos = VAdd(pos, moveVec);//移動
 		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
 	}
-	pos.y = 10.0f;
-	MV1SetPosition(modelHandle, pos);//位置の設定
-	blood->Update(45);
-
+	//アニメーションの変更
+	ChangeAnim();
+	//位置の設定
+	MV1SetPosition(modelHandle, pos);
+	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle, 63);
+	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
+	SetUpSphere(enemyLeftFootPos, SPHERE_RADIUS, SPHERE_COLOR, false);
+	blood->Update(60);
+	//色の変更
+	ChangeColor();
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle);
 }
@@ -125,42 +149,61 @@ void StrongEnemy::Update()
 /// </summary>
 void StrongEnemy::Move(VECTOR _playerPos)
 {
-	VECTOR playerPos = _playerPos;
-	playerPos.y = 0.0f;
+	moveVec = ORIGIN_POS;
 	//目標までのベクトル
 	VECTOR targetPos = ORIGIN_POS;
 	//正規化したベクトル
 	VECTOR normalizePos = ORIGIN_POS;
+	//返り値として返す移動後座標（角度有）
+	VECTOR outPutPos = ORIGIN_POS;
 	float vectorSize = 0.0f;
 	//プレイヤーと自分の座標のベクトルの差を求める(目標までのベクトル)
-	targetPos = VSub(pos, playerPos);
+	targetPos = VSub(pos, _playerPos);
 	//そのベクトルの大きさを求める
 	vectorSize = VSize(targetPos);
 	//目標までのベクトルを正規化する
 	normalizePos = VNorm(targetPos);
-	//もしベクトルサイズが80以下だったら攻撃する
+	//もしベクトルサイズが定数以下だったら攻撃する
 	if (vectorSize <= 80.0f)
 	{
-		if (!isAttack)
-		{
-			anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
-			attackAnimLoopCount = 150;
-			isAttack = true;
-		}
-	}
-	else
-	{
+		//すでに攻撃していない、休憩中ではない
 		if (!isAttack && !isRestTime)
 		{
-			//もしベクトルサイズが200以下だったらプレイヤーに向けて走る
+			if (!isPreliminaryOperation)
+			{
+				preliminaryOperation->StartTimer();
+			}
+			else
+			{
+
+				attackAnimLoopCount = 100;
+				isAttack = true;
+				isMove = false;
+				isRandomWalk = false;
+				isRandomRest = false;
+			}
+		}
+	}
+	//80以上だったら
+	else
+	{
+		//攻撃や休憩をしていなかったら
+		if (!isAttack && !isRestTime)
+		{
+			//もしベクトルサイズが定数以下だったらプレイヤーに向けて走る
 			if (vectorSize <= 100.0f)
 			{
-				anim->SetAnim(static_cast<int>(AnimationType::RUN));
+				isMove = true;
+				isAttack = false;
+				isRandomWalk = false;
+				isRandomRest = false;
 			}
 			//それより離れていたら
 			else
 			{
-				anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+				RandomWalk();
+				isMove = false;
+				isAttack = false;
 			}
 		}
 	}
@@ -172,10 +215,11 @@ void StrongEnemy::Move(VECTOR _playerPos)
 		{
 			attackAnimLoopCount = 0;
 			restTimeAfterAttack->StartTimer();
-			//もしジャンプ中だったらそれ用のIdleにする
 			isAttack = false;
+			isMove = false;
+			isRandomWalk = false;
+			isPreliminaryOperation = false;
 			isRestTime = true;
-			anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 		}
 		//0じゃなければ攻撃回数を減らす
 		else
@@ -184,7 +228,7 @@ void StrongEnemy::Move(VECTOR _playerPos)
 		}
 	}
 	//もし休憩中だったら
-	if (isRestTime)
+	else if (isRestTime)
 	{
 		//タイマーが終了していたら
 		if (restTimeAfterAttack->CountTimer())
@@ -193,24 +237,111 @@ void StrongEnemy::Move(VECTOR _playerPos)
 			restTimeAfterAttack->EndTimer();
 		}
 	}
-	if (anim->GetAnim() != static_cast<int>(AnimationType::IDLE))
+	if (isMove && vectorSize >= 20 || isAttack && vectorSize >= 20)
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
-		rotate = VGet(0.0f, (float)ChangeRotate(playerPos), 0.0f);
+		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
+	}
+	if (preliminaryOperation->getIsStartTimer())
+	{
+		if (preliminaryOperation->CountTimer())
+		{
+			preliminaryOperation->EndTimer();
+			isPreliminaryOperation = true;
+		}
 	}
 }
 /// <summary>
+/// ランダムに歩く
+/// </summary>
+void StrongEnemy::RandomWalk()
+{
+	//目標までのベクトル
+	VECTOR targetVec = ORIGIN_POS;
+	//正規化したベクトル
+	VECTOR normalizeVec = ORIGIN_POS;
+	//ベクトルのサイズ
+	float vectorSize = 0.0f;
+	targetVec = VSub(randomWalkTargetPos, pos);
+	if (isRandomWalk == false)
+	{
+		randomWalkTargetPos = spawnPos;
+		/*TODO*/
+		//もしスポーン位置から定数以上離れていたらスポーン位置スポーン位置に向かって進む
+		//そうでなければランダムで座標を出して、進む方向を決める、ベクトルのサイズを出して、０になるまで進む
+		// ランダムで出す座標はスポーン位置からX,Z座標方向に＋定数の範囲で出す
+		//もし進んでいる途中にスポーン位置から定数以上離れたら止まる
+		randomWalkTargetPos.x += static_cast<float>(GetRand(200) - 100);
+		randomWalkTargetPos.z += static_cast<float>(GetRand(200) - 100);
+		isRandomWalk = true;
+		targetVec = VSub(randomWalkTargetPos, pos);
+	}
+	//そのベクトルの大きさを求める
+	else if (VSize(targetVec) < 10.0f)
+	{
+		randomRest->StartTimer();
+		isRandomRest = true;
+	}
+	if (randomRest->CountTimer())
+	{
+		randomRest->EndTimer();
+		isRandomWalk = false;
+		isRandomRest = false;
+	}
+	if (!randomRest->getIsStartTimer())
+	{
+		normalizeVec = VNorm(targetVec);
+		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
+		moveVec = VScale(normalizeVec, status->GetAgi());
+		moveVec.y = 0.0f;
+		//角度を変える
+		rotate = VGet(0.0f, (float)ChangeRotate(randomWalkTargetPos), 0.0f);
+	}
+}
+
+/// <summary>
 ///	角度の変更
 /// </summary>
-float StrongEnemy::ChangeRotate(VECTOR playerPos)
+double StrongEnemy::ChangeRotate(VECTOR playerPos)
 {
 	//2点間のベクトルを出す(エネミーからプレイヤー)
 	VECTOR EP_Vector = VSub(pos, playerPos);
 	//2点の座標からラジアンを求める
 
 	return static_cast<float>(atan2(static_cast<double>(EP_Vector.x), static_cast<double>(EP_Vector.z)));
+}
+/// <summary>
+///	アニメーションの変更
+/// </summary>
+void StrongEnemy::ChangeAnim()
+{
+	//攻撃も移動もしていないまたは休憩中だったら
+	if (!isAttack && !isMove && !isRandomWalk || isRestTime || isRandomRest)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::IDLE));
+	}
+	//攻撃中だったら
+	else if (isAttack && !isMove && !isRestTime)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
+	}
+	//移動中だったら
+	else if (!isAttack && isMove && !isRestTime || !isAttack && isRandomWalk && !isRestTime)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::RUN));
+	}
+	//もしHPが0以下になったら
+	if (status->GetHp() <= 0)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
+	}
+	else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
+	}
+
 }
 /// <summary>
 /// 最終処理
@@ -220,36 +351,17 @@ void StrongEnemy::Final()
 	if (invincibleTimer)
 	{
 		delete(invincibleTimer);
-		invincibleTimer = NULL;
+		invincibleTimer = nullptr;
 	}
 	if (restTimeAfterAttack)
 	{
 		delete(restTimeAfterAttack);
-		restTimeAfterAttack = NULL;
+		restTimeAfterAttack = nullptr;
 	}
 	if (anim)
 	{
 		delete(anim);
-		anim = NULL;
+		anim = nullptr;
 	}
 
 }
-/// <summary>
-/// 球と球の当たり判定
-/// </summary>
-/// <param name="isAttack">攻撃しているかどうかの判定</param>
-/// <param name="playerAttackPos">攻撃時当たり判定座標</param>
-/// <param name="attackRadius">攻撃時当たり判定半径</param>
-/// <returns>当たったかどうか</returns>
-//bool StrongEnemy::SphereAndSphere(bool isAttack, VECTOR playerAttackPos, float attackRadius)
-//{
-//	// 距離の計算(二つのベクトルを引いたベクトルを取得)
-//	VECTOR playerToEnemy = VSub(playerAttackPos, base.pos);
-//	// 上で求めたベクトルの大きさよりも、二つの半径を足したものが大きければ当たっていると判定
-//	if (VSize(playerToEnemy) < attackRadius + RADIUS)
-//	{
-//		base.isHit = true;
-//		return true;
-//	}
-//	return false;
-//}

@@ -16,9 +16,9 @@ public:
 	void Move(const VECTOR _cameraToPlayer);//移動
 	void Attack();//攻撃
 	void Update();//更新
-	void Draw();//描画
+	void Draw(const VECTOR _bonfirePos);//描画
 	void Final();//削除
-	void StatusUpdate();//ステータス更新
+	void StatusUpdate(const VECTOR _bonfirePos);//ステータス更新
 	void FixMoveVec(const VECTOR _fixVec);
 	void DrawShadow(const int _stageModelHandle);
 	//bool IsStoppingUpdate();
@@ -42,6 +42,8 @@ public:
 	const bool GetIsShowStatusMenu() { return player->GetIsShowStatusMenu(); }
 	//移動量のgetter
 	const VECTOR GetMoveVec()const { return player->GetMoveVec(); }
+	//LVのgetter
+	const float GetLv()const { return player->GetLv(); }
 	/*HACK:
 	const ~ ~()constは
 	最初のconst = 定数値を返す
@@ -51,7 +53,9 @@ public:
 	void CalcHP(const float _atk, const VECTOR _attackerPos);
 	//レベルアップ処理
 	void CalcExp(const float _expToGive);
-
+	void ReSpawn();//体力回復
+	void PhysicalRecovery();//体力回復
+	const void InitPos() const;
 private:
 	static constexpr float SHADOW_SIZE = 20.0f;
 	static constexpr float SHADOW_HEIGHT = 1000.0f;

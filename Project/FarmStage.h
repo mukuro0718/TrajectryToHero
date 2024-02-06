@@ -13,11 +13,12 @@ public:
 	~FarmStage();						// デストラクタ
 
 	void Init();
-	void Draw();						//描画
+	void Draw(const bool _isFarm);						//描画
 	void Delete();						//最終処理
-	void Update();						//更新
-
+	void Update(const int _playerLv);						//更新
+	const int GetIsShowGate() const { return isShowGate; }
 	const int GetModelHandle()const { return model[static_cast<int>(FARM::GROUND)]; }
+	const VECTOR GetGatePos()const { return pos[static_cast<int>(FARM::GATE)]; }
 protected:
 	enum class FARM
 	{
@@ -37,5 +38,6 @@ protected:
 	std::vector<VECTOR> pos;							//ポジション
 	std::vector<int> model;					//モデルハンドル
 	float portalRotate;
+	bool isShowGate;
 };
 

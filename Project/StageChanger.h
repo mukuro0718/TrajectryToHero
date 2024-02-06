@@ -17,10 +17,9 @@ public:
     void Init();//初期化
     void Delete();//削除
     void DrawImageWhenSwitchingStage();//ウェーブ開始時の画像の表示
-    void DrawGameOver();//ゲーム終了時の画像の表示
     void DrawGameClear();//ゲームクリアの画像の表示
     void Draw();
-    VECTOR DrawAlert(VECTOR playerPos);//farm_bossのステージ移動を行うかどうか
+    bool DrawAlert(const VECTOR _playerPos, const VECTOR _gatePos, const bool _isShowGate);//farm_bossのステージ移動を行うかどうか
 
     //ステージ切り替えフラグ（切り替えが終わっているかどうかを管理）
     const bool GetIsChangeStage()const { return isChangeStage; }
@@ -36,7 +35,7 @@ public:
     const bool GetIsGameEnd()const { return isGameEnd; }
     //警告フラグのgetter/setter
     const bool GetIsAlert()const { return isDrawAlert; }
-
+    const void ChangeStage();
 private:
     //定数
     enum class ImageType
@@ -77,4 +76,6 @@ private:
     bool isGameEnd;         //ゲーム終了フラグ
     bool isDrawBlackBack;   //黒背景描画フラグ
     bool isDrawAlert;       //警告描画フラグ(true:描画している false:描画していない)
+    static constexpr DrawRect BOSS_UI_DRAW_RECT = { 1120,660,1320,700 };//移動UI描画範囲
+
 };

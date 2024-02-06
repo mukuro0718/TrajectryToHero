@@ -181,6 +181,27 @@
     <Filter Include="Object\Scene\Game\Stage\StageType\BossStage">
       <UniqueIdentifier>{b1407668-87c3-498d-9d99-ccd163880613}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Stage\Gimmick">
+      <UniqueIdentifier>{0c83c493-d742-4649-b488-7f028dac7375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\FireParticle">
+      <UniqueIdentifier>{3a95f2c4-d9a7-4e20-8b14-d361a74c25b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Title\Player">
+      <UniqueIdentifier>{026ad284-fcf0-43f9-9170-a861187fa844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Title\Enemy">
+      <UniqueIdentifier>{6f41b2d8-8d3b-449f-b3eb-dd7091a6601b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Title\Stage">
+      <UniqueIdentifier>{b23222aa-7008-4fe8-8de6-abe3a5df39eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Title\Camera">
+      <UniqueIdentifier>{7bf0ed60-c2dd-4808-831e-62e3e9c9e699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\UI\StrongerUI">
+      <UniqueIdentifier>{2cfa6a93-566b-47e8-9002-67c33dd24625}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -318,6 +339,27 @@
     <ClCompile Include="Tutorial.cpp">
       <Filter>Object\Scene\Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="Bonfire.cpp">
+      <Filter>Object\Scene\Game\Stage\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="FireParticle.cpp">
+      <Filter>Object\Scene\Game\Particle\FireParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialStage.cpp">
+      <Filter>Object\Scene\Title\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialCamera.cpp">
+      <Filter>Object\Scene\Title\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialPlayer.cpp">
+      <Filter>Object\Scene\Title\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialEnemy.cpp">
+      <Filter>Object\Scene\Title\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="StrongerUI.cpp">
+      <Filter>Object\Scene\Game\UI\StrongerUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -451,6 +493,27 @@
     </ClInclude>
     <ClInclude Include="Tutorial.h">
       <Filter>Object\Scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Bonfire.h">
+      <Filter>Object\Scene\Game\Stage\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="FireParticle.h">
+      <Filter>Object\Scene\Game\Particle\FireParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialStage.h">
+      <Filter>Object\Scene\Title\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialCamera.h">
+      <Filter>Object\Scene\Title\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialPlayer.h">
+      <Filter>Object\Scene\Title\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialEnemy.h">
+      <Filter>Object\Scene\Title\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="StrongerUI.h">
+      <Filter>Object\Scene\Game\UI\StrongerUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
