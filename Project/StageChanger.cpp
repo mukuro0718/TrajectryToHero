@@ -99,7 +99,7 @@ void StageChanger::DrawImageWhenSwitchingStage()
 		}
 		//アルファ値を増やす
 		alpha += alphaValue;
-
+		SetFontSize(180);
 		//ブレンド処理
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		//描画画像切り替え
@@ -157,6 +157,7 @@ bool StageChanger::DrawAlert(const VECTOR _playerPos, const VECTOR _gatePos, con
 			if (input & PAD_INPUT_1)
 			{
 				isFarm = false;
+				isChangeStage = true;
 				isBoss = true;
 				return true;
 			}

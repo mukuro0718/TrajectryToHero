@@ -35,6 +35,10 @@ public:
 	void ReSpawn();//リスポーン
 	void PhysicalRecovery();//体力回復
 	const void InitPos() { pos = ORIGIN_POS; }
+	const int GetAtkUpCount()const;
+	const int GetAgiUpCount()const;
+	const int GetDefUpCount()const;
+	const bool GetIsBonfireMenu()const;
 private:
 	/*定数*/
 	enum class AnimationType//アニメーションの種類

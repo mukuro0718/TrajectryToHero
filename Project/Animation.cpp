@@ -45,6 +45,19 @@ void Animation::Attach(int *_modelHandle)
 	animAttachIndex = MV1AttachAnim(*_modelHandle,useAnimIndex[nowAnim], animModelHandle[nowAnim], FALSE);
 	//アニメーションの総再生時間を設定
 	animTotalTime = MV1GetAttachAnimTotalTime(*_modelHandle,animAttachIndex);
+	float rate = 0.0f;
+	//for (int i = 0; i < useAnimIndex.size(); i++)
+	//{
+	//	if (i == nowAnim)
+	//	{
+	//		rate = 1.0f;
+	//	}
+	//	else
+	//	{
+	//		rate = 0.0f;
+	//	}
+	//	MV1SetAttachAnimBlendRate(*_modelHandle, useAnimIndex[i], rate);
+	//}
 }
 /// <summary>
 /// アニメーションの再生

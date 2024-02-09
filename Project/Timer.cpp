@@ -9,7 +9,7 @@
 /// <param name="targetTime">目標時間</param>
 Timer::Timer()
 {
-	SetFontSize(64);
+	//SetFontSize(64);
 }
 /// <summary>
 /// デストラクタ

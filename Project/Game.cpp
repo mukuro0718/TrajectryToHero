@@ -7,7 +7,9 @@
 #include"EnemyManager.h"
 #include"Collision.h"
 #include"Load.h"
+#include"StatusUpParticle.h"
 const int Game::MOVE_RANGE_COLOR = GetColor(200,200,200);
+const int Game::FONT_COLOR = GetColor(200, 200, 200);
 
 /// <summary>
 /// コンストラクタ
@@ -25,9 +27,16 @@ Game::Game()
     , victoryImage(0)
     , alpha(0)
     , isFrameCount(false)
+    , youDiedImage(0)
+    , statusUpParticle(nullptr)
+    , strongUI(0)
 {
     auto& load = Load::GetInstance();
     load.GetVictoryData(&victoryImage);
+    load.GetDiedData(&youDiedImage);
+    load.GetStrongerUIData(&strongUI);
+    textFont = CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 24, 32, DX_FONTTYPE_NORMAL);
+    youDiedFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 150, 32, DX_FONTTYPE_NORMAL);
     Create();
     Init();
 }
@@ -51,6 +60,7 @@ void Game::Create()
     stageChanger = new StageChanger();
     enemyManager = new EnemyManager();
     collision = new Collision();
+    statusUpParticle = new StatusUpParticle();
 }
 void Game::Init()
 {
@@ -122,6 +132,7 @@ void Game::Update()
         playerManager->PhysicalRecovery();
     }
     playerManager->StatusUpdate(stageManager->GetBonfirePos());
+    statusUpParticle->Update(playerManager->GetPos(), playerManager->GetIsBonfireMenu());
 }
 /// <summary>
 /// 描画
@@ -135,6 +146,7 @@ void Game::Draw()
     playerManager->DrawShadow(stageManager->GetModelHandle());
     enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
     enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+    enemyManager->DrawStrongerUI(playerManager->GetLv(),stageChanger->GetIsFarm());
     playerManager->Draw(stageManager->GetBonfirePos());
     if (!stageChanger->GetIsBoss())
     {
@@ -149,6 +161,7 @@ void Game::Draw()
         stageChanger->DrawImageWhenSwitchingStage();
     }
     GameEnd(playerManager->GetIsDeath(), enemyManager->GetIsDeathBossEnemy());
+    statusUpParticle->Draw(playerManager->GetIsBonfireMenu());
 }
 const void Game::DrawMoveRange()const
 {
@@ -162,6 +175,18 @@ const void Game::DrawMoveRange()const
     DrawTriangle3D(MOVE_RANGE_POS_RTB, MOVE_RANGE_POS_RBB, MOVE_RANGE_POS_RBT, MOVE_RANGE_COLOR, TRUE);
     DrawTriangle3D(MOVE_RANGE_POS_RBB, MOVE_RANGE_POS_RTB, MOVE_RANGE_POS_RTT, MOVE_RANGE_COLOR, TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, MAX_ALPHA_VALUE);
+
+    //文字用の背景画像の描画
+    DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
+    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "敵を倒すと、経験値を取得できます。\nレベルが上がると、ステータスポイントが\n付与されます。", FONT_COLOR, textFont);
+    //文字用の背景画像の描画
+    DrawExtendGraph(1390, 150, 1500, 230, strongUI, TRUE);
+    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x + 70, TEXT_POS_FOR_DESCRIPTION.y + 100, "このマークがついている敵は,\nあなたよりもレベルが上の敵です。\nステータスを強化して挑みましょう。", FONT_COLOR, textFont);
+    //文字用の背景画像の描画
+    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 200, "たき火で休むと、体力を回復することが\nできます。\nまたレベルアップメニューを選択すると、\nステータスポイントを消費してステータス\nを強化できます。", FONT_COLOR, textFont);
+    //文字用の背景画像の描画
+    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 350, "レベルが一定以上上がると、ゲートが出現\nします。\nゲートをくぐるとボス戦が始まるので、\nステータスを強化して挑みましょう。", FONT_COLOR, textFont);
+
 }
 
 /// <summary>
@@ -390,8 +415,30 @@ void Game::GameEnd(const bool _playerIsDeath, const bool _bossIsDeath)
     }
     if (_playerIsDeath)
     {
-        enemyManager->PhysicalRecoveryBossEnemy();
-        playerManager->ReSpawn();
-        stageChanger->ChangeStage();
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+        DrawBox(YOU_DIED_BACKGROUND.lx, YOU_DIED_BACKGROUND.ly, YOU_DIED_BACKGROUND.rx, YOU_DIED_BACKGROUND.ry, GetColor(0, 0, 0), TRUE);
+        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, MAX_ALPHA_VALUE);
+        DrawExtendFormatStringToHandle(250,400,1.0,1.0,GetColor(150,150,150), youDiedFont, "あなたは死亡しました\n  %d秒後にリスポーン",(MAX_FRAME_COUNT / 60) - (frameCount / 60));
+        if (!isFrameCount)
+        {
+            alpha += ADD_ALPHA_VALUE;
+            if (alpha >= MAX_ALPHA_VALUE)
+            {
+                isFrameCount = true;
+                alpha = MAX_ALPHA_VALUE;
+            }
+        }
+        else
+        {
+            frameCount++;
+            if (frameCount >= MAX_FRAME_COUNT)
+            {
+                enemyManager->PhysicalRecoveryBossEnemy();
+                playerManager->ReSpawn();
+                stageChanger->ChangeStage();
+                isFrameCount = false;
+                frameCount = 0;
+            }
+        }
     }
 }

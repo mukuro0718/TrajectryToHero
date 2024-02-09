@@ -103,8 +103,11 @@ void SwordGirl::Update()
 	{
 		blood->Init(bloodBaseDir,pos);
 	}
-	//移動量を座標に足す
-	pos = VAdd(pos, moveVec);
+	if (status->GetHp() > 0)
+	{
+		//移動量を座標に足す
+		pos = VAdd(pos, moveVec);
+	}
 	//ステージの範囲をもとに位置を補正する
 	/*pos.y = PLAYETR_Y_POS;*/
 	if (pos.x >= PLAYER_RANGE_OF_ACTION.LX)
@@ -389,4 +392,20 @@ void SwordGirl::ReSpawn()
 void SwordGirl::PhysicalRecovery()
 {
 	status->PhysicalRecovery();
+}
+const int SwordGirl::GetAtkUpCount()const
+{
+	return status->GetAtkUpCount();
+}
+const int SwordGirl::GetAgiUpCount()const
+{
+	return status->GetAgiUpCount();
+}
+const int SwordGirl::GetDefUpCount()const
+{
+	return status->GetDefUpCount();
+}
+const bool SwordGirl::GetIsBonfireMenu()const
+{
+	return status->GetIsBonfireMenu();
 }

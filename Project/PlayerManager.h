@@ -44,6 +44,7 @@ public:
 	const VECTOR GetMoveVec()const { return player->GetMoveVec(); }
 	//LV‚Ìgetter
 	const float GetLv()const { return player->GetLv(); }
+	const bool GetIsBonfireMenu()const { return player->GetIsBonfireMenu(); }
 	/*HACK:
 	const ~ ~()const‚Í
 	Å‰‚Ìconst = ’è”’l‚ð•Ô‚·
@@ -56,6 +57,9 @@ public:
 	void ReSpawn();//‘Ì—Í‰ñ•œ
 	void PhysicalRecovery();//‘Ì—Í‰ñ•œ
 	const void InitPos() const;
+	const int GetAtkUpCount()const{	return player->GetAtkUpCount();	}
+	const int GetAgiUpCount()const{	return player->GetAgiUpCount();	}
+	const int GetDefUpCount()const{	return player->GetDefUpCount(); }
 private:
 	static constexpr float SHADOW_SIZE = 20.0f;
 	static constexpr float SHADOW_HEIGHT = 1000.0f;

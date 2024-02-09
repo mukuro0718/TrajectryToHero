@@ -69,7 +69,7 @@ StrongEnemy::~StrongEnemy()
 void StrongEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
-	invincibleTimer->Init(9);
+	invincibleTimer->Init(8);
 	restTimeAfterAttack->Init(20);
 	randomRest->Init(20);
 	preliminaryOperation->Init(9);
@@ -138,7 +138,7 @@ void StrongEnemy::Update()
 	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle, 63);
 	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
 	SetUpSphere(enemyLeftFootPos, SPHERE_RADIUS, SPHERE_COLOR, false);
-	blood->Update(60);
+	blood->Update(50);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット

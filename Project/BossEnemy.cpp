@@ -25,6 +25,7 @@ BossEnemy::BossEnemy(const VECTOR _spawnPos,const int _modelHandle, const int _f
 	,hpImage(_hpImage)
 	, preliminaryOperation(nullptr)
 	, isPreliminaryOperation(false)
+	, isAttackPreparation(false)
 {
 	Create();
 	spawnPos = _spawnPos;
@@ -83,7 +84,7 @@ void BossEnemy::Init()
 	waitBeforeJumpAttack  ->Init(30);
 	waitBeforeRotateAttack->Init(10);
 	rotateAttackLoopTime  ->Init(50);
-	invincibleTimer		  ->Init(7);	
+	invincibleTimer		  ->Init(8);	
 	restTimeAfterAttack   ->Init(50);
 	preliminaryOperation->Init(12);
 	//Å‘åHP‚Ìİ’è
@@ -102,6 +103,8 @@ void BossEnemy::Init()
 	isDeath			= false;
 	isHit			= false;
 	isRestTime		= false;
+	isPreliminaryOperation = false;
+	isAttackPreparation = false;
 	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
 	SetUpSphere(spherePos, 10.0f, CAPSULE_COLOR, false);
 }
@@ -212,10 +215,11 @@ void BossEnemy::Move(const VECTOR _playerPos)
 	//–Ú•W‚Ü‚Å‚ÌƒxƒNƒgƒ‹‚ğ³‹K‰»‚·‚é
 	normalizePos = VNorm(targetPos);
 	//UŒ‚‚à‹xŒe‚à‚µ‚Ä‚¢‚È‚©‚Á‚½‚ç
-	if (!isAttack && !isRestTime)
+	if (!isAttackPreparation && !isRestTime)
 	{
 		//UŒ‚ƒtƒ‰ƒO‚ğ—§‚Ä‚é
-		isAttack = true;
+		//isAttack = true;
+		isAttackPreparation = true;
 		if (vectorSize <= 20)
 		{
 			attackType = static_cast<int>(AnimationType::NORMAL_ATTACK);
@@ -262,6 +266,7 @@ void BossEnemy::Move(const VECTOR _playerPos)
 			{
 				jumpAttackTargetPos = _playerPos;
 				isJumpAttack = true;
+				isAttack = true;
 				waitBeforeJumpAttack->EndTimer();
 			}
 		}
@@ -298,6 +303,7 @@ void BossEnemy::Move(const VECTOR _playerPos)
 		{
 			restTimeAfterAttack->EndTimer();
 			isRestTime = false;
+			isAttackPreparation = false;
 		}
 	}
 }
@@ -317,43 +323,52 @@ void BossEnemy::ChangeAnim()
 	}
 	else
 	{
-		if (isAttack && !isRestTime)
+		if (!isRestTime)
 		{
 			switch (attackType)
 			{
 			case 1://’Êí
-				anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
-				spherePos = MV1GetFramePosition(modelHandle, 11);
-				attackAnimLoopCount = 1;
+				if (isAttack)
+				{
+
+
+					anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
+					spherePos = MV1GetFramePosition(modelHandle, 11);
+					attackAnimLoopCount = 1;
+				}
 				break;
 			case 2://‰ñ“]
-				if (!isPreliminaryOperation)
-				{
-					preliminaryOperation->StartTimer();
-				}
-				else
-				{
-					anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
-					spherePos = MV1GetFramePosition(modelHandle, 31);
-					rotateAttackLoopTime->StartTimer();
-				}
-				if (preliminaryOperation->getIsStartTimer())
-				{
-					anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
-					if (preliminaryOperation->CountTimer())
+					if (!isPreliminaryOperation)
 					{
-						preliminaryOperation->EndTimer();
-						isPreliminaryOperation = true;
+						preliminaryOperation->StartTimer();
 					}
-				}
-
+					else
+					{
+						isAttack = true;
+						anim->SetAnim(static_cast<int>(AnimationType::ROTATE_ATTACK));
+						spherePos = MV1GetFramePosition(modelHandle, 31);
+						rotateAttackLoopTime->StartTimer();
+					}
+					if (preliminaryOperation->getIsStartTimer())
+					{
+						anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
+						if (preliminaryOperation->CountTimer())
+						{
+							preliminaryOperation->EndTimer();
+							isPreliminaryOperation = true;
+						}
+					}
+				
 				break;
 			case 3://ƒWƒƒƒ“ƒv
-				anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
-				spherePos = MV1GetFramePosition(modelHandle, 7);
-				if (!isJumpAttack)
+				if (isAttack || isAttackPreparation)
 				{
-					waitBeforeJumpAttack->StartTimer();
+					anim->SetAnim(static_cast<int>(AnimationType::JUMP_ATTACK));
+					spherePos = MV1GetFramePosition(modelHandle, 7);
+					if (!isJumpAttack)
+					{
+						waitBeforeJumpAttack->StartTimer();
+					}
 				}
 				break;
 			default:

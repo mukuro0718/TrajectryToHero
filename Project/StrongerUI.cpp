@@ -14,10 +14,10 @@ StrongerUI::~StrongerUI()
 {
 
 }
-void StrongerUI::Update(const VECTOR _enemyPos)
+void StrongerUI::Update(const VECTOR _enemyPos, const int _modelHandle,const int _frameNum)
 {
-	pos = _enemyPos;
-	pos.y += 40.0f;
+	pos = MV1GetFramePosition(_modelHandle,_frameNum);
+	pos.y += 5.0f;
 }
 const void StrongerUI::Draw(const float playerLv,const float enemyLv) const
 {

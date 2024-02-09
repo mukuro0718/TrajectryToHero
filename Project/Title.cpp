@@ -36,15 +36,17 @@ Title::Title()
 	, textAlpha(MIN_ALPHA_VALUE)
 	, progressFrameCount(0)
 	, destroyEnemy(false)
-	,enemy(nullptr)
-	,collision(nullptr)
-	,prevPlayerAtk(0.0f)
-	,isDescription(false)
+	, enemy(nullptr)
+	, collision(nullptr)
+	, prevPlayerAtk(0.0f)
+	, isDescription(false)
+	, strongUI(0)
 {
 	//ロードクラスのインスタンスを取得
 	auto& load = Load::GetInstance();
 	//画像のロード
 	load.GetTitleData(&titleData, &fontData, &playerData, &enemyData, &stageData);
+	load.GetStrongerUIData(&strongUI);
 	stage = new TutorialStage(stageData);
 	camera = new Camera();
 	player = new SwordGirl(playerData[static_cast<int>(PlayerData::MODEL)], playerData[static_cast<int>(PlayerData::FRAME)], playerData[static_cast<int>(PlayerData::HP)], playerData[static_cast<int>(PlayerData::EXP)], fontData[static_cast<int>(FontType::TEXT)]);
@@ -61,6 +63,7 @@ Title::Title()
 void Title::Init()
 {
 	player->Init();
+	enemy->Init();
 	camera->Init(player->GetPos());
 	for (int i = 0; i < PROGRESS_NUM; i++)
 	{
@@ -81,6 +84,26 @@ Title::~Title()
 	{
 		delete(camera);
 		camera = nullptr;
+	}
+	if (enemy)
+	{
+		delete(enemy);
+		enemy = nullptr;
+	}
+	if (stage)
+	{
+		delete(stage);
+		stage = nullptr;
+	}
+	if (opeUI)
+	{
+		delete(opeUI);
+		opeUI = nullptr;
+	}
+	if (collision)
+	{
+		delete(collision);
+		collision = nullptr;
 	}
 }
 /// <summary>
@@ -200,7 +223,7 @@ void Title::Update()
 	{
 		enemy->OnIsDamage();
 	}
-	else
+	if(!player->GetIsShowStatusMenu())
 	{
 		player->TutorialStatusReset();
 	}
@@ -312,11 +335,21 @@ void Title::DrawDetailedDescription()
 }
 void Title::DrawTutorialText()
 {
+	//文字用の背景画像の描画
+	DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
+	DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "敵を倒すと、経験値を取得できます。\nレベルが上がると、ステータスポイントが\n付与されます。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT_2)]);
+	//文字用の背景画像の描画
+	DrawExtendGraph(1390, 150, 1500, 230, strongUI, TRUE);
+	DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x + 70, TEXT_POS_FOR_DESCRIPTION.y + 100, "このマークがついている敵は,\nあなたよりもレベルが上の敵です。\nステータスを強化して挑みましょう。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT_2)]);
+	//文字用の背景画像の描画
+	DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 200, "たき火で休むと、体力を回復することが\nできます。\nまたレベルアップメニューを選択すると、\nステータスポイントを消費してステータス\nを強化できます。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT_2)]);
+	//文字用の背景画像の描画
+	DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 350, "レベルが一定以上上がると、ゲートが出現\nします。\nゲートをくぐるとボス戦が始まるので、\nステータスを強化して挑みましょう。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT_2)]);
+
+
 	if (!isDrawStageName && isDrawTitleEnd)
 	{
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, textAlpha);
-
-		
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, textAlpha);	
 		//テキスト文字の描画
 		switch (tutorialProgress)
 		{
@@ -351,17 +384,6 @@ void Title::DrawTutorialText()
 			if (isDrawText && player->GetIsAttack())
 			{
 				isChange = true;
-				isDescription = true;
-			}
-			break;
-		case static_cast<int>(TutorialProgress::EXP):
-			//文字用の背景画像の描画
-			DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
-			DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "敵を倒すと、経験値を取得できます。\nレベルが上がると、ステータスポイントが付与されます", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT)]);
-			//EXPの説明が終了していたら次に行く
-			if (isDrawText && isProgress[tutorialProgress])
-			{
-				isChange = true;
 			}
 			break;
 		case static_cast<int>(TutorialProgress::DESTROY_ENEMY_1):
@@ -370,28 +392,6 @@ void Title::DrawTutorialText()
 			DrawStringToHandle(TEXT_POS.x, TEXT_POS.y, "敵を倒す", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT)]);
 			//敵が死亡したら次に行く
 			if (isDrawText && enemy->GetIsDeath())
-			{
-				isChange = true;
-				isDescription = true;
-			}
-			break;
-		case static_cast<int>(TutorialProgress::STRONG_UI):
-			//文字用の背景画像の描画
-			DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
-			DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "このマークがついている敵はあなたよりもレベルが上の敵です。\nステータスを強化して挑みましょう", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT)]);
-			//強敵マークの説明が終了していたら次に行く
-			if (isDrawText && isProgress[tutorialProgress])
-			{
-				isChange = true;
-				isDescription = true;
-			}
-			break;
-		case static_cast<int>(TutorialProgress::CAMPFIRE_1):
-			//文字用の背景画像の描画
-			DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
-			DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "かがり火で休むと、体力を回復することができます。\nまたステータスを強化を選択すると、\nステータスポイントを消費してステータスを強化できます。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT)]);
-			//攻撃力がアップしていたら次に行く
-			if (isDrawText && !isDescription)
 			{
 				isChange = true;
 			}
@@ -426,15 +426,6 @@ void Title::DrawTutorialText()
 					isChange = true;
 					isDescription = true;
 				}
-			break;
-		case static_cast<int>(TutorialProgress::GATE_1):
-			//文字用の背景画像の描画
-			DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
-			DrawStringToHandle(TEXT_POS.x, TEXT_POS.y, "レベルが一定以上上がると、ゲートが出現します。\nゲートをくぐるとボスと戦うことになるので、\nステータスを強化して挑みましょう。", FONT_COLOR, fontData[static_cast<int>(FontType::TEXT)]);
-			if (isDrawText && !isDescription)
-			{
-				isChange = true;
-			}
 			break;
 		case static_cast<int>(TutorialProgress::GATE_2):
 			//文字用の背景画像の描画
@@ -489,14 +480,14 @@ void Title::FragChanger()
 	if (isDescription)
 	{
 		progressFrameCount++;
-		if (progressFrameCount > 300)
+		if (progressFrameCount > 240)
 		{
 			progressFrameCount = 0;
 			isProgress[tutorialProgress] = true;
 			isDescription = false;
 		}
 	}
-	if (tutorialProgress == static_cast<int>(TutorialProgress::GATE_1))
+	if (tutorialProgress == static_cast<int>(TutorialProgress::GATE_2))
 	{
 		stage->OnIsShowGate();
 	}

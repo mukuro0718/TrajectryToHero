@@ -15,6 +15,7 @@ class TutorialEnemy
 public:
 	TutorialEnemy(const int _modelHandle);//コンストラクタ
 	~TutorialEnemy();//デストラクタ
+	void Init();
 	void Draw(const float _playerLv);//描画
 	void Update();
 	float CalcHP(const float _atk, const VECTOR _attackPos);
@@ -73,6 +74,6 @@ private:
 	static const COLOR_F CHANGE_SPC_COLOR;//スペキュラカラー
 	static const COLOR_F CHANGE_EMI_COLOR;//エミッシブカラー
 	static const COLOR_F CHANGE_AMB_COLOR;//アンビエントカラー
-
+	int animModel;
 };
 

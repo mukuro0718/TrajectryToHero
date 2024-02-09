@@ -23,11 +23,10 @@ protected:
 	enum class FARM
 	{
 		GROUND,
-		VILLAGE,
 		GATE,
 		PORTAL
 	};
-	static constexpr int MODEL_NUM = 4;
+	static constexpr int MODEL_NUM = 3;
 	//定数
 	static const VECTOR SCALE;			//拡大率
 	static const VECTOR INIT_STAGE_POS;//初期プレイヤー座標

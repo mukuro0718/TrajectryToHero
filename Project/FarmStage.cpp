@@ -32,10 +32,8 @@ void FarmStage::Init()
 	}
 
 	//座標のセット
-	pos[static_cast<int>(FARM::VILLAGE)] = VGet(0.0f, 0.0f, -1200.0f);
 	pos[static_cast<int>(FARM::GATE)] = VGet(0.0f, -20.0f, 500.0f);
 	pos[static_cast<int>(FARM::PORTAL)] = VGet(0.0f, 40.0f, 550.0f);
-	rotate[static_cast<int>(FARM::VILLAGE)] = ROTATE_VILLAGE;
 	for (int i = 0; i < MODEL_NUM; i++)
 	{
 		MV1SetPosition(model[i], pos[i]);
@@ -60,7 +58,6 @@ void FarmStage::Delete()
 	model.clear();
 	// モデルのアンロード.
 	MV1DeleteModel(model[static_cast<int>(FARM::GROUND)]);
-	MV1DeleteModel(model[static_cast<int>(FARM::VILLAGE)]);
 	MV1DeleteModel(model[static_cast<int>(FARM::GATE)]);
 	MV1DeleteModel(model[static_cast<int>(FARM::PORTAL)]);
 }
@@ -85,7 +82,6 @@ void FarmStage::Draw(const bool _isFarm)
 	MV1DrawModel(model[static_cast<int>(FARM::GROUND)]);
 	if (_isFarm)
 	{
-		MV1DrawModel(model[static_cast<int>(FARM::VILLAGE)]);
 		if (isShowGate)
 		{
 			MV1DrawModel(model[static_cast<int>(FARM::GATE)]);

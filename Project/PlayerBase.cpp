@@ -58,8 +58,11 @@ PlayerBase::~PlayerBase()
 /// </summary>
 void PlayerBase::Draw()
 {
-	// ‚R‚cƒ‚ƒfƒ‹‚Ì•`‰æ
-	MV1DrawModel(modelHandle);
+	if (!isDeath)
+	{
+		// ‚R‚cƒ‚ƒfƒ‹‚Ì•`‰æ
+		MV1DrawModel(modelHandle);
+	}
 	if (status->GetHp() > 0)
 	{
 		blood->Draw();
@@ -102,7 +105,7 @@ void PlayerBase::Draw()
 		attackLatency->EndTimer();
 	}
 	
-	statusUI->Draw(static_cast<int>(status->GetAtk())-1 , static_cast<int>(status->GetDef()) - 1, static_cast<int>(status->GetAgi()) - 1);
+	statusUI->Draw(status->GetAtkUpCount(), status->GetDefUpCount(), status->GetAgiUpCount());
 	swordTrail->Update(MV1GetFramePosition(modelHandle, 69), MV1GetFramePosition(modelHandle, 67));
 	swordTrail->Draw();
 }

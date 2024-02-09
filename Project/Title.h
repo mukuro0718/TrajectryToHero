@@ -57,6 +57,7 @@ private:
 		PLAYER,
 		LOGO,
 		TEXT,
+		TEXT_2,
 	};
 	enum class PlayerData//画像タイプ
 	{
@@ -124,14 +125,10 @@ private:
 		MOVE,			//移動
 		CAMERA,			//カメラ操作
 		ATTACK,			//攻撃
-		EXP,			//経験値の説明
 		DESTROY_ENEMY_1,
-		STRONG_UI,		//強敵に表示されるUIの説明をする
-		CAMPFIRE_1,		//焚火に行く
 		CAMPFIRE_2,		//焚火に行く
 		STATUS_UP,
 		DESTROY_ENEMY_2,//敵を倒す
-		GATE_1,			//ゲート
 		GATE_2,
 	};
 	static constexpr int PROGRESS_NUM = 12;
@@ -153,10 +150,11 @@ private:
 	bool destroyEnemy;
 	float prevPlayerAtk;
 	static constexpr DrawRect BACKGROUND_POS_FOR_TEXT = { 500,200,1420,300 };
-	static constexpr DrawRect BACKGROUND_POS_FOR_DESCRIPTION = { 300,200,1620,400 };
+	static constexpr DrawRect BACKGROUND_POS_FOR_DESCRIPTION = { 1400,30,1910,520 };
 	bool isDescription;
 	static constexpr Vec2d TEXT_POS = { 620,230 };
-	static constexpr Vec2d TEXT_POS_FOR_DESCRIPTION = { 500,230 };
+	static constexpr Vec2d TEXT_POS_FOR_DESCRIPTION = { 1420,50 };
 	static constexpr DrawRect BUTTON_POS = { 510,210,590,290 };
 	static constexpr DrawRect BOSS_UI_DRAW_RECT = { 500,900,1420,1000 };//移動UI描画範囲
+	int strongUI;
 };

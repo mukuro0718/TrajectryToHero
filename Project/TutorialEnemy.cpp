@@ -35,30 +35,43 @@ TutorialEnemy::TutorialEnemy(const int _modelHandle)
 	, isChangeColor(false)
 	, isPrevColorChange(false)
 	, materialNum(0)
+	,animModel(0)
 {
 	int bloodParticle = 0;
 	auto& load = Load::GetInstance();
-	load.GetEnemyParticleData(&bloodParticle);
+	load.GetEnemyParticleData(&bloodParticle,&animModel);
 	blood = new BloodParticle(bloodParticle);
-	MV1SetScale(modelHandle, SCALE);
-	MV1SetRotationXYZ(modelHandle, ROTATE);
-	MV1SetPosition(modelHandle, pos);
 	status = new CharacterStatus();
-	status->InitTutorialStatus(initCount);
-	initCount++;
 	anim = new Animation();
 	shadow = new Shadow();
 	strongerUI = new StrongerUI();
 	changeColorTimer = new Timer();
+	MV1SetScale(modelHandle, SCALE);
+	MV1SetRotationXYZ(modelHandle, ROTATE);
+	MV1SetPosition(modelHandle, pos);
 	changeColorTimer->Init(2);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1"), 1);			//待機アニメーション
+	anim->Add(animModel, 1);			//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);		//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
 	anim->Attach(&modelHandle);
 	SetUpCapsule();
+	//977272975
+	//945553430
+}
+void TutorialEnemy::Init()
+{
+	//必要なInitクラスの呼び出し
+	changeColorTimer->Init(2);
+	status->InitTutorialStatus(initCount);
+	initCount++;
+	//新しい座標の生成
+	pos = INIT_POS;
+	isDeath = false;
+	//最大HPの設定
+	status->InitWeakEnemyStatus(1.0f);
 }
 /// <summary>
 /// デストラクタ
@@ -73,6 +86,7 @@ TutorialEnemy::~TutorialEnemy()
 	{
 		delete(anim);
 	}
+	modelHandle = 0;
 }
 /// <summary>
 /// 更新
@@ -96,11 +110,8 @@ void TutorialEnemy::Update()
 		isDamage = true;
 	}
 	ChangeAnim();
-	if (!isDeath)
-	{
-		anim->Play(&modelHandle);
-	}
-	else
+	anim->Play(&modelHandle);
+	if (isDeath)
 	{
 		if (!isRespawn)
 		{
@@ -115,7 +126,7 @@ void TutorialEnemy::Update()
 			}
 		}
 	}
-	strongerUI->Update(pos);
+	strongerUI->Update(pos, modelHandle, 6);
 	blood->Update(60);
 	ChangeColor();
 	MV1SetPosition(modelHandle, pos);

@@ -87,6 +87,7 @@ void Load::LoadingData()
 	titleFontData.push_back(CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 70, 32, DX_FONTTYPE_NORMAL));
 	titleFontData.push_back(CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 200, 24, DX_FONTTYPE_NORMAL));
 	titleFontData.push_back(CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 40, 32, DX_FONTTYPE_NORMAL));
+	titleFontData.push_back(CreateFontToHandle("Data/Font/Honoka_Shin_Mincho_L.otf", 24, 32, DX_FONTTYPE_NORMAL));
 	//プレイヤー
 	titleplayerData.push_back(MV1LoadModel("Data/Model/Player/Player_test2.mv1"));
 	titleplayerData.push_back(LoadGraph("Data/Img/Game/UI/HPBar.png"));
@@ -114,7 +115,7 @@ void Load::LoadingData()
 	enemyFont = CreateFontToHandle("Data/Img/Font/HelpMe.ttf", 35, 32, DX_FONTTYPE_NORMAL);
 	//ステージモデル
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Ground.mv1"));
-	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Village.mv1"));
+	//farmStageData.push_back(MV1LoadModel("Data/Model/Map/Village.mv1"));
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Gate.mv1"));
 	farmStageData.push_back(MV1LoadModel("Data/Model/Map/Portal.mv1"));
 	//かがり火
@@ -160,6 +161,8 @@ void Load::LoadingData()
 	//ゲームクリア画像
 	gameOverImage = LoadGraph("Data/Img/GameOver/Gameover.png");
 	victoryImage = LoadGraph("Data/Img/Game/StageChange/VICTORY.png");
+	diedImage = LoadGraph("Data/Img/Game/StageChange/YouDied.png");
+	animModel = MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1");
 }
 /// <summary>
 /// オープニングデータのgetter
@@ -182,7 +185,7 @@ void Load::GetTitleData(vector<int>* _title, vector<int>* _font, vector<int>* _p
 	{
 		_title->push_back(titleData[i]);
 	}
-	for (int i = 0; i < TITLE_FONT_DATA_NUM; i++)
+	for (int i = 0; i < titleFontData.size(); i++)
 	{
 		_font->push_back(titleFontData[i]);
 	}
@@ -292,9 +295,10 @@ void Load::GetGameOverData(int* _image)
 /// <summary>
 /// パーティクルデータのgetter
 /// </summary>
-void Load::GetEnemyParticleData(int* _image)
+void Load::GetEnemyParticleData(int* _image,int* _animModel)
 {
 	*_image = enemyBloodParticleImage;
+	*_animModel = animModel;
 }
 /// <summary>
 /// パーティクルデータのgetter
@@ -337,4 +341,8 @@ void Load::GetStrongerUIData(int* _data)
 void Load::GetVictoryData(int* _victoryData)
 {
 	*_victoryData = victoryImage;
+}
+void Load::GetDiedData(int* _diedData)
+{
+	*_diedData = diedImage;
 }

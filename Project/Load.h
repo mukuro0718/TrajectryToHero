@@ -47,7 +47,7 @@ public:
 	void GetGameClearData	 (int* _image);//ゲームクリアデータのgetter
 	void GetGameOverData	 (int* _image);//ゲームクリアデータのgetter
 
-	void GetEnemyParticleData(int* _image);//パーティクルデータのgetter
+	void GetEnemyParticleData(int* _image, int* _animModel);//パーティクルデータのgetter
 	void GetPlayerParticleData(int* _image);//パーティクルデータのgetter
 
 	void GetStatusUIData(int* _atkImage, int* _defImage, int* _agiImage, int* font);//ステータスUIデータのgetter
@@ -55,6 +55,7 @@ public:
 	void GetBonfireData(vector<int>* _bonfireData);
 	void GetStrongerUIData(int* _imageHandle);
 	void GetVictoryData(int* _victoryData);
+	void GetDiedData(int* _diedData);
 private:
 	Load();//コンストラクタ
 	static Load* load;
@@ -63,7 +64,7 @@ private:
 	/// 強敵マーク
 	/// </summary>
 	int strongerUIData;
-
+	int animModel;
 
 	/// <summary>
 	/// オープニング
@@ -76,7 +77,7 @@ private:
 	/// タイトル
 	/// </summary>
 	static constexpr int TITLE_DATA_NUM = 8;		//タイトルロゴ
-	static constexpr int TITLE_FONT_DATA_NUM = 3;	//フォント
+	static constexpr int TITLE_FONT_DATA_NUM = 4;	//フォント
 	static constexpr int TITLE_PLAYER_DATA_NUM = 4;	//プレイヤー
 	static constexpr int TITLE_ENEMY_DATA_NUM = 1;	//エネミー
 	static constexpr int TITLE_STAGE_DATA_NUM = 6;	//ステージ
@@ -99,7 +100,7 @@ private:
 	/// <summary>
 	/// ステージ
 	/// </summary>
-	static constexpr int FARM_STAGE_MODEL_NUM = 4;
+	static constexpr int FARM_STAGE_MODEL_NUM = 3;
 	vector<int> farmStageData;
 	/// <summary>
 	/// かがり火
@@ -110,6 +111,10 @@ private:
 	/// 勝利ロゴ
 	/// </summary>
 	int victoryImage;
+	/// <summary>
+	/// 死亡ロゴ
+	/// </summary>
+	int diedImage;
 	/// <summary>
 	/// ステージチェンジ
 	/// </summary>

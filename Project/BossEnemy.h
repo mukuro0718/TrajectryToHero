@@ -80,8 +80,8 @@ private:
 	int font;	//フォントハンドル
 	int frameImage;
 	int hpImage;
-	bool isPreliminaryOperation;
-
+	bool isPreliminaryOperation;//予備動作
+	bool isAttackPreparation;//攻撃準備
 };
 
 

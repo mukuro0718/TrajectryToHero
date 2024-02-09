@@ -73,6 +73,7 @@ public:
     //—^‚¦‚éŒoŒ±’l‚Ì‰Šú‰»
     void InitExpToGive(const int _enemyNum);
     const void PhysicalRecoveryBossEnemy();
+    const void DrawStrongerUI(const float _playerLv,const bool _isFarm);
 
 private:
     /*’è”*/

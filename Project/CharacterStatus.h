@@ -11,7 +11,7 @@
 
 using namespace std;
 class Timer;
-
+class CrackerParticle;
 class CharacterStatus final
 {
 public:
@@ -30,7 +30,6 @@ public:
     void InitPlayerStatus();                            //ステータスの初期設定
     void InitExpToGive();                               //経験値の初期化
     void PhysicalRecovery();//体力回復
-    void BonfireMenu(const float _playerToBonfire);
     float CalcHP(const float _atk);//HP計算
     void CalcExp(const float _expToGive);//レベルアップ処理
     const float GetAgi()const { return agi; }
@@ -38,10 +37,14 @@ public:
     const float GetDef()const { return def; }
     const float GetLv()const { return lv; }
     const float GetAtk()const { return atk; }
+    const int GetAtkUpCount()const { return atkUpCount; }
+    const int GetAgiUpCount()const { return agiUpCount; }
+    const int GetDefUpCount()const { return defUpCount; }
     const float GetMaxHP()const { return maxHp;}
     const float GetExp()const { return exp; }
     const float GetNeedExp()const { return needExp; }
     const bool GetIsShowMenu()const { return isShowMenu; }
+    const bool GetIsBonfireMenu()const { return isBonfireMenu; }
     void ShowInfo();//情報の表示
     void TutorialStatusReset();
 private:
@@ -133,6 +136,7 @@ private:
     static constexpr DrawRect DEF_LOW_CURSOR_POS = { 1270,760,1300,730 };
     static constexpr DrawRect BACKGROUND_POS = {550,250,1450,800};
     static const int FONT_COLOR;
+    static const int BLUE_FONT_COLOR;
     static const int PREV_FONT_COLOR;
     int atkImage;
     int agiImage;
@@ -206,5 +210,6 @@ private:
     int	   backGroundImage;		//背景画像ハンドル
     Timer* inputWaitTimer;		//入力待機時間
     int	   statusFontHandle;	//LvUp時メニュー用フォントハンドル
+    CrackerParticle* particle;
 
 };

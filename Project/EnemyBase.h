@@ -7,6 +7,7 @@
 #include"Common.h"
 class Timer;
 class BloodParticle;
+class StrongerUI;
 
 class EnemyBase:public CharacterBase 
 {
@@ -36,6 +37,8 @@ public:
 	float CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void InitExpToGive();
 	void ChangeColor();//色の変更
+
+	const void DrawStrongerUI(const float _playerLv,const int _modelHandle, const int _frameNum);
 protected:
 	enum class RandomSign
 	{
@@ -51,6 +54,7 @@ protected:
 	/*メンバ変数*/
 	BloodParticle* blood;//血しぶきパーティクル
 	CharacterStatus* status;
+	StrongerUI* strongerUI;
 	float maxHP;						//最大体力
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
 	VECTOR bloodBaseDir;//血しぶきパーティクルを飛ばす方向のもとになる方向

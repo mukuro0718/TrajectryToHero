@@ -202,6 +202,21 @@
     <Filter Include="Object\Scene\Game\UI\StrongerUI">
       <UniqueIdentifier>{2cfa6a93-566b-47e8-9002-67c33dd24625}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Scene\Game\Particle\DeathParticle">
+      <UniqueIdentifier>{9c345e23-94e5-4359-8140-c0620ce38e9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\StatusUpParticle">
+      <UniqueIdentifier>{99fb224b-d189-4024-b499-40ae22858182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\StatusUpParticle\StatusUpParticleBase">
+      <UniqueIdentifier>{42d4d4f5-975f-4882-aa7a-a718804925cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\CrackerParticle">
+      <UniqueIdentifier>{0e56eb23-0274-4cb9-b739-1cf49b8f24fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase">
+      <UniqueIdentifier>{d9623757-d9b8-4cdd-92fb-37415ee62d9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -360,6 +375,18 @@
     <ClCompile Include="StrongerUI.cpp">
       <Filter>Object\Scene\Game\UI\StrongerUI</Filter>
     </ClCompile>
+    <ClCompile Include="StatusUpParticle.cpp">
+      <Filter>Object\Scene\Game\Particle\StatusUpParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusUpParticleBase.cpp">
+      <Filter>Object\Scene\Game\Particle\StatusUpParticle\StatusUpParticleBase</Filter>
+    </ClCompile>
+    <ClCompile Include="CrackerParticle.cpp">
+      <Filter>Object\Scene\Game\Particle\CrackerParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="CrackerParticleBase.cpp">
+      <Filter>Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneBase.h">
@@ -514,6 +541,18 @@
     </ClInclude>
     <ClInclude Include="StrongerUI.h">
       <Filter>Object\Scene\Game\UI\StrongerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusUpParticle.h">
+      <Filter>Object\Scene\Game\Particle\StatusUpParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusUpParticleBase.h">
+      <Filter>Object\Scene\Game\Particle\StatusUpParticle\StatusUpParticleBase</Filter>
+    </ClInclude>
+    <ClInclude Include="CrackerParticle.h">
+      <Filter>Object\Scene\Game\Particle\CrackerParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="CrackerParticleBase.h">
+      <Filter>Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

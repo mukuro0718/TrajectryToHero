@@ -6,10 +6,12 @@
 #include "SceneChanger.h"
 #include "Load.h"
 #include "Timer.h"
+#include "CrackerParticle.h"
 const VECTOR CharacterStatus::SET_DRAW_POS		= VGet(50.0f,50.0f,0.0f);
 const int	 CharacterStatus::FONT_COLOR_WHITE	= GetColor(210, 210, 210);
 const int	 CharacterStatus::FONT_COLOR_RED	= GetColor(255, 50, 50);
 const int CharacterStatus::FONT_COLOR = GetColor(200, 200, 150);
+const int CharacterStatus::BLUE_FONT_COLOR = GetColor(50, 50, 150);
 const int CharacterStatus::PREV_FONT_COLOR = GetColor(200, 200, 250);
 const VECTOR CharacterStatus::BONFIRE_POS = VGet(0.0f, 5.0f, -850.0f);
 
@@ -57,9 +59,11 @@ CharacterStatus::CharacterStatus()
 	, statusUpPoint(5)
 	, prevStatusUpPoint(5)
 	, isShowMenu(false)
+	, particle(nullptr)
 {
 	auto& load = Load::GetInstance();
 	inputWaitTimer = new Timer();
+	particle = new CrackerParticle();
 	//初期化
 	Init();
 	load.GetCharacterStatusData(&data);
@@ -136,7 +140,7 @@ void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 	if (lv == 1)
 	{
 		//ステータスの初期設定をする
-		hp			= 10.0f;//体力のセット
+		hp			= 5.0f;//体力のセット
 		atk			= 3.0f;//攻撃力のセット
 		def			= 2.0f;//防御力のセット
 		agi			= 1.0f;	//素早さのセット
@@ -182,7 +186,7 @@ void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 	//もしレベルが１（スタート時）だったら
 	if (lv == 10)
 	{
-		hp = 20.0f;		//体力のセット
+		hp = 10.0f;		//体力のセット
 		atk = 6.0f;			//攻撃力のセット
 		def = 5.0f;			//防御力のセット
 		agi = 2.0f;			//素早さのセット
@@ -227,8 +231,8 @@ void CharacterStatus::InitPlayerStatus()
 {
 	lv			= 1.0f;	//レベルのセット
 	hp			= 30.0f;//体力のセット
-	atk			= 2.0f;	//攻撃力のセット
-	def			= 2.0f;	//防御力のセット
+	atk			= 1.0f;	//攻撃力のセット
+	def			= 1.0f;	//防御力のセット
 	agi			= 1.5f;	//素早さのセット
 	expToGive	= 0.0f;	//倒されたとき与える経験値のセット
 	exp			= 0.0f;	//経験値のセット
@@ -295,15 +299,6 @@ void CharacterStatus::Delete()
 		inputWaitTimer = nullptr;
 	}
 }
-void CharacterStatus::BonfireMenu(const float _playerToBonfire)
-{
-	// キーの入力状態をとる
-	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-
-	if (_playerToBonfire < 30.0f && isShowBonfireMenu)
-	{
-	}
-}
 /// <summary>
 /// 更新
 /// </summary>
@@ -325,6 +320,7 @@ void CharacterStatus::Update(const bool _isShowMenu)
 			}
 		}
 	}
+		particle->Update();
 		UpdateBonfireMenu();
 		UpdateLevelUpMenu();
 }
@@ -419,6 +415,7 @@ void CharacterStatus::UpdateBonfireMenu()
 			isLevelUp = true;
 			isBonfireMenu = false;
 			isFinalSelectMenu = false;
+			prevStatusUpPoint = statusUpPoint;
 			break;
 		}
 		isInputPad = true;
@@ -476,7 +473,7 @@ void CharacterStatus::ChangeBlendRateDrawText(const int currentSelectStatus, con
 }
 void CharacterStatus::TutorialStatusReset()
 {
-	if (atk < 2.0f)
+	if (atk < 2.0f && !isShowLevelUpMenu)
 	{
 		statusUpPoint = 1;
 		atk = 1.0f;
@@ -489,6 +486,7 @@ void CharacterStatus::TutorialStatusReset()
 		prevAgiUpCount = agiUpCount;
 		prevDefUpCount = defUpCount;
 		prevStatusUpPoint = statusUpPoint;
+		prevLv = 1;
 	}
 }
 void CharacterStatus::UpdateLevelUpMenu()
@@ -593,38 +591,47 @@ void CharacterStatus::UpdateLevelUpMenu()
 				}
 				isInputPad = true;
 			}
-		}
-		//決定
-		if (input & PAD_INPUT_1)
-		{
-			for (int i = 0; i < atkUpCount - prevAtkUpCount; i++)
+
+			//決定
+			if (input & PAD_INPUT_1)
 			{
-				atk += 1.0f;
+				bool isParticle[3] = { false };
+				for (int i = 0; i < atkUpCount - prevAtkUpCount; i++)
+				{
+					isParticle[0] = true;
+					atk += 3.0f;
+					prevLv++;
+				}
+				for (int i = 0; i < agiUpCount - prevAgiUpCount; i++)
+				{
+					isParticle[1] = true;
+					agi += 3.0f;
+					prevLv++;
+				}
+				for (int i = 0; i < defUpCount - prevDefUpCount; i++)
+				{
+					isParticle[2] = true;
+					def += 3.0f;
+					prevLv++;
+				}
+				particle->Init(isParticle[0], isParticle[1], isParticle[2]);
+				prevAtkUpCount = atkUpCount;
+				prevAgiUpCount = agiUpCount;
+				prevDefUpCount = defUpCount;
+				prevStatusUpPoint = statusUpPoint;
+				//prevLv = lv;
 			}
-			for (int i = 0; i < agiUpCount - prevAgiUpCount; i++)
+			//戻る
+			if (input & PAD_INPUT_2)
 			{
-				agi += 1.0f;
+				statusUpPoint = prevStatusUpPoint;
+				atkUpCount = prevAtkUpCount;
+				agiUpCount = prevAgiUpCount;
+				defUpCount = prevDefUpCount;
+				isLevelUp = false;
+				isBonfireMenu = true;
+				isInputPad = true;
 			}
-			for (int i = 0; i < defUpCount - prevDefUpCount; i++)
-			{
-				def += 1.0f;
-			}
-			prevAtkUpCount = atkUpCount;
-			prevAgiUpCount = agiUpCount;
-			prevDefUpCount = defUpCount;
-			prevStatusUpPoint = statusUpPoint;
-			prevLv = lv;
-		}
-		//戻る
-		if (input & PAD_INPUT_2)
-		{
-			statusUpPoint = prevStatusUpPoint;
-			atkUpCount = prevAtkUpCount;
-			agiUpCount = prevAgiUpCount;
-			defUpCount = prevDefUpCount;
-			isLevelUp = false;
-			isBonfireMenu = true;
-			isInputPad = true;
 		}
 	}
 }
@@ -637,6 +644,8 @@ void CharacterStatus::DrawLevelUpMenu()
 	{
 		DrawExtendGraph(BACKGROUND_POS.lx, BACKGROUND_POS.ly, BACKGROUND_POS.rx, BACKGROUND_POS.ry,data[static_cast<int>(DataType::BACK_GROUND)],TRUE);
 
+		particle->Draw();
+
 		DrawFormatString(TEXT_POS.x, TEXT_POS.y,  FONT_COLOR, "レベルアップ          ステータスポイント:%d\n上昇させるステータスを選んでください",statusUpPoint );
 		DrawExtendGraph(ATK_POS.lx, ATK_POS.ly, ATK_POS.rx, ATK_POS.ry, data[static_cast<int>(DataType::ATK)], TRUE);
 		DrawExtendGraph(AGI_POS.lx, AGI_POS.ly, AGI_POS.rx, AGI_POS.ry, data[static_cast<int>(DataType::AGI)], TRUE);
@@ -647,12 +656,37 @@ void CharacterStatus::DrawLevelUpMenu()
 		DrawString(AGI_TEXT_POS.x, AGI_TEXT_POS.y, "素早さ", FONT_COLOR);
 		DrawString(DEF_TEXT_POS.x, DEF_TEXT_POS.y, "防御力", FONT_COLOR);
 
-		DrawFormatString(ATK_UP_COUNT_POS.x, ATK_UP_COUNT_POS.y, FONT_COLOR, "x%d", atkUpCount);
-		DrawFormatString(AGI_UP_COUNT_POS.x, AGI_UP_COUNT_POS.y, FONT_COLOR, "x%d", agiUpCount);
-		DrawFormatString(DEF_UP_COUNT_POS.x, DEF_UP_COUNT_POS.y, FONT_COLOR, "x%d", defUpCount);
+		if (prevAtkUpCount != atkUpCount)
+		{
+			DrawFormatString(ATK_UP_COUNT_POS.x, ATK_UP_COUNT_POS.y, BLUE_FONT_COLOR, "x%d", atkUpCount);
+		}
+		else
+		{
+			DrawFormatString(ATK_UP_COUNT_POS.x, ATK_UP_COUNT_POS.y, FONT_COLOR, "x%d", atkUpCount);
+		}
+		if (prevAgiUpCount != agiUpCount)
+		{
+			DrawFormatString(AGI_UP_COUNT_POS.x, AGI_UP_COUNT_POS.y, BLUE_FONT_COLOR, "x%d", agiUpCount);
+		}
+		else
+		{
+			DrawFormatString(AGI_UP_COUNT_POS.x, AGI_UP_COUNT_POS.y, FONT_COLOR, "x%d", agiUpCount);
+		}
+		if (prevDefUpCount != defUpCount)
+		{
+			DrawFormatString(DEF_UP_COUNT_POS.x, DEF_UP_COUNT_POS.y, BLUE_FONT_COLOR, "x%d", defUpCount);
+		}
+		else
+		{
+			DrawFormatString(DEF_UP_COUNT_POS.x, DEF_UP_COUNT_POS.y, FONT_COLOR, "x%d", defUpCount);
+		}
 
 		DrawExtendGraph(nowHighCursorPos.lx, nowHighCursorPos.ly, nowHighCursorPos.rx, nowHighCursorPos.ry, data[static_cast<int>(DataType::CURSOR)], TRUE);
 		DrawExtendGraph(nowLowCursorPos.lx, nowLowCursorPos.ly, nowLowCursorPos.rx, nowLowCursorPos.ry, data[static_cast<int>(DataType::CURSOR)], TRUE);
+	}
+	else
+	{
+		particle->OffIsDraw();
 	}
 }
 /// <summary>

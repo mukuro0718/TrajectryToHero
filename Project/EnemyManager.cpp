@@ -349,3 +349,21 @@ const void EnemyManager::PhysicalRecoveryBossEnemy()
 {
 	bossEnemy->PhysicalRecovery();
 }
+const void EnemyManager::DrawStrongerUI(const float _playerLv, const bool _isFarm)
+{
+	if (_isFarm)
+	{
+		for (int i = 0; i < nowWeakEnemyNum; i++)
+		{
+			weakEnemy[i]->DrawStrongerUI(_playerLv,weakEnemy[i]->GetModelHandle(),6);
+		}
+		for (int i = 0; i < nowStrongEnemyNum; i++)
+		{
+			strongEnemy[i]->DrawStrongerUI(_playerLv,strongEnemy[i]->GetModelHandle(),6);
+		}
+	}
+	else
+	{
+		bossEnemy->DrawStrongerUI(_playerLv,bossEnemy->GetModelHandle(),7);
+	}
+}
