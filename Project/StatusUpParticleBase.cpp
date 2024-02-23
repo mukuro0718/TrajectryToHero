@@ -3,12 +3,11 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-StatusUpParticleBase::StatusUpParticleBase(const int _color)
-	:topPos(ORIGIN_POS)
-	, underPos(ORIGIN_POS)
-	, offsetPos(ORIGIN_POS)
+StatusUpParticleBase::StatusUpParticleBase(const int _imageHandle)
+	: offsetPos(ORIGIN_POS)
+	, targetPos(ORIGIN_POS)
 	, size(0.0f)
-	, color(_color)
+	, imageHandle(_imageHandle)
 	, alpha(MAX_ALPHA_VALUE)
 {
 	Init();
@@ -26,24 +25,24 @@ void StatusUpParticleBase::Init()
 {
 	speed = ReturnRandomFloatValue(false, SPEED_RANGE) / 10.0f;
 	size = ReturnRandomFloatValue(false,SIZE_RANGE);
-	offsetPos = VGet(ReturnRandomFloatValue(true,POS_RANGE), 0.0f, ReturnRandomFloatValue(true, POS_RANGE));
+	offsetPos = VGet(ReturnRandomFloatValue(true, POS_RANGE),0.0f, ReturnRandomFloatValue(true, POS_RANGE));
+	addAlphaValue = static_cast<int>(ReturnRandomFloatValue(false, ALPHA_RANGE));
+	alpha = MAX_ALPHA_VALUE;
+	frameCount = 0;
 }
 /// <summary>
 /// 更新
 /// </summary>
 void StatusUpParticleBase::Update(const VECTOR _targetPos)
 {
-	underPos = VAdd(_targetPos,offsetPos);
-	topPos = VGet(underPos.x,underPos.y + size,underPos.z);
+	//画像を描画する中心座標
+	targetPos = VAdd(_targetPos,offsetPos);
 
 	offsetPos.y += speed;
-	alpha -= ADD_ALPHA_VALUE;
+	alpha -= addAlphaValue;
 
-	if (offsetPos.y > 30.0f)
-	{
-		alpha = MAX_ALPHA_VALUE;
-		offsetPos.y = 0.0f;
-	}
+	frameCount++;
+	
 }
 /// <summary>
 /// 描画
@@ -51,8 +50,12 @@ void StatusUpParticleBase::Update(const VECTOR _targetPos)
 void StatusUpParticleBase::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawLine3D(topPos,underPos,color);
+	DrawBillboard3D(targetPos, 0.5f,0.5f, size,0.0f, imageHandle,TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, MAX_ALPHA_VALUE);
+	if (offsetPos.y > 30.0f || alpha < MIN_ALPHA_VALUE)
+	{
+		Init();
+	}
 }
 float StatusUpParticleBase::ReturnRandomFloatValue(const bool _sign,const int _range)
 {

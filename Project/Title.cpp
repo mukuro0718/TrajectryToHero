@@ -10,6 +10,8 @@
 #include"Load.h"
 #include"TutorialEnemy.h"
 #include"Collision.h"
+#include"StatusUpParticle.h"
+
 const int Title::FONT_COLOR = GetColor(200, 200, 200);
 /// <summary>
 /// コンストラクタ
@@ -31,6 +33,7 @@ Title::Title()
 	, camera(nullptr)
 	, player(nullptr)
 	, opeUI(nullptr)
+	, statusUpParticle(nullptr)
 	, tutorialProgress(0)
 	, isChange(false)
 	, textAlpha(MIN_ALPHA_VALUE)
@@ -51,8 +54,9 @@ Title::Title()
 	camera = new Camera();
 	player = new SwordGirl(playerData[static_cast<int>(PlayerData::MODEL)], playerData[static_cast<int>(PlayerData::FRAME)], playerData[static_cast<int>(PlayerData::HP)], playerData[static_cast<int>(PlayerData::EXP)], fontData[static_cast<int>(FontType::TEXT)]);
 	opeUI = new OperationUI();
-	enemy = new TutorialEnemy(enemyData[static_cast<int>(EnemyData::MODEL)]);
+	enemy = new TutorialEnemy(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
 	collision = new Collision();
+	statusUpParticle = new StatusUpParticle(player->GetLv());
 	prevPlayerAtk = player->GetAtk();
 	//初期化
 	Init();
@@ -231,6 +235,8 @@ void Title::Update()
 	{
 		isChangeScene = true;
 	}
+	statusUpParticle->Update(player->GetPos(), player->GetIsBonfireMenu(), player->GetLv());
+
 }
 /// <summary>
 /// 描画
@@ -245,6 +251,7 @@ void Title::Draw()
 	player->DrawUI();
 	opeUI->Draw(stage->GetBonfirePos(), player->GetPos());
 	DrawTutorialText();
+	statusUpParticle->Draw(player->GetIsBonfireMenu());
 	player->DrawMenu();
 	/*タイトルロゴと開始ボタンの表示*/
 	DrawTitle();

@@ -27,6 +27,7 @@ EnemyBase::EnemyBase(int _modelHandle)
 	,materialNum(0)
 	,spawnPos(ORIGIN_POS)
 	,bloodBaseDir(ORIGIN_POS)
+	,frameCount(0)
 {
 	int bloodParticle = 0;
 	int animModel = 0;
@@ -161,4 +162,15 @@ const void EnemyBase::DrawStrongerUI(const float _playerLv, const int _modelHand
 {
 	strongerUI->Update(pos, _modelHandle,_frameNum);
 	strongerUI->Draw(_playerLv,status->GetLv());
+}
+const void EnemyBase::SetIsHit(const bool _isHitPlayer)
+{
+	if (_isHitPlayer)
+	{
+		isHit = true;
+	}
+	else
+	{
+		isHit = false;
+	}
 }

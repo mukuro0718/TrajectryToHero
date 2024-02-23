@@ -191,7 +191,7 @@ void BossEnemy::Update()
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
-	anim->Play(&modelHandle);
+	anim->Play(&modelHandle, 0.8f);
 }
 /// <summary>
 /// 移動

@@ -64,6 +64,14 @@ public:
     const bool GetIsInvincibleWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsInvincible(); }
     const bool GetIsInvincibleStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetIsInvincible(); }
     const bool GetIsInvincibleBossEnemy()const { return bossEnemy->GetIsInvincible(); }
+    //攻撃の当たり判定のgetter
+    const bool GetIsHitWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsHit(); }
+    const bool GetIsHitStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetIsHit(); }
+    const bool GetIsHitBossEnemy()const { return bossEnemy->GetIsHit(); }
+
+    const void SetIsHitWeakEnemy(const int _enemyNum,const bool _isHitPlayer)const { weakEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }
+    const void SetIsHitStrongEnemy(const int _enemyNum, const bool _isHitPlayer)const { strongEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }
+    const void SetIsHitBossEnemy(const bool _isHitPlayer)const { bossEnemy->SetIsHit(_isHitPlayer); }
     //無敵フラグを下す
     void FlaggingBossEnemy();//フラグを下す
     //HP計算

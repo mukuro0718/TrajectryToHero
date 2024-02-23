@@ -16,7 +16,7 @@ public:
 
     void Add             (int _animModelHandle, int _useAnimIndex); //アニメーションの追加
     void Attach          (int* _modelHandle);                       //アニメーションのアタッチ
-    void Play            (int* _modelHandle);                       //アニメーションの再生時間
+    void Play            (int* _modelHandle, const float _addAnimPlayTime);                       //アニメーションの再生時間
     void InitAnimPlayTime() { animPlayTime = 0.0f; }                //アニメーション再生時間の初期化
     void InitIsChangeAnim() { isChangeAnim = false; }               //アニメーション変更フラグの初期化
 
@@ -29,6 +29,11 @@ public:
     const bool GetIsChangeAnim()const { return isChangeAnim; }
     //モデルハンドルのgetter
     const int GetAnimModelHandle(int modelIndex)const { return animModelHandle[modelIndex]; }
+
+    const void SetNowPos(int* _modelHandle);
+    const VECTOR GetNowPos()const { return nowPos; }
+    const void SetPrevPos(int* _modelHandle);
+    const VECTOR GetPrevPos()const { return prevPos; }
 private:
     //変数
     vector<int> animModelHandle;    //アニメーションのモデルのハンドル
@@ -39,4 +44,6 @@ private:
     float animTotalTime;            //アニメーション総再生時間
     float animPlayTime;             //アニメーション再生時間
     bool isChangeAnim;              //アニメーション変更フラグ（true:変更可能 false:不可）
+    VECTOR prevPos;
+    VECTOR nowPos;
 };

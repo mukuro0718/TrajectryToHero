@@ -72,9 +72,9 @@ void CrackerParticleBase::Update()
 	{
 		//基準となる座標にスピードを足す
 
-		vertexPos1.y += speed;
+		vertexPos1.y -= speed;
 		//基準をもとにほかの座標を出す
-		if (vertexPos1.y >= Y_LIMIT)
+		if (vertexPos1.y <= Y_LIMIT)
 		{
 			vertexPos1 = initPos;
 			count++;

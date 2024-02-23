@@ -110,7 +110,7 @@ void TutorialEnemy::Update()
 		isDamage = true;
 	}
 	ChangeAnim();
-	anim->Play(&modelHandle);
+	anim->Play(&modelHandle, 0.8f);
 	if (isDeath)
 	{
 		if (!isRespawn)

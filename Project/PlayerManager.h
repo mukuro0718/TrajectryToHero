@@ -17,49 +17,43 @@ public:
 	void Attack();//攻撃
 	void Update();//更新
 	void Draw(const VECTOR _bonfirePos);//描画
+	const void DrawMenu();
 	void Final();//削除
 	void StatusUpdate(const VECTOR _bonfirePos);//ステータス更新
 	void FixMoveVec(const VECTOR _fixVec);
 	void DrawShadow(const int _stageModelHandle);
-	//bool IsStoppingUpdate();
-	//座標のgetter
-	const VECTOR GetPos() { return player->GetPos(); }
-	//モデルハンドルのgetter
-	const int GetModelHandle()const { return player->GetModelHandle(); }
-	//無敵フラグのgetter
-	const bool GetIsInvincible()const { return player->GetIsInvincible(); }
-	//カプセル情報のgetter
-	const CapsuleInfo GetCapsuleInfo()const { return player->GetCapsuleInfo(); }
-	//球情報のgetter
-	const SphereInfo GetSphereInfo()const { return player->GetSphereInfo(); }
-	//攻撃フラグのgetter
-	const bool GetIsAttack()const { return player->GetIsAttack(); }
-	//死亡フラグのgetter
-	const bool GetIsDeath()const { return player->GetIsDeath(); }
-	//攻撃力のgetter
-	const float GetAtk()const { return player->GetAtk(); }
-	const float GetHp()const { return player->GetHp(); }
-	const bool GetIsShowStatusMenu() { return player->GetIsShowStatusMenu(); }
-	//移動量のgetter
-	const VECTOR GetMoveVec()const { return player->GetMoveVec(); }
-	//LVのgetter
-	const float GetLv()const { return player->GetLv(); }
-	const bool GetIsBonfireMenu()const { return player->GetIsBonfireMenu(); }
+
 	/*HACK:
 	const ~ ~()constは
 	最初のconst = 定数値を返す
 	最後のconst = このメンバ関数は値をいじらない
 	*/
-	//HP計算
-	void CalcHP(const float _atk, const VECTOR _attackerPos);
-	//レベルアップ処理
+	
+	const CapsuleInfo GetCapsuleInfo()		const { return player->GetCapsuleInfo();	  }//カプセル情報のgetter
+	const SphereInfo  GetSphereInfo()		const { return player->GetSphereInfo();		  }//カプセル情報のgetter
+	const VECTOR	  GetPos()				const { return player->GetPos();			  }//座標のgetter
+	const VECTOR	  GetMoveVec()			const { return player->GetMoveVec();		  }//移動量のgetter
+	const float		  GetAtk()				const { return player->GetAtk();			  }//攻撃力のgetter
+	const float		  GetHp()				const { return player->GetHp();				  }//体力のgetter
+	const float		  GetLv()				const { return player->GetLv();				  }//LVのgetter
+	const bool		  GetIsInvincible()		const { return player->GetIsInvincible();	  }//無敵フラグのgetter
+	const bool		  GetIsAttack()			const { return player->GetIsAttack();		  }//攻撃フラグのgetter
+	const bool		  GetIsDeath()			const { return player->GetIsDeath();		  }//死亡フラグのgetter
+	const bool		  GetIsShowStatusMenu()	const { return player->GetIsShowStatusMenu(); }//レベルアップメニューの表示フラグのgetter
+	const bool		  GetIsBonfireMenu()	const { return player->GetIsBonfireMenu();	  }//かがり火メニューの表示フラグのgetter
+	const bool		  GetIsHit()			const { return player->GetIsHit();			  }//攻撃ヒットフラグのgetter
+	const void		  SetIsInvincible()			  { player->SetIsInvincible(); }
+	const void		  OnKnockBack(const VECTOR _targetVec) { player->OnKnockBack(_targetVec); }//ノックバックの開始
+	const int		  GetModelHandle()		const { return player->GetModelHandle();	  }//モデルハンドルのgetter
+	const int		  GetAtkUpCount()		const {	return player->GetAtkUpCount();		  }//攻撃力上昇回数のgetter
+	const int		  GetAgiUpCount()		const {	return player->GetAgiUpCount();		  }//素早さ上昇回数のgetter
+	const int		  GetDefUpCount()		const {	return player->GetDefUpCount();		  }//防御力上昇回数のgetter
+	//ステータス処理
+	void CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void CalcExp(const float _expToGive);
 	void ReSpawn();//体力回復
 	void PhysicalRecovery();//体力回復
 	const void InitPos() const;
-	const int GetAtkUpCount()const{	return player->GetAtkUpCount();	}
-	const int GetAgiUpCount()const{	return player->GetAgiUpCount();	}
-	const int GetDefUpCount()const{	return player->GetDefUpCount(); }
 private:
 	static constexpr float SHADOW_SIZE = 20.0f;
 	static constexpr float SHADOW_HEIGHT = 1000.0f;

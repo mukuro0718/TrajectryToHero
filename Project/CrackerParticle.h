@@ -21,7 +21,7 @@ private:
 	static constexpr int MAX_BLUE_PARTICLE_NUM = 50;
 	static constexpr int MAX_YELLOW_PARTICLE_NUM = 50;
 	static constexpr int FLAG_NUM = 3;
-	static constexpr VECTOR INIT_POS = { 550.0f,250.0f,0.0f };
+	static constexpr VECTOR INIT_POS = { 550.0f,800.0f,0.0f };
 	/*ÉÅÉìÉoïœêî*/
 	std::vector<CrackerParticleBase*> redParticle;
 	std::vector<CrackerParticleBase*> blueParticle;

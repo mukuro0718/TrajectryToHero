@@ -30,11 +30,18 @@ private:
 	static constexpr int ADD_ALPHA_VALUE = 5;
 	static constexpr int MAX_ALPHA = 255;
 	static constexpr int MIN_ALPHA = 0;
+	static constexpr DrawRect BACKGROUND_POS_FOR_DESCRIPTION = { 1400,30,1910,520 };
+	static constexpr VEC2D TEXT_POS_FOR_DESCRIPTION = { 1420,50 };
+	static const int FONT_COLOR;//フォントの色
+
+
 	/*メンバ変数*/
 	int alpha;
 	int moveUI;
 	int menuUI;
 	int attackUI;
 	int cameraUI;
+	int textFont;
+	int strongUI;
 };
 

@@ -15,7 +15,7 @@ private:
 	static constexpr int SIZE_RANGE = 10;
 	static constexpr int POS_RANGE = 5;
 	static constexpr int SPEED_RANGE = 10;
-	static constexpr float Y_LIMIT = 800.0f;
+	static constexpr float Y_LIMIT = 250.0f;
 	static constexpr int X_LIMIT = 900;
 	static constexpr int MAX_FRAME_COUNT = 10;
 	/*ƒƒ“ƒo•Ï”*/

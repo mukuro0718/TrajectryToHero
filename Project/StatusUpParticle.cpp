@@ -1,22 +1,24 @@
 #include "StatusUpParticle.h"
 #include"StatusUpParticleBase.h"
 
-const int StatusUpParticle::COLOR_RED = GetColor(150,50,50);
-const int StatusUpParticle::COLOR_BLUE = GetColor(50, 50, 150);
-const int StatusUpParticle::COLOR_YELLOW = GetColor(150, 150, 50);
-const int StatusUpParticle::COLOR_GREEN = GetColor(50, 150, 50);
-
 /// <summary>
 /// コンストラクタ
 /// </summary>
-StatusUpParticle::StatusUpParticle()
-	:redNum(0)
-	,blueNum(0)
-	,yellowNum(0)
+StatusUpParticle::StatusUpParticle(const float _prevPlayerLv)
+	:hpParticleImage(0)
+	,LvUPParticleImage(0)
+	,prevPlayerLv(_prevPlayerLv)
+	,lvUpFrameCount(0)
+	, isDrawLvupParticle(false)
+	,targetPos(ORIGIN_POS)
 {
-	for (int i = 0; i < 50; i++)
+	hpParticleImage = LoadGraph("Data/Img/Game/Particle/HP.png");
+	LvUPParticleImage = LoadGraph("Data/Img/Game/Particle/LvUP.png");
+	textImageHandle = LoadGraph("Data/Img/Game/Particle/LvUPText.png");
+	for (int i = 0; i < 25; i++)
 	{
-		particle.push_back(new StatusUpParticleBase(COLOR_GREEN));
+		hpParticle.push_back(new StatusUpParticleBase(hpParticleImage));
+		lvUpParticle.push_back(new StatusUpParticleBase(LvUPParticleImage));
 	}
 }
 /// <summary>
@@ -26,61 +28,53 @@ StatusUpParticle::~StatusUpParticle()
 {
 
 }
-/// <summary>
-/// 更新
-/// </summary>
-//void StatusUpParticle::Update(const VECTOR _targetPos,const int _atkUpCount, const int _agiUpCount, const int _defUpCount)
-//{
-//	for (int i = 0; i < (_atkUpCount - redNum) * 5; i++)
-//	{
-//		particle.push_back(new StatusUpParticleBase(COLOR_RED));
-//	}
-//	for (int i = 0; i < (_agiUpCount - blueNum) *5; i++)
-//	{
-//		particle.push_back(new StatusUpParticleBase(COLOR_BLUE));
-//	}
-//	for (int i = 0; i < (_defUpCount - yellowNum) *5; i++)
-//	{
-//		particle.push_back(new StatusUpParticleBase(COLOR_YELLOW));
-//	}
-//
-//	redNum = _atkUpCount;
-//	blueNum = _agiUpCount;
-//	yellowNum = _defUpCount;
-//
-//	for (int i = 0; i < particle.size(); i++)
-//	{
-//		particle[i]->Update(_targetPos);
-//	}
-//}
-void StatusUpParticle::Update(const VECTOR _targetPos, const bool _isBonfireMenu)
+
+void StatusUpParticle::Update(const VECTOR _targetPos, const bool _isBonfireMenu,const float _playerLv)
 {
+	targetPos = _targetPos;
 	if (_isBonfireMenu)
 	{
-		for (int i = 0; i < particle.size(); i++)
+		for (int i = 0; i < hpParticle.size(); i++)
 		{
-			particle[i]->Update(_targetPos);
+			hpParticle[i]->Update(_targetPos);
 		}
 	}
+	if (_playerLv != prevPlayerLv)
+	{
+		prevPlayerLv = _playerLv;
+		isDrawLvupParticle = true;
+	}
+	if (isDrawLvupParticle)
+	{
+		for (int i = 0; i < lvUpParticle.size(); i++)
+		{
+			lvUpParticle[i]->Update(_targetPos);
+		}
+		lvUpFrameCount++;
+		if (lvUpFrameCount > MAX_FRAME_COUNT)
+		{
+			isDrawLvupParticle = false;
+			lvUpFrameCount = 0;
+		}
+	}
+	
 }
 
-/// <summary>
-/// 描画
-/// </summary>
-//void StatusUpParticle::Draw()
-//{
-//	for (int i = 0; i < particle.size(); i++)
-//	{
-//		particle[i]->Draw();
-//	}
-//}
 void StatusUpParticle::Draw(const bool _isBonfireMenu)
 {
 	if (_isBonfireMenu)
 	{
-		for (int i = 0; i < particle.size(); i++)
+		for (int i = 0; i < hpParticle.size(); i++)
 		{
-			particle[i]->Draw();
+			hpParticle[i]->Draw();
 		}
+	}
+	if (isDrawLvupParticle)
+	{
+		for (int i = 0; i < lvUpParticle.size(); i++)
+		{
+			lvUpParticle[i]->Draw();
+		}
+		DrawBillboard3D(targetPos, 0.5f, 1.0f, 20.0f, 0.0f, textImageHandle, TRUE);
 	}
 }

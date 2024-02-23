@@ -120,7 +120,7 @@ void PlayerBase::Delete()
 /// <summary>
 /// HPŒvŽZ
 /// </summary>
-void PlayerBase::CalcHP( const float _atk, const VECTOR _attackerPos)
+void PlayerBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HPŒvŽZ

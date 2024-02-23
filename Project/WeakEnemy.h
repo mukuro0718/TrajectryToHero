@@ -29,7 +29,8 @@ private:
 		ATTACK,		//攻撃アニメーション
 		IDLE,       //待機アニメーション
 		DEATH,      //死亡アニメーション
-		BEFORE_ATTACK,
+		WALK_LEFT,	//左に歩く
+		WALK_RIGHT,	//右に歩く
 	};
 	/*静的定数*/
 	static constexpr float	RADIUS		   = 10.0f;	//半径

@@ -24,11 +24,11 @@ Game::Game()
     , stageChanger(nullptr)
     , enemyManager(nullptr)
     , collision(nullptr)
+    , statusUpParticle(nullptr)
     , victoryImage(0)
     , alpha(0)
     , isFrameCount(false)
     , youDiedImage(0)
-    , statusUpParticle(nullptr)
     , strongUI(0)
 {
     auto& load = Load::GetInstance();
@@ -60,12 +60,13 @@ void Game::Create()
     stageChanger = new StageChanger();
     enemyManager = new EnemyManager();
     collision = new Collision();
-    statusUpParticle = new StatusUpParticle();
+    statusUpParticle = new StatusUpParticle(playerManager->GetLv());
 }
 void Game::Init()
 {
     playerManager->Init();
     camera->Init(playerManager->GetPos());
+    camera->SetFarmStageInitAngle();
     stageChanger->Init();
     enemyManager->Init();
 }
@@ -132,7 +133,7 @@ void Game::Update()
         playerManager->PhysicalRecovery();
     }
     playerManager->StatusUpdate(stageManager->GetBonfirePos());
-    statusUpParticle->Update(playerManager->GetPos(), playerManager->GetIsBonfireMenu());
+    statusUpParticle->Update(playerManager->GetPos(), playerManager->GetIsBonfireMenu(),playerManager->GetLv());
 }
 /// <summary>
 /// 描画
@@ -162,6 +163,8 @@ void Game::Draw()
     }
     GameEnd(playerManager->GetIsDeath(), enemyManager->GetIsDeathBossEnemy());
     statusUpParticle->Draw(playerManager->GetIsBonfireMenu());
+    playerManager->DrawMenu();
+
 }
 const void Game::DrawMoveRange()const
 {
@@ -175,17 +178,6 @@ const void Game::DrawMoveRange()const
     DrawTriangle3D(MOVE_RANGE_POS_RTB, MOVE_RANGE_POS_RBB, MOVE_RANGE_POS_RBT, MOVE_RANGE_COLOR, TRUE);
     DrawTriangle3D(MOVE_RANGE_POS_RBB, MOVE_RANGE_POS_RTB, MOVE_RANGE_POS_RTT, MOVE_RANGE_COLOR, TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, MAX_ALPHA_VALUE);
-
-    //文字用の背景画像の描画
-    DrawBox(BACKGROUND_POS_FOR_DESCRIPTION.lx, BACKGROUND_POS_FOR_DESCRIPTION.ly, BACKGROUND_POS_FOR_DESCRIPTION.rx, BACKGROUND_POS_FOR_DESCRIPTION.ry, GetColor(0, 0, 0), TRUE);
-    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y, "敵を倒すと、経験値を取得できます。\nレベルが上がると、ステータスポイントが\n付与されます。", FONT_COLOR, textFont);
-    //文字用の背景画像の描画
-    DrawExtendGraph(1390, 150, 1500, 230, strongUI, TRUE);
-    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x + 70, TEXT_POS_FOR_DESCRIPTION.y + 100, "このマークがついている敵は,\nあなたよりもレベルが上の敵です。\nステータスを強化して挑みましょう。", FONT_COLOR, textFont);
-    //文字用の背景画像の描画
-    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 200, "たき火で休むと、体力を回復することが\nできます。\nまたレベルアップメニューを選択すると、\nステータスポイントを消費してステータス\nを強化できます。", FONT_COLOR, textFont);
-    //文字用の背景画像の描画
-    DrawStringToHandle(TEXT_POS_FOR_DESCRIPTION.x, TEXT_POS_FOR_DESCRIPTION.y + 350, "レベルが一定以上上がると、ゲートが出現\nします。\nゲートをくぐるとボス戦が始まるので、\nステータスを強化して挑みましょう。", FONT_COLOR, textFont);
 
 }
 
@@ -312,6 +304,7 @@ void Game::OnDamage()
                 }
             }
         }
+
         //プレイヤーへの攻撃
         bool isHitPlayer = false;
         for (int i = 0; i < enemyManager->GetNowWeakEnemyNum(); i++)
@@ -320,12 +313,22 @@ void Game::OnDamage()
             if (enemyManager->GetIsAttackWeakEnemy(i))
             {
                 //攻撃が当たっているかのチェック
-                isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoWeakEnemy(i));
-                //もし攻撃が当たっていたら
+                isHitPlayer = collision->OnDamage(false, playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoWeakEnemy(i));
+                //もしプレイヤーに当たっていたら
                 if (isHitPlayer)
                 {
-                    //HP計算
-                    playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i),enemyManager->GetPosWeakEnemy(i));
+                    //もし前フレームで攻撃が当たっていなかったら
+                    if (!enemyManager->GetIsHitWeakEnemy(i))
+                    {
+                        //HP計算
+                        playerManager->CalcHP(enemyManager->GetAtkWeakEnemy(i), enemyManager->GetPosWeakEnemy(i));
+                        enemyManager->SetIsHitWeakEnemy(i,isHitPlayer);
+                        playerManager->OnKnockBack(enemyManager->GetPosWeakEnemy(i));
+                    }
+                }
+                else
+                {
+                    enemyManager->SetIsHitWeakEnemy(i, isHitPlayer);
                 }
             }
         }
@@ -335,13 +338,21 @@ void Game::OnDamage()
             if (enemyManager->GetIsAttackStrongEnemy(i))
             {
                 //攻撃が当たっているかのチェック
-                isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoStrongEnemy(i));
-                //もし攻撃が当たっていたら
+                isHitPlayer = collision->OnDamage(false, playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoStrongEnemy(i));
                 if (isHitPlayer)
                 {
-                    //HP計算
-                    playerManager->CalcHP(enemyManager->GetAtkStrongEnemy(i), enemyManager->GetPosStrongEnemy(i));
+                    if (!enemyManager->GetIsHitStrongEnemy(i))
+                    {
+                        //HP計算
+                        playerManager->CalcHP(enemyManager->GetAtkStrongEnemy(i), enemyManager->GetPosStrongEnemy(i));
+                        enemyManager->SetIsHitStrongEnemy(i, isHitPlayer);
+                    }
                 }
+                else
+                {
+                    enemyManager->SetIsHitStrongEnemy(i,isHitPlayer);
+                }
+
             }
         }
     }
@@ -367,15 +378,21 @@ void Game::OnDamage()
         }
         if (enemyManager->GetIsAttackBossEnemy())
         {
-            bool isHitPlayer = collision->OnDamage(playerManager->GetIsInvincible(), playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoBossEnemy());
-            //もし攻撃が当たっていたら
+            bool isHitPlayer = collision->OnDamage(false, playerManager->GetIsDeath(), playerManager->GetCapsuleInfo(), enemyManager->GetSphereInfoBossEnemy());
             if (isHitPlayer)
             {
-                //HP計算
-                playerManager->CalcHP(enemyManager->GetAtkBossEnemy(),enemyManager->GetPosBossEnemy());
+                if (!enemyManager->GetIsHitBossEnemy())
+                {
+                    //HP計算
+                    playerManager->CalcHP(enemyManager->GetAtkBossEnemy(), enemyManager->GetPosBossEnemy());
+                    enemyManager->SetIsHitBossEnemy(isHitPlayer);
+                }
+            }
+            else
+            {
+                enemyManager->SetIsHitBossEnemy(isHitPlayer);
             }
         }
-        
     }
 }
 /// <summary>

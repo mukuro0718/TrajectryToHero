@@ -142,7 +142,7 @@ void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 		//ステータスの初期設定をする
 		hp			= 5.0f;//体力のセット
 		atk			= 3.0f;//攻撃力のセット
-		def			= 2.0f;//防御力のセット
+		def			= 1.0f;//防御力のセット
 		agi			= 1.0f;	//素早さのセット
 		expToGive	= 20.0f;	//倒されたとき与える経験値のセット(Enemy用)
 		exp			= 0.0f;	//経験値のセット
@@ -188,7 +188,7 @@ void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 	{
 		hp = 10.0f;		//体力のセット
 		atk = 6.0f;			//攻撃力のセット
-		def = 5.0f;			//防御力のセット
+		def = 3.0f;			//防御力のセット
 		agi = 2.0f;			//素早さのセット
 		expToGive = 80.0f;	//倒されたとき与える経験値のセット
 		exp = 0;			//経験値のセット
@@ -216,8 +216,8 @@ void CharacterStatus::InitBossEnemyStatus()
 	lv			= 10.0f;	//レベルのセット
 	hp			= 30.0f;	//体力のセット
 	atk			= 15.0f;	//攻撃力のセット
-	def			= 10.0f;	//防御力のセット
-	agi			= 2.0f;		//素早さのセット
+	def			= 5.0f;	//防御力のセット
+	agi			= 0.8f;		//素早さのセット
 	expToGive   = 10.0f;		//倒されたとき与える経験値のセット
 	exp			= 0.0f;		//経験値のセット
 	needExp     = 0.0f;
@@ -233,7 +233,7 @@ void CharacterStatus::InitPlayerStatus()
 	hp			= 30.0f;//体力のセット
 	atk			= 1.0f;	//攻撃力のセット
 	def			= 1.0f;	//防御力のセット
-	agi			= 1.5f;	//素早さのセット
+	agi			= 1.0f;	//素早さのセット
 	expToGive	= 0.0f;	//倒されたとき与える経験値のセット
 	exp			= 0.0f;	//経験値のセット
 	needExp		= 10.0f;//必要な経験値のセット
@@ -605,7 +605,7 @@ void CharacterStatus::UpdateLevelUpMenu()
 				for (int i = 0; i < agiUpCount - prevAgiUpCount; i++)
 				{
 					isParticle[1] = true;
-					agi += 3.0f;
+					agi += 1.0f;
 					prevLv++;
 				}
 				for (int i = 0; i < defUpCount - prevDefUpCount; i++)

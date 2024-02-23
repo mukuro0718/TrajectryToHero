@@ -69,6 +69,9 @@ void PlayerManager::Draw(const VECTOR _bonfirePos)
 	player->Draw();
 	player->DrawUI();
 	opeUI->Draw(_bonfirePos,player->GetPos());
+}
+const void PlayerManager::DrawMenu()
+{
 	player->DrawMenu();
 }
 /// <summary>

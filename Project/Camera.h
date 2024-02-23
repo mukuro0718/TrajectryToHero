@@ -17,7 +17,7 @@ public:
 
 	void Init  (VECTOR _playerPos);		//初期化
 	void Update(VECTOR _playerPos);		// 更新
-
+	const void SetFarmStageInitAngle() { angleX = 3.0f; }
 	const float  GetAngleX()		 { return angleX; };		//カメラアングルのgetter
 	const VECTOR GetCameraToPlayer() { return cameraToPlayer; }	//カメラからプレイヤーへのベクトルのgetter
 private:

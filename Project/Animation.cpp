@@ -8,6 +8,8 @@
 /// コンストラクタ
 /// </summary>
 Animation::Animation()
+	:nowPos(VGet(0.0f, 0.0f, 0.0f))
+	, prevPos(VGet(0.0f, 0.0f, 0.0f))
 {
 	animAttachIndex = 0;
 	animTotalTime = 0.0f;
@@ -45,24 +47,11 @@ void Animation::Attach(int *_modelHandle)
 	animAttachIndex = MV1AttachAnim(*_modelHandle,useAnimIndex[nowAnim], animModelHandle[nowAnim], FALSE);
 	//アニメーションの総再生時間を設定
 	animTotalTime = MV1GetAttachAnimTotalTime(*_modelHandle,animAttachIndex);
-	float rate = 0.0f;
-	//for (int i = 0; i < useAnimIndex.size(); i++)
-	//{
-	//	if (i == nowAnim)
-	//	{
-	//		rate = 1.0f;
-	//	}
-	//	else
-	//	{
-	//		rate = 0.0f;
-	//	}
-	//	MV1SetAttachAnimBlendRate(*_modelHandle, useAnimIndex[i], rate);
-	//}
 }
 /// <summary>
 /// アニメーションの再生
 /// </summary>
-void Animation::Play(int *_modelHandle)
+void Animation::Play(int *_modelHandle,const float _addAnimPlayTime)
 {
 	//もし今までアタッチしていたアニメーションと次のアニメーションが違うなら
 	if (nowAnim != prevAnim)
@@ -78,11 +67,23 @@ void Animation::Play(int *_modelHandle)
 	//アニメーション再生時間を設定
 	MV1SetAttachAnimTime(*_modelHandle, animAttachIndex, animPlayTime);
 	//アニメーション
-	animPlayTime += 0.8f;//再生時間を進める
+	animPlayTime += _addAnimPlayTime;//再生時間を進める
 	//再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
 	if (animPlayTime >= animTotalTime)
 	{
 		animPlayTime = 0.0f;
 		isChangeAnim = true;
 	}
+}
+const void Animation::SetNowPos(int* _modelHandle)
+{
+	// アニメーションで移動をしているフレームを無効にする
+	MV1SetFrameUserLocalMatrix(*_modelHandle, 0, MGetIdent());
+	MV1SetAttachAnimTime(*_modelHandle, animAttachIndex, animPlayTime);
+	nowPos = MV1GetAttachAnimFrameLocalPosition(*_modelHandle, animAttachIndex, 0);
+}
+const void Animation::SetPrevPos(int* _modelHandle)
+{
+	MV1SetAttachAnimTime(*_modelHandle, animAttachIndex, 0.0f);
+	nowPos = MV1GetAttachAnimFrameLocalPosition(*_modelHandle, animAttachIndex, 0);
 }

@@ -13,6 +13,7 @@ class SwordGirl;
 class OperationUI;
 class TutorialEnemy;
 class Collision;
+class StatusUpParticle;
 
 class Title final
 {
@@ -119,6 +120,7 @@ private:
 	OperationUI* opeUI;
 	TutorialEnemy* enemy;
 	Collision* collision;
+	StatusUpParticle* statusUpParticle;
 
 	enum class TutorialProgress
 	{

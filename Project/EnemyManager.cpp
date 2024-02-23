@@ -301,8 +301,8 @@ void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
 	switch (_playerLv)
 	{
 	case 1:
-		nowWeakEnemyNum = 3;
-		nowStrongEnemyNum = 1;
+		nowWeakEnemyNum = 1;
+		nowStrongEnemyNum = 0;
 		break;
 	case 3:
 		nowWeakEnemyNum = 4;

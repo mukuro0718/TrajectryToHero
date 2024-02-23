@@ -34,11 +34,13 @@
 	//回転値のセット
 	MV1SetRotationXYZ(modelHandle, rotate);
 	//アニメーションの追加
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/RunAnim.mv1"), 1);				//走りアニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/AttackAnim.mv1"), 1);		//攻撃アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1"), 1);			//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/RunAnim.mv1"), 1);			//走りアニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/ComboAttack.mv1"), 1);		//攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1"), 1);		//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);		//死亡アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/BeforeAttackAnim.mv1"), 1);//攻撃前モーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/WalkLeftAnim.mv1"), 1);	//左へ歩くモーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/WalkRightAnim.mv1"), 1);	//右へ歩くモーション
+
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
@@ -97,6 +99,15 @@ const void WeakEnemy::NewStatus(const float _playerLv)
 /// </summary>
 void WeakEnemy::Update()
 {
+	if (isHit)
+	{
+		frameCount++;
+		if (frameCount == 60)
+		{
+			isHit = false; 
+			frameCount = 0;
+		}
+	}
 	blood->UpdateGravity();
 	if (isInvincible)
 	{
@@ -134,14 +145,14 @@ void WeakEnemy::Update()
 	ChangeAnim();
 	//位置の設定
 	MV1SetPosition(modelHandle, pos);
-	VECTOR enemyLeftFootPos = MV1GetFramePosition(modelHandle, 57);
+	VECTOR enemyRightHandPos = MV1GetFramePosition(modelHandle, 34);
 	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
-	SetUpSphere(enemyLeftFootPos, SPHERE_RADIUS, SPHERE_COLOR, false);
+	SetUpSphere(enemyRightHandPos, SPHERE_RADIUS, SPHERE_COLOR, false);
 	blood->Update(50);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
-	anim->Play(&modelHandle);
+	anim->Play(&modelHandle, 0.8f);
 }
 /// <summary>
 /// 移動
@@ -235,10 +246,13 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			restTimeAfterAttack->EndTimer();
 		}
 	}
-	if (isMove && vectorSize >= 20 || isAttack && vectorSize >=20)
+	if (isMove && vectorSize >= 20 )
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
+	}
+	if (isMove && vectorSize >= 20 || isAttack && vectorSize >=20)
+	{
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
@@ -335,7 +349,7 @@ void WeakEnemy::ChangeAnim()
 	}
 	else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
 	{
-		anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
+		//anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
 	}
 }
 /// <summary>

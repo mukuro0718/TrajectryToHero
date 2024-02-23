@@ -24,20 +24,19 @@ public:
 	virtual void Init() = 0;					//初期化
 	virtual void Move(const VECTOR _playerPos) = 0;	//移動
 
-	//ポジションのgetter/setter
-	const VECTOR& GetPos() const { return pos; }
-	////当たり判定のsetter
-	const bool GetIsDeath()const { return isDeath; }
-	const bool GetIsAttack()const { return isAttack; }
-	//半径のsetter
-	const int GetModelHandle()const { return modelHandle; }
+	//getter
+	const VECTOR GetPos			()const { return pos;				}//座標のgetter
+	const float  GetHp			()const { return status->GetHp();	}//ステータスクラスの体力のgetter
+	const float  GetAtk			()const { return status->GetAtk();	}//ステータスクラスの攻撃力のgetter
+	const bool	 GetIsDeath		()const { return isDeath;			}//死亡フラグのgetter
+	const bool	 GetIsAttack	()const { return isAttack;			}//攻撃フラグのgetter
+	const bool   GetIsHit		()const { return isHit;				}//攻撃ヒットフラグのgetter
+	const int	 GetModelHandle	()const { return modelHandle;		}//モデルハンドルのgetter
 
-	const float GetHp()const { return status->GetHp(); }
-	const float GetAtk()const { return status->GetAtk(); }
 	float CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void InitExpToGive();
 	void ChangeColor();//色の変更
-
+	const void SetIsHit(const bool _isHitPlayer);
 	const void DrawStrongerUI(const float _playerLv,const int _modelHandle, const int _frameNum);
 protected:
 	enum class RandomSign
@@ -56,6 +55,7 @@ protected:
 	CharacterStatus* status;
 	StrongerUI* strongerUI;
 	float maxHP;						//最大体力
+	int frameCount;
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
 	VECTOR bloodBaseDir;//血しぶきパーティクルを飛ばす方向のもとになる方向
 private:
