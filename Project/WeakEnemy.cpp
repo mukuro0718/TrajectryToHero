@@ -23,8 +23,11 @@
 	 , restTimeAfterAttack(nullptr)
 	 , anim(nullptr)
 	 , randomRest(nullptr)
-	 , preliminaryOperation(nullptr)
-	 , isPreliminaryOperation(false)
+	 //, preliminaryOperation(nullptr)
+	 //, isPreliminaryOperation(false)
+	 , isWalk(false)
+	 , animPlayTime{0.8f,0.95f, 0.6f, 0.7f, 0.8f, 0.8f, 0.6f}
+	 , attackType(0)
 {
 	Create();
 	spawnPos = _spawnPos;
@@ -36,10 +39,11 @@
 	//アニメーションの追加
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/RunAnim.mv1"), 1);			//走りアニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/ComboAttack.mv1"), 1);		//攻撃アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/AttackAnim.mv1"), 1);		//攻撃アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/IdleAnim.mv1"), 1);		//待機アニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);		//死亡アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/WalkLeftAnim.mv1"), 1);	//左へ歩くモーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/WalkRightAnim.mv1"), 1);	//右へ歩くモーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/WalkAnim.mv1"), 1);	//右へ歩くモーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/KnockBack.mv1"), 1);	//右へ歩くモーション
 
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
@@ -55,7 +59,7 @@ void WeakEnemy::Create()
 	invincibleTimer		= new Timer();
 	restTimeAfterAttack = new Timer();
 	randomRest			= new Timer();
-	preliminaryOperation= new Timer();
+	//preliminaryOperation= new Timer();
 	anim				= new Animation();
 }
 /// <summary>
@@ -72,9 +76,9 @@ void WeakEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
 	invincibleTimer->Init(8);
-	restTimeAfterAttack->Init(20);
+	restTimeAfterAttack->Init(5);
 	randomRest->Init(20);
-	preliminaryOperation->Init(12);
+	//preliminaryOperation->Init(12);
 	//新しい座標の生成
 	pos			= spawnPos;
 	rotate		= MODEL_ROTATE;
@@ -104,7 +108,7 @@ void WeakEnemy::Update()
 		frameCount++;
 		if (frameCount == 60)
 		{
-			isHit = false; 
+			isHit = false;
 			frameCount = 0;
 		}
 	}
@@ -125,12 +129,12 @@ void WeakEnemy::Update()
 			isInvincible = false;
 		}
 	}
-	
+
 	//もしHPをつけてHPが０になったら
 	if (status->GetHp() <= 0)
 	{
 		//現在のアニメーションをやられたアニメーションにする
-		if(anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
+		if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
 		{
 			isDeath = true;
 			pos = DESTROY_POS;
@@ -145,14 +149,21 @@ void WeakEnemy::Update()
 	ChangeAnim();
 	//位置の設定
 	MV1SetPosition(modelHandle, pos);
-	VECTOR enemyRightHandPos = MV1GetFramePosition(modelHandle, 34);
+
 	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
-	SetUpSphere(enemyRightHandPos, SPHERE_RADIUS, SPHERE_COLOR, false);
+	//攻撃当たり判定用スフィア座標の設定
+	VECTOR framePos33 = MV1GetFramePosition(modelHandle, 33);
+	VECTOR framePos46 = MV1GetFramePosition(modelHandle, 46);
+	VECTOR framePos33to46 = VSub(framePos46, framePos33);
+	framePos33to46 = VNorm(framePos33to46);
+	framePos33to46 = VScale(framePos33to46, 10.0f);
+	VECTOR attackSphereCenterPos = VAdd(framePos46, framePos33to46);
+	SetUpSphere(attackSphereCenterPos, SPHERE_RADIUS, SPHERE_COLOR, false);
 	blood->Update(50);
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
-	anim->Play(&modelHandle, 0.8f);
+	anim->Play(&modelHandle, animPlayTime[anim->GetAnim()]);
 }
 /// <summary>
 /// 移動
@@ -174,43 +185,59 @@ void WeakEnemy::Move(VECTOR _playerPos)
 	//目標までのベクトルを正規化する
 	normalizePos = VNorm(targetPos);
 	//もしベクトルサイズが定数以下だったら攻撃する
-	if (vectorSize <= 80.0f)
+	if (vectorSize <= 20.0f)
+	{
+		//すでに攻撃していない、休憩中ではない
+		if (!isAttack && !isRestTime && !isInvincible)
+		{
+			//if (!isPreliminaryOperation)
+			//{
+			//	preliminaryOperation->StartTimer();
+			//}
+			//else
+			//{
+			attackType = GetRand(1);
+			attackAnimLoopCount = 100;
+			isAttack = true;
+			isMove = false;
+			isRandomWalk = false;
+			isRandomRest = false;
+			isWalk = false;
+			//}
+		}
+	}
+	//80以上だったら
+	else if (vectorSize <= 50.0f)
 	{
 		//すでに攻撃していない、休憩中ではない
 		if (!isAttack && !isRestTime)
 		{
-			if (!isPreliminaryOperation)
-			{
-				preliminaryOperation->StartTimer();
-			}
-			else
-			{
-				attackAnimLoopCount = 100;
-				isAttack = true;
-				isMove = false;
-				isRandomWalk = false;
-				isRandomRest = false;
-			}
+			isWalk = true;
+			isMove = false;
+			isAttack = false;
+			isRandomWalk = false;
+			isRandomRest = false;
 		}
 	}
-	//80以上だったら
 	else
 	{
 		//攻撃や休憩をしていなかったら
 		if (!isAttack && !isRestTime)
 		{
 			//もしベクトルサイズが定数以下だったらプレイヤーに向けて走る
-			if (vectorSize <= 100.0f)
+			if (vectorSize <= 200.0f)
 			{
 				isMove = true;
 				isAttack = false;
 				isRandomWalk = false;
 				isRandomRest = false;
+				isWalk = false;
 			}
 			//それより離れていたら
 			else
 			{
 				RandomWalk();
+				isWalk = false;
 				isMove = false;
 				isAttack = false;
 			}
@@ -227,8 +254,9 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			isAttack = false;
 			isMove = false;
 			isRandomWalk = false;
-			isPreliminaryOperation = false;
+			//isPreliminaryOperation = false;
 			isRestTime = true;
+			isWalk = false;
 		}
 		//0じゃなければ攻撃回数を減らす
 		else
@@ -246,24 +274,30 @@ void WeakEnemy::Move(VECTOR _playerPos)
 			restTimeAfterAttack->EndTimer();
 		}
 	}
-	if (isMove && vectorSize >= 20 )
+	if (isMove && vectorSize >= 20 && !isInvincible)
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 	}
-	if (isMove && vectorSize >= 20 || isAttack && vectorSize >=20)
+	else if (isWalk && !isInvincible)
+	{
+		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
+		moveVec = VScale(normalizePos, status->GetAgi() * -0.5f);
+	}
+	if (isMove && vectorSize >= 20 && !isInvincible || isAttack && vectorSize >= 20 && !isInvincible || isWalk && !isInvincible)
 	{
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
-	if (preliminaryOperation->getIsStartTimer())
-	{
-		if (preliminaryOperation->CountTimer())
-		{
-			preliminaryOperation->EndTimer();
-			isPreliminaryOperation = true;
-		}
-	}
+
+	//if (preliminaryOperation->getIsStartTimer())
+	//{
+	//	if (preliminaryOperation->CountTimer())
+	//	{
+	//		preliminaryOperation->EndTimer();
+	//		isPreliminaryOperation = true;
+	//	}
+	//}
 }
 /// <summary>
 /// ランダムに歩く
@@ -327,30 +361,45 @@ double WeakEnemy::ChangeRotate(VECTOR playerPos)
 /// </summary>
 void WeakEnemy::ChangeAnim()
 {
+	if (isInvincible)
+	{
+	anim->SetAnim(static_cast<int>(AnimationType::FRIGHTENING));//怯み
+	}
 	//攻撃も移動もしていないまたは休憩中だったら
-	if (!isAttack && !isMove && !isRandomWalk || isRestTime || isRandomRest)
+	else if (!isAttack && !isMove && !isRandomWalk && !isWalk|| isRestTime || isRandomRest)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	}
 	//攻撃中だったら
 	else if (isAttack && !isMove && !isRestTime)
 	{
-		anim->SetAnim(static_cast<int>(AnimationType::ATTACK));
+		if (attackType == static_cast<int>(AttackType::COMBO_ATTACK))
+		{
+			anim->SetAnim(static_cast<int>(AnimationType::COMBO_ATTACK));
+		}
+		else
+		{
+			anim->SetAnim(static_cast<int>(AnimationType::NORMAL_ATTACK));
+		}
 	}
 	//移動中だったら
 	else if (!isAttack && isMove && !isRestTime || !isAttack && isRandomWalk && !isRestTime)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::RUN));
 	}
+	else if (isWalk)
+	{
+		anim->SetAnim(static_cast<int>(AnimationType::WALK));
+	}
 	//もしHPが0以下になったら
 	if (status->GetHp() <= 0)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
 	}
-	else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
-	{
-		//anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
-	}
+	//else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
+	//{
+	//	anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
+	//}
 }
 /// <summary>
 /// 最終処理

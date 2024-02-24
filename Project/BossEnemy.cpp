@@ -81,11 +81,11 @@ void BossEnemy::Create()
 void BossEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
-	waitBeforeJumpAttack  ->Init(30);
+	waitBeforeJumpAttack  ->Init(20);
 	waitBeforeRotateAttack->Init(10);
 	rotateAttackLoopTime  ->Init(50);
 	invincibleTimer		  ->Init(8);	
-	restTimeAfterAttack   ->Init(50);
+	restTimeAfterAttack   ->Init(30);
 	preliminaryOperation->Init(12);
 	//最大HPの設定
 	status->InitBossEnemyStatus();

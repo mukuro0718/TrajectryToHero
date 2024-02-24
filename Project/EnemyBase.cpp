@@ -77,10 +77,10 @@ void EnemyBase::Final()
 /// </summary>
 void EnemyBase::Draw(VECTOR playerPos)
 {
-//#ifdef _DEBUG
-//	DrawCapsule(capsuleInfo);
-//	DrawSphere(sphereInfo);
-//#endif // _DEBUG
+#ifdef _DEBUG
+	DrawCapsule(capsuleInfo);
+	DrawSphere(sphereInfo);
+#endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
 	MV1DrawModel(modelHandle);
@@ -92,6 +92,7 @@ void EnemyBase::Draw(VECTOR playerPos)
 float EnemyBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {
 	isInvincible = true;
+	isAttack = false;
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HP計算
 	return status->CalcHP(_atk);

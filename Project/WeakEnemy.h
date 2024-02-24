@@ -25,14 +25,21 @@ private:
 	/*定数*/
 	enum class AnimationType
 	{
-		RUN,        //走りアニメーション
-		ATTACK,		//攻撃アニメーション
-		IDLE,       //待機アニメーション
-		DEATH,      //死亡アニメーション
-		WALK_LEFT,	//左に歩く
-		WALK_RIGHT,	//右に歩く
+		RUN,			//走りアニメーション
+		COMBO_ATTACK,	//攻撃アニメーション
+		NORMAL_ATTACK,	//攻撃アニメーション
+		IDLE,			//待機アニメーション
+		DEATH,			//死亡アニメーション
+		WALK,			//歩く
+		FRIGHTENING,	//怯みアニメーション
+	};
+	enum class AttackType
+	{
+		COMBO_ATTACK,		//攻撃アニメーション
+		NORMAL_ATTACK,
 	};
 	/*静的定数*/
+	static constexpr int TOTAL_ANIM_NUM = 7;
 	static constexpr float	RADIUS		   = 10.0f;	//半径
 	static constexpr float	HEIGHT		   = 30.0f;	//カプセルの高さ
 	static constexpr float	SPHERE_RADIUS  = 3.0f;	//球の半径
@@ -52,16 +59,18 @@ private:
 	Animation*	anim;					//アニメーションクラス
 	Timer*		invincibleTimer;		//無敵時間
 	Timer*		restTimeAfterAttack;	//攻撃後休憩時間
-	Timer* preliminaryOperation;
+	//Timer* preliminaryOperation;
 
+	float animPlayTime[TOTAL_ANIM_NUM];
 	int  attackAnimLoopCount;	//攻撃追従可能時間
 	bool isRestTime;			//休憩に入るかどうか
-
-	bool isPreliminaryOperation;
-	bool isRandomWalk;
-	bool isRandomRest;
-	VECTOR randomWalkTargetPos;
-	Timer* randomRest;
+	bool isWalk;//歩いているか
+	//bool isPreliminaryOperation;//攻撃前予備動作
+	bool isRandomWalk;//ランダムで移動しているか
+	bool isRandomRest;//ランダム移動後に休憩しているか
+	int attackType;//攻撃の種類
+	VECTOR randomWalkTargetPos;//ランダムで歩く方向
+	Timer* randomRest;//ランダム休憩時間
 
 };
 

@@ -140,7 +140,7 @@ void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 	if (lv == 1)
 	{
 		//ステータスの初期設定をする
-		hp			= 5.0f;//体力のセット
+		hp			= 3.0f;//体力のセット
 		atk			= 3.0f;//攻撃力のセット
 		def			= 1.0f;//防御力のセット
 		agi			= 1.0f;	//素早さのセット

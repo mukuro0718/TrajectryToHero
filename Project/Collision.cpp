@@ -141,3 +141,19 @@ bool Collision::SphereCapsuleCalc(const VECTOR _capsuleStartPos,const VECTOR _ca
 	}
 	return false;
 }
+/// <summary>
+/// カプセル同士の当たり判定
+/// </summary>
+bool Collision::TwoCapsuleHitCollision(const VECTOR _startPos1, const VECTOR _endPos1, const float _radius1, const VECTOR _startPos2, const VECTOR _endPos2, const float _radius2)
+{
+	//２つのカプセルの線分を出し、最近点間の距離を得る
+	float minLength = Segment_Segment_MinLength(_startPos1,_startPos2,_endPos1,_endPos2);
+	//二つのカプセルの半径の合計を求める
+	float sumRadius = _radius1 + _radius2;
+	//最近点間と半径の合計を比べて、半径の合計＜＝最近点間だったら衝突している
+	if (sumRadius <= minLength)
+	{
+		return true;
+	}
+	return false;
+}
