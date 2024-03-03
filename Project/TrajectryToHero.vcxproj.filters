@@ -82,9 +82,6 @@
     <Filter Include="Object\Scene\Game\Collision">
       <UniqueIdentifier>{81794503-8605-4977-a70d-f8cebd2ed49c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Character\Shadow">
-      <UniqueIdentifier>{9ff3fc56-5979-4ea3-a78e-3a6c77cc5e16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Stage">
       <UniqueIdentifier>{9c37692c-7908-463e-a34a-e2eaf5cdd45d}</UniqueIdentifier>
     </Filter>
@@ -163,12 +160,6 @@
     <Filter Include="Object\Scene\Game\UI\OperationUI">
       <UniqueIdentifier>{8b7e11df-f993-45e2-bcf4-f6f32179f35c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Tutorial">
-      <UniqueIdentifier>{2fe37573-d245-4f9f-b9ff-77c9e2dc30db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System\Scene\SceneType\TutorialScene">
-      <UniqueIdentifier>{561f859a-c7ee-40c5-8de7-a8593bd050e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Stage\StageType">
       <UniqueIdentifier>{6c092823-a3d8-4f54-839f-eff84c6e3d3f}</UniqueIdentifier>
     </Filter>
@@ -216,6 +207,24 @@
     </Filter>
     <Filter Include="Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase">
       <UniqueIdentifier>{d9623757-d9b8-4cdd-92fb-37415ee62d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Shadow">
+      <UniqueIdentifier>{9ff3fc56-5979-4ea3-a78e-3a6c77cc5e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\Gimmick\Meteorite">
+      <UniqueIdentifier>{d6095afa-7174-4788-8cc9-ee5bb011c917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\Gimmick\Meteorite\MeteoriteBase">
+      <UniqueIdentifier>{99005a2f-1e52-430b-81f6-2eddd7de58a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Stage\Gimmick\Explosion">
+      <UniqueIdentifier>{28e8c6f3-afa7-45b0-9298-4379e3ad8178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Skydome\Star">
+      <UniqueIdentifier>{2f908dfa-c332-49a7-847f-f1c032c11cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Bloom">
+      <UniqueIdentifier>{db16074c-e2df-41b5-90ab-8bf9dca6861f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -277,7 +286,7 @@
       <Filter>Object\Scene\Game\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Shadow.cpp">
-      <Filter>Object\Scene\Game\Character\Shadow</Filter>
+      <Filter>Object\Scene\Game\Shadow</Filter>
     </ClCompile>
     <ClCompile Include="CharacterBase.cpp">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -348,12 +357,6 @@
     <ClCompile Include="OperationUI.cpp">
       <Filter>Object\Scene\Game\UI\OperationUI</Filter>
     </ClCompile>
-    <ClCompile Include="TutorialScene.cpp">
-      <Filter>System\Scene\SceneType\TutorialScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Tutorial.cpp">
-      <Filter>Object\Scene\Tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="Bonfire.cpp">
       <Filter>Object\Scene\Game\Stage\Gimmick</Filter>
     </ClCompile>
@@ -386,6 +389,21 @@
     </ClCompile>
     <ClCompile Include="CrackerParticleBase.cpp">
       <Filter>Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Meteorite.cpp">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Meteorite</Filter>
+    </ClCompile>
+    <ClCompile Include="MeteoriteBase.cpp">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Meteorite\MeteoriteBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>Object\Scene\Game\Skydome\Star</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomEffect.cpp">
+      <Filter>System\Bloom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -444,7 +462,7 @@
       <Filter>Object\Scene\Game\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Shadow.h">
-      <Filter>Object\Scene\Game\Character\Shadow</Filter>
+      <Filter>Object\Scene\Game\Shadow</Filter>
     </ClInclude>
     <ClInclude Include="CharacterBase.h">
       <Filter>Object\Scene\Game\Character\CharacterBase</Filter>
@@ -515,12 +533,6 @@
     <ClInclude Include="OperationUI.h">
       <Filter>Object\Scene\Game\UI\OperationUI</Filter>
     </ClInclude>
-    <ClInclude Include="TutorialScene.h">
-      <Filter>System\Scene\SceneType\TutorialScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Tutorial.h">
-      <Filter>Object\Scene\Tutorial</Filter>
-    </ClInclude>
     <ClInclude Include="Bonfire.h">
       <Filter>Object\Scene\Game\Stage\Gimmick</Filter>
     </ClInclude>
@@ -553,6 +565,21 @@
     </ClInclude>
     <ClInclude Include="CrackerParticleBase.h">
       <Filter>Object\Scene\Game\Particle\CrackerParticle\CrackerParticleBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Meteorite.h">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Meteorite</Filter>
+    </ClInclude>
+    <ClInclude Include="MeteoriteBase.h">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Meteorite\MeteoriteBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>Object\Scene\Game\Stage\Gimmick\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>Object\Scene\Game\Skydome\Star</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomEffect.h">
+      <Filter>System\Bloom</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

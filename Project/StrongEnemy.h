@@ -30,7 +30,6 @@ private:
 		ATTACK,		//攻撃アニメーション
 		IDLE,       //待機アニメーション
 		DEATH,      //死亡アニメーション
-		BEFORE_ATTACK,
 	};
 	/*静的定数*/
 	static constexpr float	RADIUS		  = 10.0f;	//半径
@@ -53,8 +52,8 @@ private:
 	Timer* restTimeAfterAttack;						//攻撃後休憩時間
 	Timer* invincibleTimer;							//無敵時間
 	Timer* preliminaryOperation;
-
-	
+	static constexpr int TOTAL_ANIM_NUM = 4;
+	float animPlayTime[TOTAL_ANIM_NUM];
 	int attackAnimLoopCount;//攻撃回数
 	bool isRestTime;		//休憩に入るかどうか
 	bool isPreliminaryOperation;

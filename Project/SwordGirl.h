@@ -18,7 +18,7 @@ public:
 	//基本動作
 	void Update()override;						//更新
 	void Init()override;						//初期化
-	void Move(const VECTOR cameraToPlayer);		//移動処理
+	void Move(const VECTOR _cameraToPlayer);		//移動処理
 	void Attack();								//攻撃処理
 	void Death();								//死亡処理
 	void AnimChange();							//アニメーションの変更
@@ -136,5 +136,6 @@ private:
 	float speed;
 	bool isKnockBack;
 	int knockBackFrameCount;
+	float multSpeed;
 	VECTOR knockBackMoveVec;	//移動ベクトルの逆行列
 };

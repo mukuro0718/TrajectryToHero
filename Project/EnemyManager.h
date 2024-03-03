@@ -68,6 +68,12 @@ public:
     const bool GetIsHitWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetIsHit(); }
     const bool GetIsHitStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetIsHit(); }
     const bool GetIsHitBossEnemy()const { return bossEnemy->GetIsHit(); }
+    const bool GetIsMeteoAttack()const { return bossEnemy->GetIsMeteoAttack(); }
+    const bool GetIsExplosionAttack()const { return bossEnemy->GetIsExplosionAttack(); }
+    //UŒ‚ƒJƒEƒ“ƒg‚Ìgetter
+    const int GetAttackNumWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetAttackNum(); }
+    const int GetAttackNumStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetAttackNum(); }
+    const int GetAttackNumBossEnemy()const { return bossEnemy->GetAttackNum(); }
 
     const void SetIsHitWeakEnemy(const int _enemyNum,const bool _isHitPlayer)const { weakEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }
     const void SetIsHitStrongEnemy(const int _enemyNum, const bool _isHitPlayer)const { strongEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }

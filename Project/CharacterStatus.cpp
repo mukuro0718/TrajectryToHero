@@ -189,7 +189,7 @@ void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 		hp = 10.0f;		//体力のセット
 		atk = 6.0f;			//攻撃力のセット
 		def = 3.0f;			//防御力のセット
-		agi = 2.0f;			//素早さのセット
+		agi = 1.0f;			//素早さのセット
 		expToGive = 80.0f;	//倒されたとき与える経験値のセット
 		exp = 0;			//経験値のセット
 		needExp = 0.0f;
@@ -239,6 +239,16 @@ void CharacterStatus::InitPlayerStatus()
 	needExp		= 10.0f;//必要な経験値のセット
 	maxHp		= hp;	//最大HPのセット
 	prevLv		= lv;	//前のレベルの設定
+	//lv			= 1.0f;	//レベルのセット
+	//hp			= 100.0f;//体力のセット
+	//atk			= 6.0f;	//攻撃力のセット
+	//def			= 10.0f;	//防御力のセット
+	//agi			= 3.0f;	//素早さのセット
+	//expToGive	= 0.0f;	//倒されたとき与える経験値のセット
+	//exp			= 0.0f;	//経験値のセット
+	//needExp		= 10.0f;//必要な経験値のセット
+	//maxHp		= hp;	//最大HPのセット
+	//prevLv		= lv;	//前のレベルの設定
 }
 /// <summary>
 /// 体力回復
@@ -271,19 +281,25 @@ void CharacterStatus::InitExpToGive()
 /// </summary>
 void CharacterStatus::CalcExp(const float _expToGive)
 {
-	//経験値を足す
-	exp += _expToGive;
-	//もし経験値量がレベルアップに必要な経験値量を超えていたら
-	if (exp >= needExp)
+	if (lv != MAX_LV)
 	{
-		//レベルアップ
-		++lv;
-		//経験値量の初期化
-		exp -= needExp;
-		//次に必要な経験値量を設定
-		needExp = lv * 10;
+		//経験値を足す
+		exp += _expToGive;
+		//もし経験値量がレベルアップに必要な経験値量を超えていたら
+		if (exp >= needExp)
+		{
+			//レベルアップ
+			++lv;
+			//経験値量の初期化
+			exp -= needExp;
+			//次に必要な経験値量を設定
+			needExp = lv * 10;
+		}
 	}
-
+	else
+	{
+		exp = 0.0f;
+	}
 }
 /// <summary>
 /// 画像ハンドル、クラスインスタンスの削除
@@ -548,16 +564,25 @@ void CharacterStatus::UpdateLevelUpMenu()
 					switch (nowSelectStatus)
 					{
 					case static_cast<int>(SelectStatus::ATK):
-						atkUpCount++;
-						statusUpPoint--;
+						if (atkUpCount != MAX_ATK_UP_COUNT)
+						{
+							atkUpCount++;
+							statusUpPoint--;
+						}
 						break;
 					case static_cast<int>(SelectStatus::AGI):
-						agiUpCount++;
-						statusUpPoint--;
+						if (agiUpCount != MAX_AGI_UP_COUNT)
+						{
+							agiUpCount++;
+							statusUpPoint--;
+						}
 						break;
 					case static_cast<int>(SelectStatus::DEF):
-						defUpCount++;
-						statusUpPoint--;
+						if (defUpCount != MAX_DEF_UP_COUNT)
+						{
+							defUpCount++;
+							statusUpPoint--;
+						}
 						break;
 					}
 					isInputPad = true;

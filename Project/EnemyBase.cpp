@@ -28,6 +28,9 @@ EnemyBase::EnemyBase(int _modelHandle)
 	,spawnPos(ORIGIN_POS)
 	,bloodBaseDir(ORIGIN_POS)
 	,frameCount(0)
+	, isAttackReadying(false)//攻撃準備
+	, waitAttackFrameCount(0)//攻撃待機フレームカウント数
+
 {
 	int bloodParticle = 0;
 	int animModel = 0;
@@ -77,14 +80,14 @@ void EnemyBase::Final()
 /// </summary>
 void EnemyBase::Draw(VECTOR playerPos)
 {
-#ifdef _DEBUG
-	DrawCapsule(capsuleInfo);
-	DrawSphere(sphereInfo);
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	DrawCapsule(capsuleInfo);
+//	DrawSphere(sphereInfo);
+//#endif // _DEBUG
 	//プレイヤーとエネミーの距離
 	float distance = VSize(VSub(playerPos, pos));
 	MV1DrawModel(modelHandle);
-	if (status->GetHp() >= 0)
+	if (status->GetHp() > 0)
 	{
 		blood->Draw();
 	}

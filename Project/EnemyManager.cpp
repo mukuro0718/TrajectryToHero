@@ -301,7 +301,7 @@ void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
 	switch (_playerLv)
 	{
 	case 1:
-		nowWeakEnemyNum = 1;
+		nowWeakEnemyNum = 2;
 		nowStrongEnemyNum = 0;
 		break;
 	case 3:
@@ -332,12 +332,12 @@ VECTOR EnemyManager::RandomSpawnPos()
 {
 	VECTOR outPutPos = ORIGIN_POS;
 
-	outPutPos.x = static_cast<float>(GetRand(350));
+	outPutPos.x = static_cast<float>(GetRand(150));
 	if (GetRand(1) == 0)
 	{
 		outPutPos.x *= -1;
 	}
-	outPutPos.z = static_cast<float>(GetRand(350));
+	outPutPos.z = static_cast<float>(GetRand(150));
 	if (GetRand(1) == 0)
 	{
 		outPutPos.z *= -1;

@@ -20,7 +20,7 @@ struct CapsuleInfo
     int divNum      = 8         ;//カプセル分割数
     int difColor    = 0         ;//ディフューズカラー
     int spcColor    = 0         ;//スペキュラカラー
-    int fillFlag    = false     ;//描画する球を塗りつぶすかどうか
+    bool fillFlag    = false     ;//描画する球を塗りつぶすかどうか
 };
 //球の作成（描画）に必要な情報
 struct SphereInfo
@@ -30,7 +30,7 @@ struct SphereInfo
     int divNum = 8;//カプセル分割数
     int difColor = 0;//ディフューズカラー
     int spcColor = 0;//スペキュラカラー
-    int fillFlag = false;//描画する球を塗りつぶすかどうか
+    bool fillFlag = false;//描画する球を塗りつぶすかどうか
 };
 //フォントの描画に必要な情報
 struct FontInfo

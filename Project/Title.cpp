@@ -55,7 +55,7 @@ Title::Title()
 	player = new SwordGirl(playerData[static_cast<int>(PlayerData::MODEL)], playerData[static_cast<int>(PlayerData::FRAME)], playerData[static_cast<int>(PlayerData::HP)], playerData[static_cast<int>(PlayerData::EXP)], fontData[static_cast<int>(FontType::TEXT)]);
 	opeUI = new OperationUI();
 	enemy = new TutorialEnemy(MV1LoadModel("Data/Model/Enemy/WeakEnemy.mv1"));
-	collision = new Collision();
+	collision = new Collision(1,0);
 	statusUpParticle = new StatusUpParticle(player->GetLv());
 	prevPlayerAtk = player->GetAtk();
 	//初期化
@@ -516,7 +516,7 @@ void Title::OnDamage()
 		player->GetIsAttack() && !enemy->GetIsDamage() && tutorialProgress == static_cast<int>(TutorialProgress::DESTROY_ENEMY_2))
 	{
 		//当たり判定チェック
-		bool isHitEnemy = collision->OnDamage(false, enemy->GetIsDeath(), enemy->GetCapsuleInfo(), player->GetSphereInfo());
+		bool isHitEnemy = collision->OnDamage(enemy->GetIsDeath(), enemy->GetCapsuleInfo(), player->GetSphereInfo());
 		//もし攻撃が当たっていたら
 		if (isHitEnemy)
 		{

@@ -15,6 +15,7 @@ CharacterBase::CharacterBase()
 	,isAttack(false)
 	,isDeath(false)
 	,shadow(nullptr)
+	,attackNum(0)
 {
 	shadow = new Shadow();
 }

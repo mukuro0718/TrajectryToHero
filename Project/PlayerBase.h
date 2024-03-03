@@ -37,6 +37,9 @@ protected:
 	VECTOR cameraToPlayer;
 	BloodParticle* blood;//血しぶきパーティクル
 	VECTOR bloodBaseDir;//血しぶきパーティクルの方向のもとになる方向
+	SwordTrail* swordTrail;	//剣の軌跡
+	bool isAttackReadying;//攻撃準備
+	int waitAttackFrameCount;//攻撃待機フレームカウント数
 private:
 	/*静的定数*/
 	static constexpr float	CAPSULE_HEIGHT		= 30.0f;//カプセルの高さ
@@ -51,8 +54,6 @@ private:
 	/*メンバ変数*/
 	VECTOR centerPos;	//中心座標
 	float degrees;		//度数
-	SwordTrail* swordTrail;	//剣の軌跡
-	Timer* attackLatency;	//攻撃時待機時間
 	StatusUI* statusUI;		//ステータスUI
 };
 

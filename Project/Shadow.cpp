@@ -22,7 +22,7 @@ Shadow::~Shadow()
 /// </summary>
 void Shadow::Final()
 {
-	DeleteGraph(shadowHandle);
+	//DeleteGraph(shadowHandle);
 }
 /// <summary>
 /// •`‰æ

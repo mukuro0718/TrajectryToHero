@@ -19,7 +19,6 @@ const VECTOR PlayerBase::CENTER_POS_OFFSET	= VGet(0.0f, 20.0f, 0.0f);
 /// <param name="modelHandle">プレイヤーモデルハンドル</param>
 PlayerBase::PlayerBase(const int _modelHandle)
 	: status(nullptr)
-	, attackLatency(nullptr)
 	, swordTrail(nullptr)
 	, blood(nullptr)
 	, statusUI(nullptr)
@@ -27,6 +26,8 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	, degrees(INIT_DEGREES)
 	, centerPos(ORIGIN_POS)
 	, bloodBaseDir(ORIGIN_POS)
+	, isAttackReadying(false)
+	, waitAttackFrameCount(0)
 {
 	int bloodParticle = 0;
 	auto& load = Load::GetInstance();
@@ -35,8 +36,6 @@ PlayerBase::PlayerBase(const int _modelHandle)
 	status		  = new CharacterStatus();
 	statusUI	  = new StatusUI();
 	swordTrail	  = new SwordTrail();
-	attackLatency = new Timer();
-	attackLatency->Init(5);
 	//モデルのロード
 	modelHandle = MV1DuplicateModel(_modelHandle);
 	if (modelHandle < INIT_MODELHANDLE)
@@ -75,34 +74,23 @@ void PlayerBase::Draw()
 	//DrawSphere3D(swordTopPos, 2.0f, 16, SPHERE_COLOR, SPHERE_COLOR, false);
 #endif // _DEBUG
 	//攻撃中であれば当たり判定用スフィアを描画する
-	if (isAttack)
+	if (isAttackReadying)
 	{
 		if (!swordTrail->GetIsStartTimer())
 		{
 			swordTrail->StartTimer();
 		}
-		if (!attackLatency->getIsStartTimer())
-		{
-			attackLatency->StartTimer();
-		}
-		if (attackLatency->CountTimer())
-		{
-			VECTOR spherePos = pos;
+		VECTOR spherePos = pos;
 
-			spherePos.x += -sinf(rotate.y) * 15.0f;
-			spherePos.z += -cosf(rotate.y) * 15.0f;
-			spherePos.y = 30.0f;
-			//スフィア情報の構築
-			SetUpSphere(spherePos, SPHERE_RADIUS, SPHERE_COLOR, false);
+		spherePos.x += -sinf(rotate.y) * 15.0f;
+		spherePos.z += -cosf(rotate.y) * 15.0f;
+		spherePos.y = 30.0f;
+		//スフィア情報の構築
+		SetUpSphere(spherePos, SPHERE_RADIUS, SPHERE_COLOR, false);
 #ifdef _DEBUG
-			////スフィアの描画
-			//DrawSphere(sphereInfo);
+		////スフィアの描画
+		//DrawSphere(sphereInfo);
 #endif
-		}
-	}
-	else
-	{
-		attackLatency->EndTimer();
 	}
 	
 	statusUI->Draw(status->GetAtkUpCount(), status->GetDefUpCount(), status->GetAgiUpCount());

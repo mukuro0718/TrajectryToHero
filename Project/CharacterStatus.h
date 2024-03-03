@@ -135,6 +135,12 @@ private:
     static constexpr DrawRect AGI_LOW_CURSOR_POS = { 960,760,990,730 };
     static constexpr DrawRect DEF_LOW_CURSOR_POS = { 1270,760,1300,730 };
     static constexpr DrawRect BACKGROUND_POS = {550,250,1450,800};
+
+    static constexpr int MAX_ATK_UP_COUNT = 5;
+    static constexpr int MAX_AGI_UP_COUNT = 5;
+    static constexpr int MAX_DEF_UP_COUNT = 5;
+    static constexpr float MAX_LV = 16.0f;
+
     static const int FONT_COLOR;
     static const int BLUE_FONT_COLOR;
     static const int PREV_FONT_COLOR;

@@ -38,6 +38,7 @@ SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _h
 	, isKnockBack	 (false)
 	, knockBackMoveVec(ORIGIN_POS)
 	, knockBackFrameCount(0)
+	, multSpeed(1.0f)
 {
 	//生成
 	Create();
@@ -47,8 +48,6 @@ SwordGirl::SwordGirl(const int _modelHandle, const int _frameImage, const int _h
 	MV1SetScale(modelHandle, scale);
 	//回転値のセット
 	MV1SetRotationXYZ(modelHandle, rotate);
-	//コリジョン情報を構築
-	MV1SetupCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex, PLAYER_COLL_INFO.xDivNum, PLAYER_COLL_INFO.yDivNum, PLAYER_COLL_INFO.zDivNum);
 	//アニメーションの追加
 	anim->Add(MV1LoadModel("Data/Animation/Player/RunAnim.mv1"		), 3);//走りアニメーション
 	anim->Add(MV1LoadModel("Data/Animation/Player/AttackAnim.mv1"	), 3);//攻撃アニメーション
@@ -104,14 +103,27 @@ void SwordGirl::FixMoveVec(const VECTOR _fixVec)
 void SwordGirl::Update()
 {
 	blood->UpdateGravity();
-	
+	switch (status->GetAgiUpCount())
+	{
+	case 1:
+		multSpeed = 2.0f;
+		break;
+	case 2:
+		animPlayTime[static_cast<int>(AnimationType::ATTACK)] = 0.7f;
+		break;
+	case 3:
+		animPlayTime[static_cast<int>(AnimationType::ATTACK)] = 0.8f;
+		break;
+	case 4:
+		animPlayTime[static_cast<int>(AnimationType::ATTACK)] = 0.9f;
+		break;
+	case 5:
+		animPlayTime[static_cast<int>(AnimationType::ATTACK)] = 1.0f;
+		break;
+	}
 	if (isInvincible)
 	{
-		blood->Init(bloodBaseDir,pos);
-	}
-	if (isAvoidance && anim->GetIsChangeAnim())
-	{
-		isAvoidance = false;
+		blood->Init(bloodBaseDir, pos);
 	}
 	if (status->GetHp() > 0)
 	{
@@ -139,15 +151,13 @@ void SwordGirl::Update()
 	//status->CalcExp
 	//死亡判定
 	Death();
-	//コリジョン情報を更新
-	MV1RefreshCollInfo(modelHandle, PLAYER_COLL_INFO.frameIndex);
 	//モデルの設定
 	MV1SetRotationXYZ(modelHandle, rotate);
 	MV1SetPosition(modelHandle, pos);
 	blood->Update(15);
 	ChangeColor();//モデルの色を変える
 	//アニメーションの再生
-	anim->Play(&modelHandle,animPlayTime[anim->GetAnim()]);
+	anim->Play(&modelHandle, animPlayTime[anim->GetAnim()]);
 }
 /// <summary>
 /// ステータス更新
@@ -243,20 +253,25 @@ void SwordGirl::ChangeColor()
 /// </summary>
 void SwordGirl::Move(const VECTOR _cameraToPlayer)
 {
+	if (isAvoidance && anim->GetIsChangeAnim())
+	{
+		isAvoidance = false;
+	}
+
 	if (status->GetHp() > 0)
 	{
 		cameraToPlayer = _cameraToPlayer;
 		moveVec = ORIGIN_POS;
 		// 攻撃または被弾をしていなかったら
-		if (!isAttack && !isInvincible && !isKnockBack)
+		if (!isAttack && !isInvincible && !isKnockBack && !isAttackReadying)
 		{
 			/*回避*/
 			int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 			//Bが押されていたら攻撃
-			if (input & PAD_INPUT_6)
+			if (input & PAD_INPUT_2)
 			{
 				isAvoidance = true;
-				speed = status->GetAgi();
+				speed = multSpeed * 1.3f;
 			}
 			if (!isAvoidance)
 			{
@@ -277,8 +292,8 @@ void SwordGirl::Move(const VECTOR _cameraToPlayer)
 					//モデル角度の計算(プレイヤーの前方向ベクトルからスティックの傾きから出したベクトルの角度を出す)
 					rotate.y = (-atan2(cameraToPlayer.z, cameraToPlayer.x) - atan2(stickDirectionNormalize.z, stickDirectionNormalize.x)) - DX_PI_F;
 					//移動ベクトル計算
-					moveVec.x += -sinf(rotate.y) * status->GetAgi();
-					moveVec.z += -cosf(rotate.y) * status->GetAgi();
+					moveVec.x += -sinf(rotate.y) * multSpeed;
+					moveVec.z += -cosf(rotate.y) * multSpeed;
 					playerDir = VNorm(playerDir);
 				}
 				else
@@ -288,8 +303,8 @@ void SwordGirl::Move(const VECTOR _cameraToPlayer)
 			}
 			else
 			{
-				moveVec.x += -sinf(rotate.y) * status->GetAgi();
-				moveVec.z += -cosf(rotate.y) * status->GetAgi();
+				moveVec.x += -sinf(rotate.y) * multSpeed;
+				moveVec.z += -cosf(rotate.y) * multSpeed;
 			}
 		}
 		if (isKnockBack)
@@ -303,6 +318,7 @@ const void SwordGirl::OnKnockBack(const VECTOR _targetPos)
 	isKnockBack = true;
 	knockBackMoveVec = VSub(pos, _targetPos);
 	knockBackMoveVec = VNorm(knockBackMoveVec);
+	knockBackMoveVec = VScale(knockBackMoveVec, 5.0f);
 }
 void SwordGirl::KnockBack()
 {
@@ -324,26 +340,47 @@ void SwordGirl::KnockBack()
 /// <param name="_isAttack">攻撃をしているか</param>
 void SwordGirl::Attack()
 {
+	clsDx();
+	printfDx("%d", isAttack);
 	if (!isInvincible)
 	{
 		//攻撃をしていない
-		if (!isAttack)
+		if (!isAttackReadying)
 		{
 			int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-			//Bが押されていたら攻撃
+			//Xが押されていたら攻撃
 			if (input & PAD_INPUT_3)
 			{
-				isAttack = true;
+				//isAttack = true;
+				isAttackReadying = true;
+				attackNum++;
 			}
 		}
 		//攻撃アニメーションが終了したらフラグを下す
-		else if (isAttack && anim->GetPlayTime() == FIRST_ANIM_PLAY_TIME)
+		else
 		{
+			waitAttackFrameCount++;
+			if (waitAttackFrameCount >= 30 && waitAttackFrameCount <= 40)
+			{
+				
+				isAttack = true;
+			}
+			else
+			{
+				isAttack = false;
+			}
+		}
+		if (isAttackReadying && anim->GetPlayTime() == FIRST_ANIM_PLAY_TIME)
+		{
+			waitAttackFrameCount = 0;
 			isAttack = false;
+			isAttackReadying = false;
 		}
 	}
 	else
 	{
+		waitAttackFrameCount = 0;
+		isAttackReadying = false;
 		isAttack = false;
 	}
 }
@@ -366,12 +403,13 @@ void SwordGirl::Death()
 /// </summary>
 void SwordGirl::AnimChange()
 {
-	if (isAttack)
+	if (isAttack || isAttackReadying)
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::ATTACK));//攻撃
 	}
 	else if (isInvincible)
 	{
+		isAvoidance = false;
 		anim->SetAnim(static_cast<int>(AnimationType::FRIGHTENING));//怯み
 	}
 	else if (isAvoidance)

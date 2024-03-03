@@ -29,8 +29,10 @@ StageChanger::StageChanger()
 	, backGroundAlpha(0)
 	, alphaValue(6)
 	, gateImageAngle(0.0f)
-	, isFarm(true)
-	, isBoss(false)
+	, isFarm(true)//true
+	, isBoss(false)//false
+	//, isFarm(false)
+	//, isBoss(true)
 	, isChangeStage(true)
 	, isGameOver(false)
 	, isGameClear(false)

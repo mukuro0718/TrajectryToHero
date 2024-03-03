@@ -70,6 +70,7 @@ void OpeningScene::ChangeNextScene()
 	{
 		//シーンチェンジを稼働させる
 		sceneChange.SetIsSceneChanger(true);
-		sceneChange.ChangeSceneFromNowToNext(SceneType::OPENING, SceneType::TITLE);
+		/*sceneChange.ChangeSceneFromNowToNext(SceneType::OPENING, SceneType::TITLE);*/
+		sceneChange.ChangeSceneFromNowToNext(SceneType::OPENING, SceneType::GAME);
 	}
 }

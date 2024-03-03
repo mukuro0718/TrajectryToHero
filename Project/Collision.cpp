@@ -5,8 +5,20 @@
 /// <summary>
 /// コンストラクタ
 /// </summary>
-Collision::Collision()
+Collision::Collision(const int _maxWeakEnemyNum, const int _maxStrongEnemyNum)
 {
+	for (int i = 0; i < _maxWeakEnemyNum; i++)
+	{
+		weakEnemyHitNum.push_back(0);
+		playerHitNumForWeakEnemy.push_back(0);
+	}
+	for (int i = 0; i < _maxStrongEnemyNum; i++)
+	{
+		strongEnemyHitNum.push_back(0);
+		playerHitNumForStrongEnemy.push_back(0);
+	}
+	bossEnemyHitNum = 0;
+	playerHitNumForBossEnemy = 0;
 }
 /// <summary>
 /// デストラクタ
@@ -25,9 +37,9 @@ void Collision::Init()
 /// 攻撃時当たり判定
 /// ダメージ判定を行う場合はtrue,そうでなければfalseを返す
 /// </summary>
-bool Collision::OnDamage(const bool _isInvicible,const bool _isDeath,const CapsuleInfo _capsuleInfo,const SphereInfo _sphereInfo)
+bool Collision::OnDamage(const bool _isDeath,const CapsuleInfo _capsuleInfo,const SphereInfo _sphereInfo)
 {
-	if (!_isInvicible && !_isDeath)
+	if (!_isDeath)
 	{
 		//球とスフィアの当たり判定をチェック
 		bool isHit = SphereCapsuleCalc(_capsuleInfo.topPos,_capsuleInfo.underPos,_capsuleInfo.radius,_sphereInfo.centerPos,_sphereInfo.radius);

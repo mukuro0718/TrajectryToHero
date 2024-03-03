@@ -48,6 +48,7 @@ public:
 	const int		  GetAtkUpCount()		const {	return player->GetAtkUpCount();		  }//攻撃力上昇回数のgetter
 	const int		  GetAgiUpCount()		const {	return player->GetAgiUpCount();		  }//素早さ上昇回数のgetter
 	const int		  GetDefUpCount()		const {	return player->GetDefUpCount();		  }//防御力上昇回数のgetter
+	const int GetAttackNum()const { return player->GetAttackNum(); }
 	//ステータス処理
 	void CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
 	void CalcExp(const float _expToGive);

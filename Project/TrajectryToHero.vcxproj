@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BloodParticleBase.cpp" />
+    <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="Bonfire.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="CrackerParticleBase.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="FireParticle.cpp" />
     <ClCompile Include="FPSController.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -163,9 +165,12 @@
     <ClCompile Include="FarmStage.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Meteorite.cpp" />
+    <ClCompile Include="MeteoriteBase.cpp" />
     <ClCompile Include="Opening.cpp" />
     <ClCompile Include="OpeningScene.cpp" />
     <ClCompile Include="OperationUI.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="StatusUpParticle.cpp" />
     <ClCompile Include="StatusUpParticleBase.cpp" />
     <ClCompile Include="StrongerUI.cpp" />
@@ -190,15 +195,14 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TItleScene.cpp" />
-    <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialCamera.cpp" />
-    <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TutorialStage.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BloodParticleBase.h" />
+    <ClInclude Include="BloomEffect.h" />
     <ClInclude Include="Bonfire.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="Camera.h" />
@@ -210,6 +214,7 @@
     <ClInclude Include="CrackerParticleBase.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FireParticle.h" />
     <ClInclude Include="FPSController.h" />
     <ClInclude Include="Game.h" />
@@ -220,9 +225,12 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="FarmStage.h" />
     <ClInclude Include="Load.h" />
+    <ClInclude Include="Meteorite.h" />
+    <ClInclude Include="MeteoriteBase.h" />
     <ClInclude Include="Opening.h" />
     <ClInclude Include="OpeningScene.h" />
     <ClInclude Include="OperationUI.h" />
+    <ClInclude Include="Star.h" />
     <ClInclude Include="StatusUpParticle.h" />
     <ClInclude Include="StatusUpParticleBase.h" />
     <ClInclude Include="StrongerUI.h" />
@@ -247,9 +255,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialCamera.h" />
-    <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TutorialStage.h" />
     <ClInclude Include="WeakEnemy.h" />
   </ItemGroup>

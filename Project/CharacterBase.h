@@ -33,6 +33,7 @@ public:
 	const bool GetIsDeath()const { return isDeath; }
 	//移動量のgetter
 	const VECTOR GetMoveVec()const { return moveVec; }
+	const int GetAttackNum()const { return attackNum; }
 protected:
 	/*静的定数*/
 	static constexpr int INIT_MODELHANDLE = 0;
@@ -50,6 +51,9 @@ protected:
 	bool			isAttack;		//攻撃したか
 	bool			isDeath;
 	Shadow* shadow;
+	int attackNum;//攻撃回数
+	/*HACK:攻撃するたびに攻撃カウントを立てて、攻撃がヒットしたらヒットした側に攻撃カウントを記録する
+	そして同じ数字の時は当たり判定を行わないようにする*/
 private:
 	void Init();
 };

@@ -22,6 +22,7 @@ StrongEnemy::StrongEnemy(const VECTOR _spawnPos,const int _modelHandle)
 	, randomRest(nullptr)
 	, preliminaryOperation(nullptr)
 	, isPreliminaryOperation(false)
+	, animPlayTime{0.8f,0.6f,0.8f,0.8f}
 {
 	//インスタンスの生成
 	Create();
@@ -142,7 +143,7 @@ void StrongEnemy::Update()
 	//色の変更
 	ChangeColor();
 	//アニメーション再生時間をセット
-	anim->Play(&modelHandle, 0.8f);
+	anim->Play(&modelHandle, animPlayTime[anim->GetAnim()]);
 }
 /// <summary>
 /// 移動
@@ -169,19 +170,11 @@ void StrongEnemy::Move(VECTOR _playerPos)
 		//すでに攻撃していない、休憩中ではない
 		if (!isAttack && !isRestTime)
 		{
-			if (!isPreliminaryOperation)
-			{
-				preliminaryOperation->StartTimer();
-			}
-			else
-			{
-
-				attackAnimLoopCount = 100;
-				isAttack = true;
-				isMove = false;
-				isRandomWalk = false;
-				isRandomRest = false;
-			}
+			attackAnimLoopCount = 100;
+			isAttack = true;
+			isMove = false;
+			isRandomWalk = false;
+			isRandomRest = false;
 		}
 	}
 	//80以上だったら
@@ -237,20 +230,19 @@ void StrongEnemy::Move(VECTOR _playerPos)
 			restTimeAfterAttack->EndTimer();
 		}
 	}
-	if (isMove && vectorSize >= 20 || isAttack && vectorSize >= 20)
+	if (isMove && vectorSize >= 20)
 	{
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -1);
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
-	if (preliminaryOperation->getIsStartTimer())
+	else if (isAttack && vectorSize >= 20)
 	{
-		if (preliminaryOperation->CountTimer())
-		{
-			preliminaryOperation->EndTimer();
-			isPreliminaryOperation = true;
-		}
+		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
+		moveVec = VScale(normalizePos, status->GetAgi() * -0.8f);
+		//角度を変える
+		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
 }
 /// <summary>
@@ -337,11 +329,6 @@ void StrongEnemy::ChangeAnim()
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
 	}
-	else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
-	{
-		anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
-	}
-
 }
 /// <summary>
 /// 最終処理

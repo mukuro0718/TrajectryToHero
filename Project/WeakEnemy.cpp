@@ -75,10 +75,9 @@ WeakEnemy::~WeakEnemy()
 void WeakEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
-	invincibleTimer->Init(8);
+	invincibleTimer->Init(9);
 	restTimeAfterAttack->Init(5);
 	randomRest->Init(20);
-	//preliminaryOperation->Init(12);
 	//新しい座標の生成
 	pos			= spawnPos;
 	rotate		= MODEL_ROTATE;
@@ -190,20 +189,15 @@ void WeakEnemy::Move(VECTOR _playerPos)
 		//すでに攻撃していない、休憩中ではない
 		if (!isAttack && !isRestTime && !isInvincible)
 		{
-			//if (!isPreliminaryOperation)
-			//{
-			//	preliminaryOperation->StartTimer();
-			//}
-			//else
-			//{
 			attackType = GetRand(1);
 			attackAnimLoopCount = 100;
+			waitAttackFrameCount = 0;
 			isAttack = true;
 			isMove = false;
 			isRandomWalk = false;
 			isRandomRest = false;
 			isWalk = false;
-			//}
+			attackNum++;
 		}
 	}
 	//80以上だったら
@@ -284,20 +278,11 @@ void WeakEnemy::Move(VECTOR _playerPos)
 		// もし攻撃中に正規化した値がーになっていたら正規化した値に移動スピードをかけて移動量を返す
 		moveVec = VScale(normalizePos, status->GetAgi() * -0.5f);
 	}
-	if (isMove && vectorSize >= 20 && !isInvincible || isAttack && vectorSize >= 20 && !isInvincible || isWalk && !isInvincible)
+	if (isMove && vectorSize >= 20 && !isInvincible ||isWalk && !isInvincible)
 	{
 		//角度を変える
 		rotate = VGet(0.0f, (float)ChangeRotate(_playerPos), 0.0f);
 	}
-
-	//if (preliminaryOperation->getIsStartTimer())
-	//{
-	//	if (preliminaryOperation->CountTimer())
-	//	{
-	//		preliminaryOperation->EndTimer();
-	//		isPreliminaryOperation = true;
-	//	}
-	//}
 }
 /// <summary>
 /// ランダムに歩く
@@ -376,6 +361,11 @@ void WeakEnemy::ChangeAnim()
 		if (attackType == static_cast<int>(AttackType::COMBO_ATTACK))
 		{
 			anim->SetAnim(static_cast<int>(AnimationType::COMBO_ATTACK));
+			waitAttackFrameCount++;
+			if (waitAttackFrameCount == 40 || waitAttackFrameCount == 75)
+			{
+				attackNum++;
+			}
 		}
 		else
 		{
@@ -396,10 +386,6 @@ void WeakEnemy::ChangeAnim()
 	{
 		anim->SetAnim(static_cast<int>(AnimationType::DEATH));
 	}
-	//else if (preliminaryOperation->getIsStartTimer() && !isRestTime)
-	//{
-	//	anim->SetAnim(static_cast<int>(AnimationType::BEFORE_ATTACK));
-	//}
 }
 /// <summary>
 /// 最終処理

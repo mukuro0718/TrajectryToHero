@@ -13,7 +13,8 @@ class StageChanger;
 class EnemyManager;
 class Collision;
 class StatusUpParticle;
-
+class Meteorite;
+class Explosion;
 using namespace std;
 
 class Game final
@@ -45,6 +46,8 @@ private:
 	EnemyManager* enemyManager;//エネミー
 	Collision* collision;
 	StatusUpParticle* statusUpParticle;
+	Meteorite* meteo;
+	Explosion* explosion;
 	static constexpr DrawRect VICTORY_LOGO_POS = { 200, 200, 1720, 700 };
 	int victoryImage;
 	int alpha;

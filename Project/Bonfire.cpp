@@ -1,7 +1,7 @@
 #include "Bonfire.h"
 #include "FireParticle.h"
 #include "Load.h"
-const VECTOR Bonfire::POS = VGet(0.0f,5.0f,-250.0f);
+const VECTOR Bonfire::POS = VGet(0.0f,5.0f,-50.0f);
 const VECTOR Bonfire::SCALE = VGet(0.3f,0.3f,0.3f);
 const VECTOR Bonfire::ROTATE = VGet(0.0f, 0.0f, 0.0f);
 

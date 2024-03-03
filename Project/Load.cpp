@@ -123,6 +123,7 @@ void Load::LoadingData()
 	bonfireData.push_back(LoadGraph("Data/Img/Game/Particle/Flame.png"));
 	//スカイドームモデル
 	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
+	//skydomeModel = MV1LoadModel("Data/Model/Skydome/Test_Skydome.mv1");
 	//メニュー画像
 	statusData.push_back(LoadGraph("Data/Img/Game/Menu/backGround.png"));
 	statusData.push_back(LoadGraph("Data/Img/Game/Menu/BonfireMenu.png"));

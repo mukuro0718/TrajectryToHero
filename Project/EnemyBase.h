@@ -58,6 +58,8 @@ protected:
 	int frameCount;
 	bool isFarmBossEnemyPos;//ファーム時ボス座標をセットするかどうか
 	VECTOR bloodBaseDir;//血しぶきパーティクルを飛ばす方向のもとになる方向
+	bool isAttackReadying;//攻撃準備
+	int waitAttackFrameCount;//攻撃待機フレームカウント数
 private:
 	/*定数*/
 	static const COLOR_F CHANGE_DIF_COLOR;//ディフューズカラー
