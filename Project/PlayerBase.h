@@ -12,34 +12,36 @@ class Timer;
 class SwordTrail;
 class BloodParticle;
 class StatusUI;
+
 class PlayerBase :public CharacterBase
 {
 public:
 	PlayerBase(const int _modelHandle);	// 引数ありコンストラクタ
 	virtual ~PlayerBase();				// デストラクタ
-	void Draw();						//描画
-	void Delete();						//削除
+	const void Draw();						//描画
+	const void Delete();						//削除
 	//仮想関数（継承先で実装）
-	virtual void Update() = 0;			//更新
-	virtual void Init() = 0;			//初期化
+	virtual const void Update() = 0;			//更新
+	virtual const void Init() = 0;			//初期化
 
-	void CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
-	void CalcExp(const float _expToGive);//レベルアップ処理
+	const void CalcHP(const float _atk, const VECTOR _attackerPos);//HP計算
+	const void CalcExp(const float _expToGive);//レベルアップ処理
 	const float GetAtk();
 	const float GetHp();
 	const float GetLv();
-	void TutorialStatusReset();
+	const void TutorialStatusReset();
 protected:
 	/*静的定数*/
 	static constexpr float WALK_SPEED = 5.0f;	//歩く速さ
 	/*メンバ変数*/
-	CharacterStatus* status;			//ステータス
-	VECTOR cameraToPlayer;
-	BloodParticle* blood;//血しぶきパーティクル
-	VECTOR bloodBaseDir;//血しぶきパーティクルの方向のもとになる方向
-	SwordTrail* swordTrail;	//剣の軌跡
-	bool isAttackReadying;//攻撃準備
-	int waitAttackFrameCount;//攻撃待機フレームカウント数
+	CharacterStatus*	status;		//ステータス
+	BloodParticle*		blood;		//血しぶきパーティクル
+	SwordTrail*			swordTrail;	//剣の軌跡
+
+	VECTOR	cameraToPlayer;			//カメラからプレイヤーへのベクトル
+	VECTOR	bloodBaseDir;			//血しぶきパーティクルの方向のもとになる方向
+	bool	isAttackReadying;		//攻撃準備
+	int		waitAttackFrameCount;	//攻撃待機フレームカウント数
 private:
 	/*静的定数*/
 	static constexpr float	CAPSULE_HEIGHT		= 30.0f;//カプセルの高さ
@@ -47,13 +49,15 @@ private:
 	static constexpr float	SPHERE_RADIUS		= 20.0f;//スフィアの半径
 	static constexpr float	INIT_DEGREES		= 0.0f;	//初期度数
 	static constexpr float	ADD_DEGREES_VALUE	= 1.6f;	//X度数増加量
+
 	static const	 int	SPHERE_COLOR;				//スフィアの色
 	static const	 int	CAPSULE_COLOR;				//カプセルの色
 	static const	 VECTOR SPHERE_POS_OFFSET;			//スフィアオフセット
 	static const	 VECTOR CENTER_POS_OFFSET;			//中心座標オフセット
 	/*メンバ変数*/
-	VECTOR centerPos;	//中心座標
-	float degrees;		//度数
-	StatusUI* statusUI;		//ステータスUI
+	StatusUI* statusUI;	//ステータスUI
+
+	VECTOR	centerPos;	//中心座標
+	float	degrees;	//度数
 };
 

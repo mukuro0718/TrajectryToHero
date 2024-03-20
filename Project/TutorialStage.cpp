@@ -10,6 +10,20 @@ TutorialStage::TutorialStage(const std::vector<int> _data)
 	:isShowGate(false)
 	,portalRotate(0.0f)
 {
+	Init(_data);
+}
+/// <summary>
+/// デストラクタ
+/// </summary>
+TutorialStage::~TutorialStage()
+{
+	Delete();
+}
+/// <summary>
+/// 初期化
+/// </summary>
+const void TutorialStage::Init(const std::vector<int> _data)
+{
 	for (int i = 0; i < MAX_DATA_NUM; i++)
 	{
 		data.push_back(_data[i]);
@@ -35,28 +49,33 @@ TutorialStage::TutorialStage(const std::vector<int> _data)
 		fire.push_back(new FireParticle(pos[static_cast<int>(DataType::BONFIRE)], data[static_cast<int>(DataType::FLAME)]));
 	}
 }
-TutorialStage::~TutorialStage()
-{
-	Delete();
-}
 /// <summary>
 /// 最終処理
 /// </summary>
-void TutorialStage::Delete()
+const void TutorialStage::Delete()
 {
+	for (int i = 0; i < fire.size(); i++)
+	{
+		if (fire[i])
+		{
+			delete(fire[i]);
+			fire[i] = nullptr;
+		}
+	}
+
 	data.clear();
 	pos.clear();
 	pos.clear();
 }
 
-void TutorialStage::Update()
+const void TutorialStage::Update()
 {
 	portalRotate += 1.0f;
 	
 	MV1SetRotationXYZ(data[static_cast<int>(DataType::PORTAL)], VGet(0.0f, 0.0f, portalRotate * (DX_PI_F / 180.0f)));
 
 }
-void TutorialStage::Draw()
+const void TutorialStage::Draw()
 {
 	MV1DrawModel(data[static_cast<int>(DataType::SKYDOME)]);
 	MV1DrawModel(data[static_cast<int>(DataType::BONFIRE)]);

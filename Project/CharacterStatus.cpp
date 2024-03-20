@@ -1,19 +1,11 @@
-//===========================================================================
-//@brief ステータスクラス
-//===========================================================================
 #include"CharacterStatus.h"
 #include "Common.h"
 #include "SceneChanger.h"
 #include "Load.h"
 #include "Timer.h"
 #include "CrackerParticle.h"
-const VECTOR CharacterStatus::SET_DRAW_POS		= VGet(50.0f,50.0f,0.0f);
-const int	 CharacterStatus::FONT_COLOR_WHITE	= GetColor(210, 210, 210);
-const int	 CharacterStatus::FONT_COLOR_RED	= GetColor(255, 50, 50);
-const int CharacterStatus::FONT_COLOR = GetColor(200, 200, 150);
-const int CharacterStatus::BLUE_FONT_COLOR = GetColor(50, 50, 150);
-const int CharacterStatus::PREV_FONT_COLOR = GetColor(200, 200, 250);
-const VECTOR CharacterStatus::BONFIRE_POS = VGet(0.0f, 5.0f, -850.0f);
+const int	 CharacterStatus::FONT_COLOR		= GetColor(200, 200, 150);
+const int	 CharacterStatus::BLUE_FONT_COLOR	= GetColor(50, 50, 150);
 
 /// <summary>
 /// コンストラクタ
@@ -30,25 +22,12 @@ CharacterStatus::CharacterStatus()
 	, maxHp(0.0f)
 	, prevLv(0.0f)
 	, isInputPad(false)
-	, isLvUP(false)
-	, isShowBonfireMenu(false)
 	, isShowLevelUpMenu(false)
-	, isFinalSelectStatus(false)
-	, lvUpCount(0)
-	, backGroundImage(0)
 	, nowSelectStatus(static_cast<int>(SelectStatus::ATK))
-	, statusFontHandle(0)
 	, inputWaitTimer(nullptr)
-	, menuImage(0)
-	, cursorImage(0)
-	, rectImage(0)
-	, frameCount(0)
 	, nowSelectMenu(0)
 	, isFinalSelectMenu(false)
 	, isBonfireMenu(false)
-	, atkImage(0)
-	, agiImage(0)
-	, defImage(0)
 	, atkUpCount(0)
 	, agiUpCount(0)
 	, defUpCount(0)
@@ -74,7 +53,7 @@ CharacterStatus::CharacterStatus()
 /// <summary>
 /// 初期化
 /// </summary>
-void CharacterStatus::Init()
+const void CharacterStatus::Init()
 {
 	inputWaitTimer->Init(5);
 }
@@ -86,7 +65,7 @@ CharacterStatus::~CharacterStatus()
 {
 	Delete();
 }
-void CharacterStatus::InitTutorialStatus(const int _showCount)
+const void CharacterStatus::InitTutorialStatus(const int _showCount)
 {
 	if (_showCount == 0)
 	{
@@ -118,7 +97,7 @@ void CharacterStatus::InitTutorialStatus(const int _showCount)
 /// <summary>
 /// 雑魚敵ステータスの初期設定
 /// </summary>
-void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
+const void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 {
 	/*プレイヤーのレベルをもとに、ステータスを調整する*/
 	//もしプレイヤーレベルが2以下だったら
@@ -165,7 +144,7 @@ void CharacterStatus::InitWeakEnemyStatus(const float _playerLv)
 /// <summary>
 /// 中ボスステータスの初期設定
 /// </summary>
-void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
+const void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 {
 	/*プレイヤーのレベルをもとに、ステータスを調整する*/
 	//もしプレイヤーレベルが8以下だったら
@@ -211,7 +190,7 @@ void CharacterStatus::InitStrongEnemyStatus(const float _playerLv)
 /// <summary>
 /// ボスステータスの初期設定
 /// </summary>
-void CharacterStatus::InitBossEnemyStatus()
+const void CharacterStatus::InitBossEnemyStatus()
 {
 	lv			= 10.0f;	//レベルのセット
 	hp			= 30.0f;	//体力のセット
@@ -227,7 +206,7 @@ void CharacterStatus::InitBossEnemyStatus()
 /// <summary>
 /// プレイヤーステータスの初期設定
 /// </summary>
-void CharacterStatus::InitPlayerStatus()
+const void CharacterStatus::InitPlayerStatus()
 {
 	lv			= 1.0f;	//レベルのセット
 	hp			= 30.0f;//体力のセット
@@ -253,14 +232,14 @@ void CharacterStatus::InitPlayerStatus()
 /// <summary>
 /// 体力回復
 /// </summary>
-void CharacterStatus::PhysicalRecovery()
+const void CharacterStatus::PhysicalRecovery()
 {
 	hp = maxHp;
 }
 /// <summary>
 /// HP計算
 /// </summary>
-float CharacterStatus::CalcHP(const float _atk)
+const float CharacterStatus::CalcHP(const float _atk)
 {
 	hp -= _atk / def;
 	if (hp <= 0)
@@ -272,14 +251,14 @@ float CharacterStatus::CalcHP(const float _atk)
 /// <summary>
 /// 与える経験値の初期化
 /// </summary>
-void CharacterStatus::InitExpToGive()
+const void CharacterStatus::InitExpToGive()
 {
 	expToGive = 0.0f;
 }
 /// <summary>
 /// HP計算
 /// </summary>
-void CharacterStatus::CalcExp(const float _expToGive)
+const void CharacterStatus::CalcExp(const float _expToGive)
 {
 	if (lv != MAX_LV)
 	{
@@ -304,21 +283,25 @@ void CharacterStatus::CalcExp(const float _expToGive)
 /// <summary>
 /// 画像ハンドル、クラスインスタンスの削除
 /// </summary>
-void CharacterStatus::Delete()
+const void CharacterStatus::Delete()
 {
-	// モデルのアンロード
-	DeleteGraph(backGroundImage);
 	//インスタンスの削除
 	if (inputWaitTimer)
 	{
 		delete(inputWaitTimer);
 		inputWaitTimer = nullptr;
 	}
+	//インスタンスの削除
+	if (particle)
+	{
+		delete(particle);
+		particle = nullptr;
+	}
 }
 /// <summary>
 /// 更新
 /// </summary>
-void CharacterStatus::Update(const bool _isShowMenu)
+const void CharacterStatus::Update(const bool _isShowMenu)
 {
 	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	
@@ -343,12 +326,12 @@ void CharacterStatus::Update(const bool _isShowMenu)
 /// <summary>
 /// 描画
 /// </summary>
-void CharacterStatus::Draw()
+const void CharacterStatus::Draw()
 {
 	DrawBonfireMenu();
 	DrawLevelUpMenu();
 }
-void CharacterStatus::UpdateBonfireMenu()
+const void CharacterStatus::UpdateBonfireMenu()
 {
 	//キーボードまたはXInputのゲームパットの入力を受け付ける
 	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
@@ -440,7 +423,7 @@ void CharacterStatus::UpdateBonfireMenu()
 /// <summary>
 /// 選択しているステータスの上昇
 /// </summary>
-void CharacterStatus::DrawBonfireMenu()
+const void CharacterStatus::DrawBonfireMenu()
 {
 	if (isBonfireMenu)
 	{
@@ -450,44 +433,7 @@ void CharacterStatus::DrawBonfireMenu()
 		DrawGraph(rectPos.x, rectPos.y, data[static_cast<int>(DataType::SELECT_RECT)], TRUE);
 	}
 }
-/// <summary>
-/// 選択された/されていないを透明度を変えて表示
-/// </summary>
-/// <param name="nowSelectStatus">現在選択中のステータス</param>
-/// <param name="statusType">ステータスの種類</param>
-/// <param name="imgHandle"></param>
-void CharacterStatus::ChangeBlendRateDrawText(const int currentSelectStatus, const int statusType)
-{
-	const TCHAR* drawText = NULL;
-	switch (statusType)
-	{
-	case static_cast<int>(SelectStatus::ATK):
-		drawText = "ATK";
-		break;
-	case static_cast<int>(SelectStatus::DEF):
-		drawText = "DEF";
-		break;
-	case static_cast<int>(SelectStatus::AGI):
-		drawText = "AGI";
-		break;
-	}
-	// カーソル番号が等しいときは選択している
-	// 選択されているときは普通に描画する
-	if (nowSelectStatus == statusType)
-	{
-		//レベルアップしていたらbutton画像を表示する
-		DrawStringToHandle(STATUS_TEXT_POS[statusType].x, STATUS_TEXT_POS[statusType].y, drawText, FONT_COLOR_RED, statusFontHandle);
-	}
-	//選択されていないときは少し暗く描画する
-	else
-	{
-		// 非選択時の画像の描画（選択されていない画像を薄くする）
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-		DrawStringToHandle(STATUS_TEXT_POS[statusType].x, STATUS_TEXT_POS[statusType].y, drawText, FONT_COLOR_RED, statusFontHandle);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-}
-void CharacterStatus::TutorialStatusReset()
+const void CharacterStatus::TutorialStatusReset()
 {
 	if (atk < 2.0f && !isShowLevelUpMenu)
 	{
@@ -505,7 +451,7 @@ void CharacterStatus::TutorialStatusReset()
 		prevLv = 1;
 	}
 }
-void CharacterStatus::UpdateLevelUpMenu()
+const void CharacterStatus::UpdateLevelUpMenu()
 {
 	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
@@ -663,7 +609,7 @@ void CharacterStatus::UpdateLevelUpMenu()
 /// <summary>
 /// アイコンの選択（カーソルの番号を切り替える）
 /// </summary>
-void CharacterStatus::DrawLevelUpMenu()
+const void CharacterStatus::DrawLevelUpMenu()
 {
 	if (isLevelUp)
 	{
@@ -671,7 +617,7 @@ void CharacterStatus::DrawLevelUpMenu()
 
 		particle->Draw();
 
-		DrawFormatString(TEXT_POS.x, TEXT_POS.y,  FONT_COLOR, "レベルアップ          ステータスポイント:%d\n上昇させるステータスを選んでください",statusUpPoint );
+		DrawFormatString(TEXT_POS.x, TEXT_POS.y,  FONT_COLOR, "ステータスアップ       ステータスポイント:%d\n上昇させるステータスを選んでください",statusUpPoint );
 		DrawExtendGraph(ATK_POS.lx, ATK_POS.ly, ATK_POS.rx, ATK_POS.ry, data[static_cast<int>(DataType::ATK)], TRUE);
 		DrawExtendGraph(AGI_POS.lx, AGI_POS.ly, AGI_POS.rx, AGI_POS.ry, data[static_cast<int>(DataType::AGI)], TRUE);
 		DrawExtendGraph(DEF_POS.lx, DEF_POS.ly, DEF_POS.rx, DEF_POS.ry, data[static_cast<int>(DataType::DEF)], TRUE);
@@ -717,7 +663,7 @@ void CharacterStatus::DrawLevelUpMenu()
 /// <summary>
 /// 情報の表示
 /// </summary>
-void CharacterStatus::ShowInfo()
+const void CharacterStatus::ShowInfo()
 {
 	//printfDx("STATUS\n");
 	//printfDx("LV:%f\n", lv);

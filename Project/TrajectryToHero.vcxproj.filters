@@ -43,20 +43,8 @@
     <Filter Include="System\Load">
       <UniqueIdentifier>{3762fb5b-10cf-415c-b9d7-76fabe33d816}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System\Scene\SceneType\GameOverScene">
-      <UniqueIdentifier>{a98c6e34-1252-4b54-8e4e-546e149610d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System\Scene\SceneType\GameClearScene">
-      <UniqueIdentifier>{a2bf0325-88cc-4404-9616-377c1047212a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene">
       <UniqueIdentifier>{26b2d921-0896-47e6-949a-d154d95fbeb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Scene\GameOver">
-      <UniqueIdentifier>{f42ca86b-13e5-4733-bb98-9b681d1c287b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Scene\GameClear">
-      <UniqueIdentifier>{2cc3095b-4677-4eed-9291-629acc2f646c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Scene\Opening">
       <UniqueIdentifier>{7304b243-2c8f-4803-9dd0-13813e06bc3a}</UniqueIdentifier>
@@ -118,9 +106,6 @@
     <Filter Include="Object\Scene\Game\Animation">
       <UniqueIdentifier>{ef9121d6-d113-4e46-9c06-b91df429b5cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\StatusManager">
-      <UniqueIdentifier>{9ed03698-16e3-49ef-93c7-5e12180f52bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Timer">
       <UniqueIdentifier>{1fe96ad6-b40c-415e-a416-cbfad0469f1b}</UniqueIdentifier>
     </Filter>
@@ -163,23 +148,14 @@
     <Filter Include="Object\Scene\Game\Stage\StageType">
       <UniqueIdentifier>{6c092823-a3d8-4f54-839f-eff84c6e3d3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Stage\StageType\TutorialStage">
-      <UniqueIdentifier>{8f00f8d7-31a5-4f98-969f-948e011f22f4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Scene\Game\Stage\StageType\FarmStage">
       <UniqueIdentifier>{70590f87-e87a-4af5-b315-a1f8138ce58e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Scene\Game\Stage\StageType\BossStage">
-      <UniqueIdentifier>{b1407668-87c3-498d-9d99-ccd163880613}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Scene\Game\Stage\Gimmick">
       <UniqueIdentifier>{0c83c493-d742-4649-b488-7f028dac7375}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Scene\Game\Particle\FireParticle">
       <UniqueIdentifier>{3a95f2c4-d9a7-4e20-8b14-d361a74c25b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Scene\Title\Player">
-      <UniqueIdentifier>{026ad284-fcf0-43f9-9170-a861187fa844}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Scene\Title\Enemy">
       <UniqueIdentifier>{6f41b2d8-8d3b-449f-b3eb-dd7091a6601b}</UniqueIdentifier>
@@ -192,9 +168,6 @@
     </Filter>
     <Filter Include="Object\Scene\Game\UI\StrongerUI">
       <UniqueIdentifier>{2cfa6a93-566b-47e8-9002-67c33dd24625}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Scene\Game\Particle\DeathParticle">
-      <UniqueIdentifier>{9c345e23-94e5-4359-8140-c0620ce38e9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Scene\Game\Particle\StatusUpParticle">
       <UniqueIdentifier>{99fb224b-d189-4024-b499-40ae22858182}</UniqueIdentifier>
@@ -220,11 +193,26 @@
     <Filter Include="Object\Scene\Game\Stage\Gimmick\Explosion">
       <UniqueIdentifier>{28e8c6f3-afa7-45b0-9298-4379e3ad8178}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Scene\Game\Skydome\Star">
-      <UniqueIdentifier>{2f908dfa-c332-49a7-847f-f1c032c11cb4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System\Bloom">
       <UniqueIdentifier>{db16074c-e2df-41b5-90ab-8bf9dca6861f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Scene\SceneType\LoadScene">
+      <UniqueIdentifier>{94f08e79-5033-40dd-9d8f-86d73c17f38f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\LightSword">
+      <UniqueIdentifier>{e2119cd4-0457-44c8-ad2e-94fc1229b427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\SpawnParticle">
+      <UniqueIdentifier>{8153622b-b920-4fdf-ad07-f8627871adff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\SpawnParticle\SpreadCircle">
+      <UniqueIdentifier>{6d023b8e-7b26-48fa-b517-8f87a635d715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\SpawnParticle\RisingCircle">
+      <UniqueIdentifier>{950c8a41-5441-4862-921a-1fb70fda6f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Scene\Game\Particle\SpawnParticle\SmokeOnCircle">
+      <UniqueIdentifier>{bc1ca996-1f7a-47ee-beb5-9d9fe927067a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -257,18 +245,6 @@
     </ClCompile>
     <ClCompile Include="Load.cpp">
       <Filter>System\Load</Filter>
-    </ClCompile>
-    <ClCompile Include="GameClearScene.cpp">
-      <Filter>System\Scene\SceneType\GameClearScene</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOverScene.cpp">
-      <Filter>System\Scene\SceneType\GameOverScene</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOver.cpp">
-      <Filter>Object\Scene\GameOver</Filter>
-    </ClCompile>
-    <ClCompile Include="GameClear.cpp">
-      <Filter>Object\Scene\GameClear</Filter>
     </ClCompile>
     <ClCompile Include="Opening.cpp">
       <Filter>Object\Scene\Opening</Filter>
@@ -318,9 +294,6 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Object\Scene\Game\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="StatusManager.cpp">
-      <Filter>Object\Scene\Game\StatusManager</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Object\Scene\Game\Timer</Filter>
     </ClCompile>
@@ -369,9 +342,6 @@
     <ClCompile Include="TutorialCamera.cpp">
       <Filter>Object\Scene\Title\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="TutorialPlayer.cpp">
-      <Filter>Object\Scene\Title\Player</Filter>
-    </ClCompile>
     <ClCompile Include="TutorialEnemy.cpp">
       <Filter>Object\Scene\Title\Enemy</Filter>
     </ClCompile>
@@ -399,11 +369,26 @@
     <ClCompile Include="Explosion.cpp">
       <Filter>Object\Scene\Game\Stage\Gimmick\Explosion</Filter>
     </ClCompile>
-    <ClCompile Include="Star.cpp">
-      <Filter>Object\Scene\Game\Skydome\Star</Filter>
-    </ClCompile>
     <ClCompile Include="BloomEffect.cpp">
       <Filter>System\Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadScene.cpp">
+      <Filter>System\Scene\SceneType\LoadScene</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSword.cpp">
+      <Filter>Object\Scene\Game\Particle\LightSword</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnParticle.cpp">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="RisingCircle.cpp">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\RisingCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeOnCircle.cpp">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\SmokeOnCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadCircle.cpp">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\SpreadCircle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,18 +418,6 @@
     </ClInclude>
     <ClInclude Include="Load.h">
       <Filter>System\Load</Filter>
-    </ClInclude>
-    <ClInclude Include="GameClearScene.h">
-      <Filter>System\Scene\SceneType\GameClearScene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameOverScene.h">
-      <Filter>System\Scene\SceneType\GameOverScene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameOver.h">
-      <Filter>Object\Scene\GameOver</Filter>
-    </ClInclude>
-    <ClInclude Include="GameClear.h">
-      <Filter>Object\Scene\GameClear</Filter>
     </ClInclude>
     <ClInclude Include="Opening.h">
       <Filter>Object\Scene\Opening</Filter>
@@ -490,9 +463,6 @@
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Object\Scene\Game\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="StatusManager.h">
-      <Filter>Object\Scene\Game\StatusManager</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Object\Scene\Game\Timer</Filter>
@@ -545,9 +515,6 @@
     <ClInclude Include="TutorialCamera.h">
       <Filter>Object\Scene\Title\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="TutorialPlayer.h">
-      <Filter>Object\Scene\Title\Player</Filter>
-    </ClInclude>
     <ClInclude Include="TutorialEnemy.h">
       <Filter>Object\Scene\Title\Enemy</Filter>
     </ClInclude>
@@ -575,11 +542,26 @@
     <ClInclude Include="Explosion.h">
       <Filter>Object\Scene\Game\Stage\Gimmick\Explosion</Filter>
     </ClInclude>
-    <ClInclude Include="Star.h">
-      <Filter>Object\Scene\Game\Skydome\Star</Filter>
-    </ClInclude>
     <ClInclude Include="BloomEffect.h">
       <Filter>System\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadScene.h">
+      <Filter>System\Scene\SceneType\LoadScene</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSword.h">
+      <Filter>Object\Scene\Game\Particle\LightSword</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnParticle.h">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="RisingCircle.h">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\RisingCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeOnCircle.h">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\SmokeOnCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadCircle.h">
+      <Filter>Object\Scene\Game\Particle\SpawnParticle\SpreadCircle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

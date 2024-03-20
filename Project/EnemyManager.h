@@ -11,21 +11,33 @@
 class EnemyManager
 {
 public:
-    EnemyManager();                                         //コンストラクタ
-    ~EnemyManager();                                        //デストラクタ
-    void Init();                           //初期化
-    void Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss);                            //描画
-    void Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss);//移動
-    void Update(const VECTOR _playerPos,const float _playerLv, const bool _isFarm,const bool _isBoss);       //更新
-    void CreateAndInit();                                          //生成
-    void AllDestroy();//すべての削除
-    void DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss);//影の描画
-    void AdjustTheNumberOfEnemy(const int _playerLv);//エネミーのスポーン数の調整
-    VECTOR RandomSpawnPos();//ランダムでスポーン座標を返す
+    EnemyManager(); //コンストラクタ
+    ~EnemyManager();//デストラクタ
+    const void   Init();                                                                                        //初期化
+    const void   Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss);                               //描画
+    const void   Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss);                         //移動
+    const void   Update(const VECTOR _playerPos,const float _playerLv, const bool _isFarm,const bool _isBoss);  //更新
+    const void   CreateAndInit();                                                                               //生成
+    const void   AllDestroy();                                                                                  //すべての削除
+    const void   DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss);               //影の描画
+    const void   AdjustTheNumberOfEnemy(const int _playerLv);                                                   //エネミーのスポーン数の調整
+    const void   DrawMagicSphere(const int _enemyNum) { strongEnemy[_enemyNum]->DrawMagicSphere(); }            //魔法陣の描画
+    const VECTOR RandomSpawnPos();                                                                              //ランダムでスポーン座標を返す
     //移動量補正
-    void FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec);
-    void FixMoveVecStrongEnemy(const int _enemyNum, const VECTOR _fixVec);
-    void FixMoveVecBossEnemy(const VECTOR _fixVec);
+    const void FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec);
+    const void FixMoveVecStrongEnemy(const int _enemyNum, const VECTOR _fixVec);
+    const void FixMoveVecBossEnemy(const VECTOR _fixVec);
+    //HP計算
+    const float CalcHPWeakEnemy(const int _enemyNum,const float _atk,const VECTOR _attackerPos);
+    const float CalcHPStrongEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos);
+    const float CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos);
+    //与える経験値の初期化
+    const void InitExpToGive(const int _enemyNum);
+    const void PhysicalRecoveryBossEnemy();
+    const void DrawStrongerUI(const float _playerLv,const bool _isFarm);
+
+
+    /*getter/setter*/
     //座標のgetter
     const VECTOR GetPosWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetPos(); }
     const VECTOR GetPosStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetPos(); }
@@ -74,21 +86,13 @@ public:
     const int GetAttackNumWeakEnemy(const int _enemyNum)const { return weakEnemy[_enemyNum]->GetAttackNum(); }
     const int GetAttackNumStrongEnemy(const int _enemyNum)const { return strongEnemy[_enemyNum]->GetAttackNum(); }
     const int GetAttackNumBossEnemy()const { return bossEnemy->GetAttackNum(); }
-
+    
     const void SetIsHitWeakEnemy(const int _enemyNum,const bool _isHitPlayer)const { weakEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }
     const void SetIsHitStrongEnemy(const int _enemyNum, const bool _isHitPlayer)const { strongEnemy[_enemyNum]->SetIsHit(_isHitPlayer); }
     const void SetIsHitBossEnemy(const bool _isHitPlayer)const { bossEnemy->SetIsHit(_isHitPlayer); }
     //無敵フラグを下す
-    void FlaggingBossEnemy();//フラグを下す
+    const void FlaggingBossEnemy();//フラグを下す
     //HP計算
-    float CalcHPWeakEnemy(const int _enemyNum,const float _atk,const VECTOR _attackerPos);
-    float CalcHPStrongEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos);
-    float CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos);
-    //与える経験値の初期化
-    void InitExpToGive(const int _enemyNum);
-    const void PhysicalRecoveryBossEnemy();
-    const void DrawStrongerUI(const float _playerLv,const bool _isFarm);
-
 private:
     /*定数*/
     enum class ModelType//モデル変数

@@ -9,7 +9,9 @@ BloodParticleBase::BloodParticleBase(const int _imageHandle)
 	, scale	 (0.0f)
 	, speed	 (0.0f)
 	, alpha	 (0)
+	, isUpdateGrav(false)
 	, imageHandle(_imageHandle)
+	, framecount(0)
 {
 
 }
@@ -23,7 +25,7 @@ BloodParticleBase::~BloodParticleBase()
 /// <summary>
 /// 初期化
 /// </summary>
-void BloodParticleBase::Init(const VECTOR _targetDir, const VECTOR _targetPos)
+const void BloodParticleBase::Init(const VECTOR _targetDir, const VECTOR _targetPos)
 {
 	pos = _targetPos;
 	pos.y += 20.0f;
@@ -35,58 +37,31 @@ void BloodParticleBase::Init(const VECTOR _targetDir, const VECTOR _targetPos)
 /// <summary>
 /// 更新
 /// </summary>
-void BloodParticleBase::Update()
+const void BloodParticleBase::Update()
 {
 	//座標の更新
 	pos = VAdd(pos, moveDir);
 	
 	moveDir.y -= GRAVITY;
 }
-void BloodParticleBase::UpdateGravity()
-{
-	//if (!isUpdateGrav)
-	//{
-	//	if (CheckHitKey(KEY_INPUT_U))
-	//	{
-	//		GRAVITY += 0.001f;
-	//		isUpdateGrav = true;
-	//	}
-	//	if (CheckHitKey(KEY_INPUT_J))
-	//	{
-	//		GRAVITY -= 0.001f;
-	//		isUpdateGrav = true;
-	//	}
-	//}
-	//else
-	//{
-	//	framecount++;
-	//}
-	//if (isUpdateGrav && framecount == 60)
-	//{
-	//	isUpdateGrav = false;
-	//	framecount = 0;
-	//}
-	//clsDx();
-	//printfDx("GRAVITY %f", BloodParticleBase::GRAVITY);
-}
 /// <summary>
 /// スケールの設定
 /// </summary>
-void BloodParticleBase::SetScale()
+const void BloodParticleBase::SetScale()
 {
 	scale = ReturnRandomFloatValue(RANDOM_SCALE_RANGE, false);
 }
 /// <summary>
 /// 速さの設定
 /// </summary>
-void BloodParticleBase::SetSpeed()
+const void BloodParticleBase::SetSpeed()
 {
 	speed = ReturnRandomFloatValue(RANDOM_SPEED_RANGE, false) / 5;
 }
 /// <summary>
 /// 方向の設定
 /// </summary>
-void BloodParticleBase::SetMoveDir()
+const void BloodParticleBase::SetMoveDir()
 {
 	/*移動方向を決める(単位ベクトルにする)*/
 	//ランダムでXYZの値を決める
@@ -102,7 +77,7 @@ void BloodParticleBase::SetMoveDir()
 /// <summary>
 /// 描画
 /// </summary>
-void BloodParticleBase::Draw()
+const void BloodParticleBase::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBillboard3D(pos, 0.0f, 0.0f, scale, 0.0f, imageHandle, TRUE);
@@ -116,7 +91,7 @@ void BloodParticleBase::Draw()
 /// <summary>
 /// 指定した範囲のランダム値を返す
 /// </summary>
-float BloodParticleBase::ReturnRandomFloatValue(const int _range, const bool _useSign)
+const float BloodParticleBase::ReturnRandomFloatValue(const int _range, const bool _useSign)
 {
 	if (_useSign)
 	{

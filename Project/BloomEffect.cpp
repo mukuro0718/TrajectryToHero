@@ -8,7 +8,7 @@ BloomEffect::BloomEffect()
 	,highBrightScreen(0)
 	,downScaleScreen(0)
 	,gaussScreen(0)
-	, GaussRatio(900)
+	, GaussRatio(1500)
 {
 
 }
@@ -94,13 +94,4 @@ const void BloomEffect::DrawGaussBlendGraph()
 
 	// 描画モードを二アレストに戻す
 	SetDrawMode(DX_DRAWMODE_NEAREST);
-
-
-	// フィルター処理の途中経過が分かるように画面下部に縮小して描画する
-	DrawExtendGraph(180 * 0 + 24, 320, 180 * 0 + 24 + 160, 120 + 320, highBrightScreen, FALSE);
-	DrawExtendGraph(180 * 1 + 24, 320, 180 * 1 + 24 + 160, 120 + 320, downScaleScreen, FALSE);
-	DrawExtendGraph(180 * 2 + 24, 320, 180 * 2 + 24 + 160, 120 + 320, gaussScreen, FALSE);
-
-	// 現在のガウスフィルタのぼかし度合いを描画する
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "Gauss:%d", GaussRatio);
 }

@@ -26,7 +26,7 @@ FPSController::~FPSController()
 /// <summary>
 /// 初期化
 /// </summary>
-void FPSController::Init()
+const void FPSController::Init()
 {
 	fps = 0.0f;
 	startTime = 0;
@@ -35,7 +35,7 @@ void FPSController::Init()
 /// <summary>
 /// FPSの平均
 /// </summary>
-void FPSController::Ave()
+const void FPSController::Ave()
 {
 	//カウントが０だったらスタートタイムを初期化
 	if (count == 0)
@@ -61,7 +61,7 @@ void FPSController::Ave()
 /// <summary>
 /// FPSの描画
 /// </summary>
-void FPSController::Draw()
+const void FPSController::Draw()
 {
 #if _DEBUG
 	//FPSの描画
@@ -71,7 +71,7 @@ void FPSController::Draw()
 /// <summary>
 /// 目標FPSになるよう待機
 /// </summary>
-void FPSController::Wait()
+const void FPSController::Wait()
 {
 	//現在の経過時間
 	int elapsedTime = GetNowCount() - startTime;

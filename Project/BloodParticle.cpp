@@ -28,18 +28,11 @@ BloodParticle::~BloodParticle()
 {
 	particle.clear();
 }
-void BloodParticle::UpdateGravity()
-{
-	for (int i = 0; i < PARTICLE_NUM; i++)
-	{
-		particle[i]->UpdateGravity();
-	}
-}
 
 /// <summary>
 /// èâä˙âª
 /// </summary>
-void BloodParticle::Init(const VECTOR _targetDir, const VECTOR _targetPos)
+const void BloodParticle::Init(const VECTOR _targetDir, const VECTOR _targetPos)
 {
 	if (!isDraw)
 	{
@@ -54,7 +47,7 @@ void BloodParticle::Init(const VECTOR _targetDir, const VECTOR _targetPos)
 /// <summary>
 /// çXêV
 /// </summary>
-void BloodParticle::Update(const int _maxFrameNum)
+const void BloodParticle::Update(const int _maxFrameNum)
 {
 	if (isDraw)
 	{
@@ -75,7 +68,7 @@ void BloodParticle::Update(const int _maxFrameNum)
 /// <summary>
 /// ï`âÊ
 /// </summary>
-void BloodParticle::Draw()
+const void BloodParticle::Draw()
 {
 	if (isDraw)
 	{

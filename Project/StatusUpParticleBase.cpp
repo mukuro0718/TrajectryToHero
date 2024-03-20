@@ -21,7 +21,7 @@ StatusUpParticleBase::~StatusUpParticleBase()
 /// <summary>
 /// 初期化
 /// </summary>
-void StatusUpParticleBase::Init()
+const void StatusUpParticleBase::Init()
 {
 	speed = ReturnRandomFloatValue(false, SPEED_RANGE) / 10.0f;
 	size = ReturnRandomFloatValue(false,SIZE_RANGE);
@@ -33,7 +33,7 @@ void StatusUpParticleBase::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void StatusUpParticleBase::Update(const VECTOR _targetPos)
+const void StatusUpParticleBase::Update(const VECTOR _targetPos)
 {
 	//画像を描画する中心座標
 	targetPos = VAdd(_targetPos,offsetPos);
@@ -47,7 +47,7 @@ void StatusUpParticleBase::Update(const VECTOR _targetPos)
 /// <summary>
 /// 描画
 /// </summary>
-void StatusUpParticleBase::Draw()
+const void StatusUpParticleBase::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBillboard3D(targetPos, 0.5f,0.5f, size,0.0f, imageHandle,TRUE);
@@ -57,7 +57,7 @@ void StatusUpParticleBase::Draw()
 		Init();
 	}
 }
-float StatusUpParticleBase::ReturnRandomFloatValue(const bool _sign,const int _range)
+const float StatusUpParticleBase::ReturnRandomFloatValue(const bool _sign,const int _range)
 {
 	int outPutValue = 0;
 	outPutValue = GetRand(_range) + 1;

@@ -22,14 +22,14 @@ TitleScene::~TitleScene()
 /// <summary>
 /// 作成
 /// </summary>
-void TitleScene::Create()
+const void TitleScene::Create()
 {
 	title = new Title();
 }
 /// <summary>
 /// 削除
 /// </summary>
-void TitleScene::Final()
+const void TitleScene::Final()
 {
 	if (title)
 	{
@@ -40,7 +40,7 @@ void TitleScene::Final()
 /// <summary>
 /// 更新
 /// </summary>
-void TitleScene::Update()
+const void TitleScene::Update()
 {
 	//更新
 	title->Update();
@@ -50,7 +50,7 @@ void TitleScene::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void TitleScene::Draw()
+const void TitleScene::Draw()
 {
 	title->Draw();
 }
@@ -58,7 +58,7 @@ void TitleScene::Draw()
 /// <summary>
 /// 次のシーンへ
 /// </summary>
-void TitleScene::ChangeNextScene()
+const void TitleScene::ChangeNextScene()
 {
 	//インスタンスを取得
 	auto& sceneChange = SceneChanger::GetInstance();

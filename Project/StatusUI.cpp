@@ -25,7 +25,7 @@ StatusUI::~StatusUI()
 /// <summary>
 /// •`‰æ
 /// </summary>
-void StatusUI::Draw(const int _atkUpCount, const int _defUpCount, const int _agiUpCount)
+const void StatusUI::Draw(const int _atkUpCount, const int _defUpCount, const int _agiUpCount)
 {
 	DrawExtendGraph(ATK_IMAGE_POS.x, ATK_IMAGE_POS.y, ATK_IMAGE_POS.x + IMAGE_SIZE.x, ATK_IMAGE_POS.y + IMAGE_SIZE.y, atkImageHandle, TRUE);
 	DrawExtendGraph(DEF_IMAGE_POS.x, DEF_IMAGE_POS.y, DEF_IMAGE_POS.x + IMAGE_SIZE.x, DEF_IMAGE_POS.y + IMAGE_SIZE.y, defImageHandle, TRUE);

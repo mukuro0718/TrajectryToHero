@@ -23,14 +23,14 @@ OpeningScene::~OpeningScene()
 /// <summary>
 /// 作成
 /// </summary>
-void OpeningScene::Create()
+const void OpeningScene::Create()
 {
 	opening = new Opening();
 }
 /// <summary>
 /// 削除
 /// </summary>
-void OpeningScene::Final()
+const void OpeningScene::Final()
 {
 	if (opening)
 	{
@@ -41,7 +41,7 @@ void OpeningScene::Final()
 /// <summary>
 /// 更新
 /// </summary>
-void OpeningScene::Update()
+const void OpeningScene::Update()
 {
 	//更新
 	opening->Update();
@@ -51,7 +51,7 @@ void OpeningScene::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void OpeningScene::Draw()
+const void OpeningScene::Draw()
 {
 	//描画
 	opening->Draw();
@@ -60,7 +60,7 @@ void OpeningScene::Draw()
 /// <summary>
 /// 次のシーンへ
 /// </summary>
-void OpeningScene::ChangeNextScene()
+const void OpeningScene::ChangeNextScene()
 {
 	//インスタンスを取得
 	 auto &sceneChange = SceneChanger::GetInstance();

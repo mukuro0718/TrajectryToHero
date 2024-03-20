@@ -7,6 +7,7 @@
 #include"BloodParticle.h"
 #include"StrongerUI.h"
 #include"Load.h"
+#include"SpawnParticle.h"
 const VECTOR  EnemyBase::DESTROY_POS = VGet(500.0f, 500.0f, 500.0f);
 const COLOR_F EnemyBase::CHANGE_DIF_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//ディフューズカラー
 const COLOR_F EnemyBase::CHANGE_SPC_COLOR = GetColorF(1.0f, 0.0f, 0.0f, 1.0f);//スペキュラカラー
@@ -24,10 +25,13 @@ EnemyBase::EnemyBase(int _modelHandle)
 	, isChangeColor(false)
 	,isPrevColorChange(false)
 	,strongerUI(nullptr)
+	, spawnParticle(nullptr)
 	,materialNum(0)
 	,spawnPos(ORIGIN_POS)
 	,bloodBaseDir(ORIGIN_POS)
 	,frameCount(0)
+	,spawnFrameCount(0)
+	, isSpawn(false)
 	, isAttackReadying(false)//攻撃準備
 	, waitAttackFrameCount(0)//攻撃待機フレームカウント数
 
@@ -40,6 +44,7 @@ EnemyBase::EnemyBase(int _modelHandle)
 	status = new CharacterStatus();
 	blood = new BloodParticle(bloodParticle);
 	strongerUI = new StrongerUI();
+	spawnParticle = new SpawnParticle();
 	changeColorTimer->Init(2);
 	
 	maxHP = 0;
@@ -61,7 +66,7 @@ EnemyBase::~EnemyBase()
 /// <summary>
 /// 移動量の補正
 /// </summary>
-void EnemyBase::FixMoveVec(const VECTOR _fixVec)
+const void EnemyBase::FixMoveVec(const VECTOR _fixVec)
 {
 	//移動量を補正する
 	moveVec = VAdd(moveVec, _fixVec);
@@ -70,7 +75,7 @@ void EnemyBase::FixMoveVec(const VECTOR _fixVec)
 /// <summary>
 /// 削除
 /// </summary>
-void EnemyBase::Final()
+const void EnemyBase::Final()
 {
 	// モデルのアンロード.
 	MV1DeleteModel(modelHandle);
@@ -78,36 +83,42 @@ void EnemyBase::Final()
 /// <summary>
 /// 描画
 /// </summary>
-void EnemyBase::Draw(VECTOR playerPos)
+const void EnemyBase::Draw(const VECTOR playerPos)
 {
 //#ifdef _DEBUG
 //	DrawCapsule(capsuleInfo);
 //	DrawSphere(sphereInfo);
 //#endif // _DEBUG
-	//プレイヤーとエネミーの距離
-	float distance = VSize(VSub(playerPos, pos));
-	MV1DrawModel(modelHandle);
-	if (status->GetHp() > 0)
+	if (isSpawn)
 	{
-		blood->Draw();
+		spawnParticle->Draw();
+	}
+	else
+	{
+		//プレイヤーとエネミーの距離
+		float distance = VSize(VSub(playerPos, pos));
+		MV1DrawModel(modelHandle);
+		if (status->GetHp() > 0)
+		{
+			blood->Draw();
+		}
 	}
 }
-float EnemyBase::CalcHP(const float _atk, const VECTOR _attackerPos)
+const float EnemyBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {
 	isInvincible = true;
-	isAttack = false;
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HP計算
 	return status->CalcHP(_atk);
 }
-void EnemyBase::InitExpToGive()
+const void EnemyBase::InitExpToGive()
 {
 	status->InitExpToGive();
 }
 /// <summary>
 /// 色の変更
 /// </summary>
-void EnemyBase::ChangeColor()
+const void EnemyBase::ChangeColor()
 {
 	if (isInvincible)
 	{

@@ -7,30 +7,42 @@
 #pragma once
 #include"DxLib.h"
 #include"Common.h"
+#include<vector>
 
-class Star;
 class BloomEffect;
+
+using namespace std;
 class Skydome
 {
 public:
-	Skydome();//コンストラクタ
-	~Skydome();//デストラクタ
+	Skydome();	//コンストラクタ
+	~Skydome();	//デストラクタ
 
-	void Init();//初期化
-	void Draw();//描画
-	
+	const void Init();										//初期化
+	const void Draw();										//描画
+	const void SetDrawScreenType(const float _angleX);	//描画するスクリーンの変更
+	const void BloomProg();								//描画結果を描画
 private:
+	/*構造体・列挙体*/
+	enum class ModelType
+	{
+		NIGNT,//夜
+		CLOUD_1,//雲１
+		CLOUD_2,//雲２
+	};
 	/*静的定数*/
-	static const VECTOR SCALE;
-	static constexpr int POLYGON_NUM = 500;
-	static const VERTEX3D ORIGIN_VERTEX;
-	static const COLOR_U8 STAR_COLOR;			//軌跡の色
+	static constexpr int MODEL_NUM = 2;//モデルの数
+
+	static const VECTOR SCALE[MODEL_NUM];		//大きさ
+	static const VECTOR ADD_ROTATE[MODEL_NUM];	//追加回転率
+
 	/*メンバ変数*/
-	VECTOR pos;
-	int modelHandle;
-	int vertexIndex;
-	VERTEX3D vertexPos[POLYGON_NUM * 3];//頂点座標
-	Star* star[POLYGON_NUM];
-	BloomEffect* bloom;
+	BloomEffect* bloom;//ブルーム
+
+	vector<int> modelHandle;	//モデルハンドル
+
+	VECTOR rotate[MODEL_NUM];	//回転率
+	VECTOR pos;					//座標
+
 };
 

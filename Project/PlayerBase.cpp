@@ -1,6 +1,3 @@
-//===========================================================================
-//@brief オブジェクトベースクラス / 基底
-//===========================================================================
 #include"PlayerBase.h"
 #include"CharacterStatus.h"
 #include"math.h"
@@ -55,7 +52,7 @@ PlayerBase::~PlayerBase()
 /// <summary>
 /// 描画
 /// </summary>
-void PlayerBase::Draw()
+const void PlayerBase::Draw()
 {
 	if (!isDeath)
 	{
@@ -100,15 +97,35 @@ void PlayerBase::Draw()
 /// <summary>
 /// 最終処理
 /// </summary>
-void PlayerBase::Delete()
+const void PlayerBase::Delete()
 {
 	// モデルのアンロード.
 	MV1DeleteModel(modelHandle);
+	if (status)
+	{
+		delete(status);
+		status = nullptr;
+	}
+	if (blood)
+	{
+		delete(blood);
+		blood = nullptr;
+	}
+	if (swordTrail)
+	{
+		delete(swordTrail);
+		swordTrail = nullptr;
+	}
+	if (statusUI)
+	{
+		delete(statusUI);
+		statusUI = nullptr;
+	}
 }
 /// <summary>
 /// HP計算
 /// </summary>
-void PlayerBase::CalcHP(const float _atk, const VECTOR _attackerPos)
+const void PlayerBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 {
 	bloodBaseDir = VSub(pos, _attackerPos);
 	//HP計算
@@ -118,7 +135,7 @@ void PlayerBase::CalcHP(const float _atk, const VECTOR _attackerPos)
 /// <summary>
 /// レベルアップ処理
 /// </summary>
-void PlayerBase::CalcExp(const float _expToGive)
+const void PlayerBase::CalcExp(const float _expToGive)
 {
 	status->CalcExp(_expToGive);
 }
@@ -134,7 +151,7 @@ const float PlayerBase::GetLv()
 {
 	return status->GetLv();
 }
-void PlayerBase::TutorialStatusReset()
+const void PlayerBase::TutorialStatusReset()
 {
 	status->TutorialStatusReset();
 }

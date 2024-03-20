@@ -45,7 +45,7 @@ EnemyManager::~EnemyManager()
 /// <summary>
 /// 初期化
 /// </summary>
-void EnemyManager::Init()
+const void EnemyManager::Init()
 {
 	for (int i = 0; i < nowWeakEnemyNum; i++)
 	{
@@ -59,7 +59,7 @@ void EnemyManager::Init()
 /// <summary>
 /// インスタンスの生成と初期化を行う
 /// </summary>
-void EnemyManager::CreateAndInit()
+const void EnemyManager::CreateAndInit()
 {
 	//インスタンスのNULL初期化
 	bossEnemy = nullptr;
@@ -78,7 +78,7 @@ void EnemyManager::CreateAndInit()
 /// 更新
 /// </summary>
 /// <param name="isDrawImg">画像を描画していたら処理を止める</param>
-void EnemyManager::Update(const VECTOR _playerPos, const float _playerLv,const bool _isFarm, const bool _isBoss)
+const void EnemyManager::Update(const VECTOR _playerPos, const float _playerLv,const bool _isFarm, const bool _isBoss)
 {
 	if (_isFarm && !_isBoss)
 	{
@@ -145,7 +145,7 @@ void EnemyManager::Update(const VECTOR _playerPos, const float _playerLv,const b
 /// <summary>
 /// 移動
 /// </summary>
-void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
+const void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
 {
 	if (_isFarm && !_isBoss)
 	{
@@ -176,7 +176,7 @@ void EnemyManager::Move(const VECTOR _playerPos, const bool _isFarm, const bool 
 /// <summary>
 /// 描画
 /// </summary>
-void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
+const void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBoss)
 {
 	if (_isFarm && !_isBoss)
 	{
@@ -191,6 +191,7 @@ void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBos
 		{
 			if (!strongEnemy[i]->GetIsDeath())
 			{
+				strongEnemy[i]->DrawAttackRange();
 				strongEnemy[i]->Draw(_playerPos);
 			}
 		}
@@ -207,7 +208,7 @@ void EnemyManager::Draw(VECTOR _playerPos, const bool _isFarm, const bool _isBos
 /// <summary>
 /// 削除
 /// </summary>
-void EnemyManager::AllDestroy()
+const void EnemyManager::AllDestroy()
 {
 	//コンテナ中のインスタンスを削除する
 	for (int i = 0; i < MAX_WEAK_ENEMY_NUM; i++)
@@ -222,14 +223,14 @@ void EnemyManager::AllDestroy()
 	weakEnemy.clear();
 	strongEnemy.clear();
 }
-void EnemyManager::FlaggingBossEnemy()
+const void EnemyManager::FlaggingBossEnemy()
 {
 	bossEnemy->Flagging();
 }
 ///<summary>
 /// HP計算
 /// </summary>
-float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
+const float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
 {
 	//HP計算
 	return weakEnemy[_enemyNum]->CalcHP(_atk, _attackerPos);
@@ -237,7 +238,7 @@ float EnemyManager::CalcHPWeakEnemy(const int _enemyNum, const float _atk, const
 ///<summary>
 /// HP計算
 /// </summary>
-float EnemyManager::CalcHPStrongEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
+const float EnemyManager::CalcHPStrongEnemy(const int _enemyNum, const float _atk, const VECTOR _attackerPos)
 {
 	//HP計算
 	return strongEnemy[_enemyNum]->CalcHP(_atk, _attackerPos);
@@ -245,7 +246,7 @@ float EnemyManager::CalcHPStrongEnemy(const int _enemyNum, const float _atk, con
 ///<summary>
 /// HP計算
 /// </summary>
-float EnemyManager::CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos)
+const float EnemyManager::CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos)
 {
 	//HP計算
 	return bossEnemy->CalcHP(_atk, _attackerPos);
@@ -253,26 +254,26 @@ float EnemyManager::CalcHPBossEnemy(const float _atk, const VECTOR _attackerPos)
 /// <summary>
 /// 必要な経験値の初期化
 /// </summary>
-void EnemyManager::InitExpToGive(const int _enemyNum)
+const void EnemyManager::InitExpToGive(const int _enemyNum)
 {
 	weakEnemy[_enemyNum]->InitExpToGive();
 }
 /// <summary>
 /// 移動量補正
 /// </summary>
-void EnemyManager::FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec)
+const void EnemyManager::FixMoveVecWeakEnemy(const int _enemyNum,const VECTOR _fixVec)
 {
 	weakEnemy[_enemyNum]->FixMoveVec(_fixVec);
 }
-void EnemyManager::FixMoveVecStrongEnemy(const int _enemyNum, const VECTOR _fixVec)
+const void EnemyManager::FixMoveVecStrongEnemy(const int _enemyNum, const VECTOR _fixVec)
 {
 	strongEnemy[_enemyNum]->FixMoveVec(_fixVec);
 }
-void EnemyManager::FixMoveVecBossEnemy(const VECTOR _fixVec)
+const void EnemyManager::FixMoveVecBossEnemy(const VECTOR _fixVec)
 {
 	bossEnemy->FixMoveVec(_fixVec);
 }
-void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss)
+const void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, const bool _isBoss)
 {
 	if (_isFarm && !_isBoss)
 	{
@@ -296,7 +297,7 @@ void EnemyManager::DrawShadow(const int _stageModelHandle, const bool _isFarm, c
 		}
 	}
 }
-void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
+const void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
 {
 	switch (_playerLv)
 	{
@@ -328,7 +329,7 @@ void EnemyManager::AdjustTheNumberOfEnemy(const int _playerLv)
 		break;
 	}
 }
-VECTOR EnemyManager::RandomSpawnPos()
+const VECTOR EnemyManager::RandomSpawnPos()
 {
 	VECTOR outPutPos = ORIGIN_POS;
 

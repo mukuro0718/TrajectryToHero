@@ -51,16 +51,28 @@ StageChanger::StageChanger()
 /// </summary>
 StageChanger::~StageChanger()
 {
+	Delete();
+}
+/// <summary>
+/// 削除
+/// </summary>
+const void StageChanger::Delete()
+{
+	if (stayMaxAlphaTimer)
+	{
+		delete(stayMaxAlphaTimer);
+		stayMaxAlphaTimer = nullptr;
+	}
 }
 /// <summary>
 /// 初期化
 /// </summary>
-void StageChanger::Init()
+const void StageChanger::Init()
 {
 	//タイマーインスタンスの作成
-	StayMaxAlphaTimer = new Timer();
+	stayMaxAlphaTimer = new Timer();
 	//目標時間のセット
-	StayMaxAlphaTimer->Init(SET_STAY_TIMER);
+	stayMaxAlphaTimer->Init(SET_STAY_TIMER);
 	for (int i = 0; i < 4; i++)
 	{
 		vertexInfo.push_back(INIT_VERTEX);
@@ -76,7 +88,7 @@ void StageChanger::Init()
 /// <summary>
 /// ステージ切り替え時の画像(FARM、BOSS)の表示
 /// </summary>
-void StageChanger::DrawImageWhenSwitchingStage()
+const void StageChanger::DrawImageWhenSwitchingStage()
 {
 	//ステージ切り替えフラグが立っていたら
 	if (isChangeStage)
@@ -85,13 +97,13 @@ void StageChanger::DrawImageWhenSwitchingStage()
 		if (alphaValue > 0 && alpha >= 255)
 		{
 			//タイマーのスタート
-			StayMaxAlphaTimer->StartTimer();
+			stayMaxAlphaTimer->StartTimer();
 
 			//タイマーが目標時間に達したら処理を行う
-			if (StayMaxAlphaTimer->CountTimer())
+			if (stayMaxAlphaTimer->CountTimer())
 			{
 				alphaValue = -6;
-				StayMaxAlphaTimer->EndTimer();
+				stayMaxAlphaTimer->EndTimer();
 			}
 			//待っていなかったら
 			else
@@ -129,24 +141,22 @@ void StageChanger::DrawImageWhenSwitchingStage()
 /// <summary>
 /// ゲームクリアの画像の表示
 /// </summary>
-void StageChanger::DrawGameClear()
+const void StageChanger::DrawGameClear()
 {
 
 }
 /// <summary>
 /// 描画
 /// </summary>
-void StageChanger::Draw()
+const void StageChanger::Draw()
 {
-	//DrawGraph(0, 30, gateImage, true);
-	//DrawBillboard3D(DRAW_GATEIMAGE_POS, 0.5f, 0.5f, IMG_SIZE, gateImageAngle * (DX_PI_F / 180), gateImage, TRUE);
 	++gateImageAngle;
 }
 /// <summary>
 /// ステージ移動を行うかどうか
 /// </summary>
 /// <param name="playerPos">変更したプレイヤー座標</param>
-bool StageChanger::DrawAlert(const VECTOR _playerPos, const VECTOR _gatePos, const bool _isShowGate)
+const bool StageChanger::DrawAlert(const VECTOR _playerPos, const VECTOR _gatePos, const bool _isShowGate)
 {
 	VECTOR playerToGate = VSub(_playerPos,_gatePos);
 	float vecSize = VSize(playerToGate);

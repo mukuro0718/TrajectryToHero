@@ -23,7 +23,7 @@ FireParticle::~FireParticle()
 /// <summary>
 /// 初期化
 /// </summary>
-void FireParticle::Init()
+const void FireParticle::Init()
 {
 	pos = centerPos;
 
@@ -50,13 +50,10 @@ void FireParticle::Init()
 	
 	speed = ReturnRandomFloat(false,SPEED_RANGE) * 0.01f;
 
-	alpha = ReturnRandomFloat(false, ALPHA_RANGE);
+	alpha = static_cast<int>(ReturnRandomFloat(false, ALPHA_RANGE));
 }
-void FireParticle::Update()
+const void FireParticle::Update()
 {
-	//clsDx();
-	//printfDx("size:%f",size);
-	//printfDx("pos X:%f,Y:%f,Z:%f", pos.x, pos.y, pos.z);
 	size -= SIZE_REDUCED_VALUE;
 
 	pos.y += speed;
@@ -66,7 +63,7 @@ void FireParticle::Update()
 		Init();
 	}
 }
-void FireParticle::Draw()
+const void FireParticle::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBillboard3D(pos, CX, CY, size, ANGLE, particleData, TRUE);
@@ -76,8 +73,7 @@ void FireParticle::Draw()
 /// ランダムで出したint型の値をfloat型で返す
 /// </summary>
 /// <param name="_useSign"></param>
-/// <returns></returns>
-float FireParticle::ReturnRandomFloat(const bool _useSign,const int _range)
+const float FireParticle::ReturnRandomFloat(const bool _useSign,const int _range)
 {
 	//返す値
 	float outPutValue = static_cast<float>(GetRand(_range));

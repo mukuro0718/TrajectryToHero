@@ -5,7 +5,6 @@
 #include"Common.h"
 #include"Timer.h"
 #include"Animation.h"
-#include"StatusManager.h"
 #include"CharacterStatus.h"
 #include"BloodParticle.h"
 #include<math.h>
@@ -79,7 +78,7 @@ void SwordGirl::Create()
 /// <summary>
 /// 初期化
 /// </summary>
-void SwordGirl::Init()
+const void SwordGirl::Init()
 {
 	stayTimer->Init(STAY_TIMER_TARGET_TIME);
 	invincibleTimer->Init(INVINCIBLE_TIMER_TARGET_TIME);
@@ -92,7 +91,7 @@ void SwordGirl::Init()
 /// <summary>
 /// 移動量の補正
 /// </summary>
-void SwordGirl::FixMoveVec(const VECTOR _fixVec)
+const void SwordGirl::FixMoveVec(const VECTOR _fixVec)
 {
 	//移動量を補正する
 	moveVec = VAdd(moveVec, _fixVec);
@@ -100,9 +99,8 @@ void SwordGirl::FixMoveVec(const VECTOR _fixVec)
 /// <summary>
 /// 更新
 /// </summary>
-void SwordGirl::Update()
+const void SwordGirl::Update()
 {
-	blood->UpdateGravity();
 	switch (status->GetAgiUpCount())
 	{
 	case 1:
@@ -162,7 +160,7 @@ void SwordGirl::Update()
 /// <summary>
 /// ステータス更新
 /// </summary>
-void SwordGirl::StatusUpdate(const VECTOR _bonfirePos)
+const void SwordGirl::StatusUpdate(const VECTOR _bonfirePos)
 {
 	VECTOR fireToPlayer = VSub(_bonfirePos,pos);
 	float vecSize = VSize(fireToPlayer);
@@ -177,7 +175,7 @@ void SwordGirl::StatusUpdate(const VECTOR _bonfirePos)
 /// <summary>
 /// 無敵フラグの計測
 /// </summary>
-void SwordGirl::CountInvincibleTimer()
+const void SwordGirl::CountInvincibleTimer()
 {
 	//無敵フラグが立っていたら
 	if (isInvincible)
@@ -197,7 +195,7 @@ void SwordGirl::CountInvincibleTimer()
 /// <summary>
 /// 色の変更
 /// </summary>
-void SwordGirl::ChangeColor()
+const void SwordGirl::ChangeColor()
 {
 	if (isInvincible)
 	{
@@ -251,7 +249,7 @@ void SwordGirl::ChangeColor()
 /// <summary>
 /// 移動
 /// </summary>
-void SwordGirl::Move(const VECTOR _cameraToPlayer)
+const void SwordGirl::Move(const VECTOR _cameraToPlayer)
 {
 	if (isAvoidance && anim->GetIsChangeAnim())
 	{
@@ -271,7 +269,7 @@ void SwordGirl::Move(const VECTOR _cameraToPlayer)
 			if (input & PAD_INPUT_2)
 			{
 				isAvoidance = true;
-				speed = multSpeed * 1.3f;
+				avoidSpeed = 1.5f;
 			}
 			if (!isAvoidance)
 			{
@@ -303,8 +301,8 @@ void SwordGirl::Move(const VECTOR _cameraToPlayer)
 			}
 			else
 			{
-				moveVec.x += -sinf(rotate.y) * multSpeed;
-				moveVec.z += -cosf(rotate.y) * multSpeed;
+				moveVec.x += -sinf(rotate.y) * avoidSpeed;
+				moveVec.z += -cosf(rotate.y) * avoidSpeed;
 			}
 		}
 		if (isKnockBack)
@@ -320,7 +318,7 @@ const void SwordGirl::OnKnockBack(const VECTOR _targetPos)
 	knockBackMoveVec = VNorm(knockBackMoveVec);
 	knockBackMoveVec = VScale(knockBackMoveVec, 5.0f);
 }
-void SwordGirl::KnockBack()
+const void SwordGirl::KnockBack()
 {
 	if (isKnockBack)
 	{
@@ -338,10 +336,8 @@ void SwordGirl::KnockBack()
 /// 攻撃
 /// </summary>
 /// <param name="_isAttack">攻撃をしているか</param>
-void SwordGirl::Attack()
+const void SwordGirl::Attack()
 {
-	clsDx();
-	printfDx("%d", isAttack);
 	if (!isInvincible)
 	{
 		//攻撃をしていない
@@ -387,7 +383,7 @@ void SwordGirl::Attack()
 /// <summary>
 /// 死亡判定
 /// </summary>
-void SwordGirl::Death()
+const void SwordGirl::Death()
 {
 	//死亡アニメーションが終了したら
 	if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH))
@@ -401,7 +397,7 @@ void SwordGirl::Death()
 /// <summary>
 /// アニメーションの変更
 /// </summary>
-void SwordGirl::AnimChange()
+const void SwordGirl::AnimChange()
 {
 	if (isAttack || isAttackReadying)
 	{
@@ -434,7 +430,7 @@ void SwordGirl::AnimChange()
 /// <summary>
 /// メニューの描画
 /// </summary>
-void SwordGirl::DrawMenu()
+const void SwordGirl::DrawMenu()
 {
 	status->Draw();
 }
@@ -449,7 +445,7 @@ const bool SwordGirl::GetIsShowStatusMenu()
 /// <summary>
 /// UIの更新
 /// </summary>
-void SwordGirl::UpdateUI()
+const void SwordGirl::UpdateUI()
 {
 	//最大HPを求める
 	//現在のHPを求める
@@ -465,7 +461,7 @@ void SwordGirl::UpdateUI()
 /// <summary>
 /// UIの描画
 /// </summary>
-void SwordGirl::DrawUI()
+const void SwordGirl::DrawUI()
 {
 	//テキストの表示
 	DrawFormatStringToHandle(25, 20, FONT_COLOR, font, "LV %d", static_cast<int>(status->GetLv()));
@@ -478,13 +474,13 @@ void SwordGirl::DrawUI()
 	DrawExtendGraph(HP_BAR_POS.x, HP_BAR_POS.y, HP_BAR_POS.x + nowHP.x, HP_BAR_POS.y + nowHP.y, hpImage, TRUE);
 	DrawExtendGraph(EXP_BAR_POS.x, EXP_BAR_POS.y, EXP_BAR_POS.x + nowEXP.x, EXP_BAR_POS.y + nowEXP.y, expImage, TRUE);
 }
-void SwordGirl::ReSpawn()
+const void SwordGirl::ReSpawn()
 {
 	pos = ORIGIN_POS;
 	status->PhysicalRecovery();
 	isDeath = false;
 }
-void SwordGirl::PhysicalRecovery()
+const void SwordGirl::PhysicalRecovery()
 {
 	status->PhysicalRecovery();
 }

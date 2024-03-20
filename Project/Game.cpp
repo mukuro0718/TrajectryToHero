@@ -10,6 +10,9 @@
 #include"StatusUpParticle.h"
 #include"Meteorite.h"
 #include"Explosion.h"
+#include"LightSword.h"
+
+
 const int Game::MOVE_RANGE_COLOR = GetColor(200,200,200);
 const int Game::FONT_COLOR = GetColor(200, 200, 200);
 
@@ -17,23 +20,25 @@ const int Game::FONT_COLOR = GetColor(200, 200, 200);
 /// コンストラクタ
 /// </summary>
 Game::Game()
-    :isGameOver(false)
-    , isGameClear(false)
-    , camera(nullptr)
-    , playerManager(nullptr)
-    , skydome(nullptr)
-    , stageManager(nullptr)
-    , stageChanger(nullptr)
-    , enemyManager(nullptr)
-    , collision(nullptr)
-    , statusUpParticle(nullptr)
-    , meteo(nullptr)
-    , explosion(nullptr)
-    , victoryImage(0)
-    , alpha(0)
-    , isFrameCount(false)
-    , youDiedImage(0)
-    , strongUI(0)
+    : isGameOver        (false)
+    , isGameClear       (false)
+    , isFrameCount      (false)
+    , statusUpParticle  (nullptr)
+    , playerManager     (nullptr)
+    , stageManager      (nullptr)
+    , stageChanger      (nullptr)
+    , enemyManager      (nullptr)
+    , lightSword        (nullptr)
+    , collision         (nullptr)
+    , explosion         (nullptr)
+    , skydome           (nullptr)
+    , camera            (nullptr)
+    , meteo             (nullptr)
+    , victoryImage      (0)
+    , alpha             (0)
+    , youDiedImage      (0)
+    , strongUI          (0)
+
 {
     auto& load = Load::GetInstance();
     load.GetVictoryData(&victoryImage);
@@ -55,47 +60,55 @@ Game::~Game()
 /// <summary>
 /// 生成
 /// </summary>
-void Game::Create()
+const void Game::Create()
 {
-    playerManager = new PlayerManager();
-    camera = new Camera();
-    skydome = new Skydome();
-    stageManager = new StageManager();
-    stageChanger = new StageChanger();
-    enemyManager = new EnemyManager();
-    collision = new Collision(enemyManager->GetMaxWeakEnemy(),enemyManager->GetMaxStrongEnemy());
+    playerManager    = new PlayerManager();
     statusUpParticle = new StatusUpParticle(playerManager->GetLv());
-    meteo = new Meteorite();
-    explosion = new Explosion();
+    stageManager     = new StageManager();
+    stageChanger     = new StageChanger();
+    enemyManager     = new EnemyManager();
+    lightSword       = new LightSword();
+    collision        = new Collision(enemyManager->GetMaxWeakEnemy(),enemyManager->GetMaxStrongEnemy());
+    explosion        = new Explosion();
+    skydome          = new Skydome();
+    camera           = new Camera();
+    meteo            = new Meteorite();
+
+
 }
-void Game::Init()
+const void Game::Init()
 {
     playerManager->Init();
     camera->Init(playerManager->GetPos());
     camera->SetFarmStageInitAngle();
     stageChanger->Init();
     enemyManager->Init();
-    enemyManager->Init();
 }
-void Game::Delete()
+const void Game::Delete()
 {
-    //カメラの開放
-    if (camera)
-    {
-        delete(camera);
-        camera = nullptr;
-    }
     //プレイヤーの開放
     if (playerManager)
     {
         delete(playerManager);
         playerManager = nullptr;
     }
-    //スカイドームの開放
-    if (skydome)
+    //ステータス上昇パーティクルの開放
+    if (statusUpParticle)
     {
-        delete(skydome);
-        skydome = nullptr;
+        delete(statusUpParticle);
+        statusUpParticle = nullptr;
+    }
+    //ステージの開放
+    if (stageManager)
+    {
+        delete(stageManager);
+        stageManager = nullptr;
+    }
+    //ステージ変更の開放
+    if (stageChanger)
+    {
+        delete(stageChanger);
+        stageChanger = nullptr;
     }
     //エネミーの開放
     if (enemyManager)
@@ -103,11 +116,35 @@ void Game::Delete()
         delete(enemyManager);
         enemyManager = nullptr;
     }
+    //光の剣の開放
+    if (lightSword)
+    {
+        delete(lightSword);
+        lightSword = nullptr;
+    }
     //コリジョンの開放
     if (collision)
     {
         delete(collision);
         collision = nullptr;
+    }
+    //爆発の開放
+    if (explosion)
+    {
+        delete(explosion);
+        explosion = nullptr;
+    }
+    //スカイドームの開放
+    if (skydome)
+    {
+        delete(skydome);
+        skydome = nullptr;
+    }
+    //カメラの開放
+    if (camera)
+    {
+        delete(camera);
+        camera = nullptr;
     }
     if (meteo)
     {
@@ -118,15 +155,15 @@ void Game::Delete()
 /// <summary>
 /// 更新
 /// </summary>
-void Game::Update()
+const void Game::Update()
 {
     stageManager->Update(static_cast<int>(playerManager->GetLv()));
 
     if (!playerManager->GetIsShowStatusMenu())
     {
         enemyManager->AdjustTheNumberOfEnemy(static_cast<int>(playerManager->GetLv()));
-        /*カメラのみ更新*/
-        camera->Update(playerManager->GetPos());
+        ///*カメラのみ更新*/
+        //camera->Update(playerManager->GetPos());
         /*移動処理*/
         playerManager->Move(camera->GetCameraToPlayer());
         enemyManager->Move(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
@@ -148,30 +185,40 @@ void Game::Update()
     }
     playerManager->StatusUpdate(stageManager->GetBonfirePos());
     statusUpParticle->Update(playerManager->GetPos(), playerManager->GetIsBonfireMenu(),playerManager->GetLv());
+    lightSword->Update(MV1GetFramePosition(playerManager->GetModelHandle(),67), MV1GetFramePosition(playerManager->GetModelHandle(), 68), MV1GetFramePosition(playerManager->GetModelHandle(), 69));
+
 }
 /// <summary>
 /// 描画
 /// </summary>
-void Game::Draw()
+const void Game::Draw()
 {
+    skydome->SetDrawScreenType(camera->GetAngleX());
+    camera->Update(playerManager->GetPos());
+    skydome->Draw();
     stageChanger->Draw();
     stageManager->Draw(stageChanger->GetIsFarm());
-
     DrawMoveRange();
     meteo->Draw(stageManager->GetModelHandle());
     playerManager->DrawShadow(stageManager->GetModelHandle());
     enemyManager->DrawShadow(stageManager->GetModelHandle(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
     enemyManager->Draw(playerManager->GetPos(), stageChanger->GetIsFarm(), stageChanger->GetIsBoss());
+    for (int i = 0; i < enemyManager->GetNowStrongEnemyNum(); i++)
+    {
+        enemyManager->DrawMagicSphere(i);
+    }
     enemyManager->DrawStrongerUI(playerManager->GetLv(),stageChanger->GetIsFarm());
     VECTOR playerToExplosion = VSub(playerManager->GetPos(), explosion->GetSphereInfo().centerPos);
     if (VSize(playerToExplosion) <= explosion->GetSphereInfo().radius)
     {
+        lightSword->Draw();
         playerManager->Draw(stageManager->GetBonfirePos());
         explosion->Draw();
     }
     else
     {
         explosion->Draw();
+        lightSword->Draw();
         playerManager->Draw(stageManager->GetBonfirePos());
     }
     if (!stageChanger->GetIsBoss())
@@ -189,9 +236,10 @@ void Game::Draw()
     GameEnd(playerManager->GetIsDeath(), enemyManager->GetIsDeathBossEnemy());
     statusUpParticle->Draw(playerManager->GetIsBonfireMenu());
     playerManager->DrawMenu();
-    skydome->Draw();
 
 
+    
+    skydome->BloomProg();
 }
 const void Game::DrawMoveRange()const
 {
@@ -211,7 +259,7 @@ const void Game::DrawMoveRange()const
 /// <summary>
 /// 移動量補正
 /// </summary>
-void Game::FixMoveVec()
+const void Game::FixMoveVec()
 {
     if (stageChanger->GetIsFarm())
     {
@@ -287,7 +335,7 @@ void Game::FixMoveVec()
 /// <summary>
 /// ダメージ判定
 /// </summary>
-void Game::OnDamage()
+const void Game::OnDamage()
 {
     /*
     攻撃をした側から受けた側へ向かうベクトルを取出す
@@ -490,7 +538,7 @@ void Game::OnDamage()
 /// <summary>
 /// ゲーム終了判定
 /// </summary>
-void Game::GameEnd(const bool _playerIsDeath, const bool _bossIsDeath)
+const void Game::GameEnd(const bool _playerIsDeath, const bool _bossIsDeath)
 {
     if (_bossIsDeath)
     {

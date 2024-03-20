@@ -7,8 +7,6 @@
 #include"OpeningScene.h"
 #include"TitleScene.h"
 #include"GameScene.h"
-#include"GameClearScene.h"
-#include"GameOverScene.h"
 #include"SceneChanger.h"
 #include"FPSController.h"
 
@@ -28,7 +26,7 @@ SceneManager::~SceneManager()
 /// <summary>
 /// 作成
 /// </summary>
-void SceneManager::Create()
+const void SceneManager::Create()
 {
 	//シーンチェンジャーのインスタンスの生成
 	SceneChanger::CreateInstance();
@@ -38,7 +36,7 @@ void SceneManager::Create()
 	//fpsコントローラーの作成
 	fpsController = new FPSController();
 }
-void SceneManager::Final()
+const void SceneManager::Final()
 {
 	//シーンチェンジャーのインスタンスの削除
 	SceneChanger::DeleteInstance();
@@ -56,7 +54,7 @@ void SceneManager::Final()
 		fpsController = NULL;
 	}
 }
-void SceneManager::ChangeScene()
+const void SceneManager::ChangeScene()
 {
 	//インスタンスを取得
 	 auto &sceneChange = SceneChanger::GetInstance();
@@ -76,16 +74,6 @@ void SceneManager::ChangeScene()
 		scene = new GameScene();//新しいシーンの取得（NULLで初期化）
 		scene->Create();//シーンの生成
 		break;
-	case SceneType::GAMECLEAR:
-		scene->Final();//前に使ったシーンの開放
-		scene = new GameClearScene();//新しいシーンの取得（NULLで初期化）
-		scene->Create();//シーンの生成
-		break;
-	case SceneType::GAMEOVER:
-		scene->Final();//前に使ったシーンの開放
-		scene = new GameOverScene();//新しいシーンの取得（NULLで初期化）
-		scene->Create();//シーンの生成
-		break;
 	default:
 		break;
 	}
@@ -93,7 +81,7 @@ void SceneManager::ChangeScene()
 /// <summary>
 /// ゲーム本編
 /// </summary>
-void SceneManager::mainGame()
+const void SceneManager::mainGame()
 {
 	//インスタンスを取得
 	auto &sceneChange = SceneChanger::GetInstance();
@@ -119,7 +107,7 @@ void SceneManager::mainGame()
 /// <summary>
 /// 更新
 /// </summary>
-void SceneManager::Update()
+const void SceneManager::Update()
 {
 	if (scene)
 	{
@@ -128,7 +116,7 @@ void SceneManager::Update()
 	}
 }
 
-void SceneManager::Draw()
+const void SceneManager::Draw()
 {
 	if (scene)
 	{

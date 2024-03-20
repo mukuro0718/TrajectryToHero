@@ -28,7 +28,7 @@ StageBase::~StageBase()
 /// <summary>
 /// 最終処理
 /// </summary>
-void StageBase::Delete()
+const void StageBase::Delete()
 {
 	// モデルのアンロード.
 	MV1DeleteModel(model[static_cast<int>(FARM::GROUND)]);
@@ -36,14 +36,14 @@ void StageBase::Delete()
 /// <summary>
 /// 描画
 /// </summary>
-void StageBase::Update()
+const void StageBase::Update()
 {
 	MV1SetPosition(model[static_cast<int>(FARM::GROUND)], pos);
 }
 /// <summary>
 /// 描画
 /// </summary>
-void StageBase::Draw()
+const void StageBase::Draw()
 {
 	MV1DrawModel(model[static_cast<int>(FARM::GROUND)]);
 }

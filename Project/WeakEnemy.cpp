@@ -7,6 +7,7 @@
 #include"Animation.h"
 #include"Timer.h"
 #include"BloodParticle.h"
+#include"SpawnParticle.h"
 
 //モデル設定
  const VECTOR WeakEnemy::MODEL_SCALE = VGet(0.2f, 0.2f, 0.2f);//モデルの拡大率
@@ -72,22 +73,23 @@ WeakEnemy::~WeakEnemy()
 /// <summary>
 /// 初期化
 /// </summary>
-void WeakEnemy::Init()
+const void WeakEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
 	invincibleTimer->Init(9);
 	restTimeAfterAttack->Init(5);
 	randomRest->Init(20);
 	//新しい座標の生成
-	pos			= spawnPos;
-	rotate		= MODEL_ROTATE;
-	scale		= MODEL_SCALE;
-	isAttack	= false;
-	isDeath		= false;
-	isHit		= false;
-	isRestTime	= false;
+	pos = spawnPos;
+	rotate = MODEL_ROTATE;
+	scale = MODEL_SCALE;
+	isAttack = false;
+	isDeath = false;
+	isHit = false;
+	isRestTime = false;
 	isRandomWalk = false;
 	isRandomRest = false;
+	isSpawn = true;//スポーンしたか
 	//最大HPの設定
 	status->InitWeakEnemyStatus(1.0f);
 	maxHP = status->GetHp();
@@ -100,74 +102,88 @@ const void WeakEnemy::NewStatus(const float _playerLv)
 /// <summary>
 /// 更新
 /// </summary>
-void WeakEnemy::Update()
+const void WeakEnemy::Update()
 {
-	if (isHit)
+	if (isSpawn)
 	{
-		frameCount++;
-		if (frameCount == 60)
+		spawnFrameCount++;
+		if (spawnFrameCount >= 120)
 		{
-			isHit = false;
-			frameCount = 0;
-		}
-	}
-	blood->UpdateGravity();
-	if (isInvincible)
-	{
-		blood->Init(bloodBaseDir, pos);
-	}
-
-	//無敵フラグが立っていたら
-	if (isInvincible)
-	{
-		//タイマーを始める
-		invincibleTimer->StartTimer();
-		if (invincibleTimer->CountTimer())
-		{
-			invincibleTimer->EndTimer();
-			isInvincible = false;
-		}
-	}
-
-	//もしHPをつけてHPが０になったら
-	if (status->GetHp() <= 0)
-	{
-		//現在のアニメーションをやられたアニメーションにする
-		if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
-		{
-			isDeath = true;
-			pos = DESTROY_POS;
+			isSpawn = false;
+			spawnFrameCount = 0;
 		}
 	}
 	else
 	{
-		pos = VAdd(pos, moveVec);//移動
-		MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
-	}
-	//アニメーションの変更
-	ChangeAnim();
-	//位置の設定
-	MV1SetPosition(modelHandle, pos);
+		if (isHit)
+		{
+			frameCount++;
+			if (frameCount == 60)
+			{
+				isHit = false;
+				frameCount = 0;
+			}
+		}
+		if (isInvincible)
+		{
+			blood->Init(bloodBaseDir, pos);
+		}
 
-	SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
-	//攻撃当たり判定用スフィア座標の設定
-	VECTOR framePos33 = MV1GetFramePosition(modelHandle, 33);
-	VECTOR framePos46 = MV1GetFramePosition(modelHandle, 46);
-	VECTOR framePos33to46 = VSub(framePos46, framePos33);
-	framePos33to46 = VNorm(framePos33to46);
-	framePos33to46 = VScale(framePos33to46, 10.0f);
-	VECTOR attackSphereCenterPos = VAdd(framePos46, framePos33to46);
-	SetUpSphere(attackSphereCenterPos, SPHERE_RADIUS, SPHERE_COLOR, false);
-	blood->Update(50);
-	//色の変更
-	ChangeColor();
-	//アニメーション再生時間をセット
-	anim->Play(&modelHandle, animPlayTime[anim->GetAnim()]);
+		//無敵フラグが立っていたら
+		if (isInvincible)
+		{
+			//タイマーを始める
+			invincibleTimer->StartTimer();
+			isAttack = false;
+			if (invincibleTimer->CountTimer())
+			{
+				invincibleTimer->EndTimer();
+				isInvincible = false;
+			}
+		}
+
+		//もしHPをつけてHPが０になったら
+		if (status->GetHp() <= 0)
+		{
+			//現在のアニメーションをやられたアニメーションにする
+			if (anim->GetAnim() == static_cast<int>(AnimationType::DEATH) && anim->GetPlayTime() == 0.0f)
+			{
+				isDeath = true;
+				pos = DESTROY_POS;
+			}
+		}
+		else
+		{
+			pos = VAdd(pos, moveVec);//移動
+			MV1SetRotationXYZ(modelHandle, rotate);//回転値の設定
+		}
+		//アニメーションの変更
+		ChangeAnim();
+		//位置の設定
+		MV1SetPosition(modelHandle, pos);
+
+		SetUpCapsule(pos, HEIGHT, RADIUS, CAPSULE_COLOR, false);
+		//攻撃当たり判定用スフィア座標の設定
+		VECTOR framePos33 = MV1GetFramePosition(modelHandle, 33);
+		VECTOR framePos46 = MV1GetFramePosition(modelHandle, 46);
+		VECTOR framePos33to46 = VSub(framePos46, framePos33);
+		framePos33to46 = VNorm(framePos33to46);
+		framePos33to46 = VScale(framePos33to46, 10.0f);
+		VECTOR attackSphereCenterPos = VAdd(framePos46, framePos33to46);
+		SetUpSphere(attackSphereCenterPos, SPHERE_RADIUS, SPHERE_COLOR, false);
+		blood->Update(50);
+		//色の変更
+		ChangeColor();
+		//アニメーション再生時間をセット
+		anim->Play(&modelHandle, animPlayTime[anim->GetAnim()]);
+	}
+	spawnParticle->Init(spawnPos, isSpawn);
+	spawnParticle->Update();
 }
 /// <summary>
 /// 移動
 /// </summary>
-void WeakEnemy::Move(VECTOR _playerPos)
+const void WeakEnemy::Move(VECTOR _playerPos)
 {
 	moveVec = ORIGIN_POS;
 	//目標までのベクトル
@@ -334,10 +350,10 @@ void WeakEnemy::RandomWalk()
 /// <summary>
 ///	角度の変更(モデルが向いている初期方向がz＝０)
 /// </summary>
-double WeakEnemy::ChangeRotate(VECTOR playerPos)
+double WeakEnemy::ChangeRotate(const VECTOR _playerPos)
 {
 	//2点間のベクトルを出す(エネミーからプレイヤー)
-	VECTOR EP_Vector = VSub(pos, playerPos);
+	VECTOR EP_Vector = VSub(pos, _playerPos);
 	//2点の座標からラジアンを求める
 	return static_cast<float>(atan2(static_cast<double>(EP_Vector.x), static_cast<double>(EP_Vector.z)));
 }
@@ -390,7 +406,7 @@ void WeakEnemy::ChangeAnim()
 /// <summary>
 /// 最終処理
 /// </summary>
-void WeakEnemy::Final()
+void WeakEnemy::Delete()
 {
 	if (invincibleTimer)
 	{

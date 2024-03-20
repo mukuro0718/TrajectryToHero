@@ -20,14 +20,14 @@ GameScene::~GameScene()
 /// <summary>
 /// 作成
 /// </summary>
-void GameScene::Create()
+const void GameScene::Create()
 {
 	game = new Game();
 }
 /// <summary>
 /// 削除
 /// </summary>
-void GameScene::Final()
+const void GameScene::Final()
 {
 	if (game)
 	{
@@ -38,7 +38,7 @@ void GameScene::Final()
 /// <summary>
 /// 更新
 /// </summary>
-void GameScene::Update()
+const void GameScene::Update()
 {
 	//更新
 	game->Update();
@@ -48,7 +48,7 @@ void GameScene::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void GameScene::Draw()
+const void GameScene::Draw()
 {
 	//描画
 	game->Draw();
@@ -57,7 +57,7 @@ void GameScene::Draw()
 /// <summary>
 /// 次のシーンへ
 /// </summary>
-void GameScene::ChangeNextScene()
+const void GameScene::ChangeNextScene()
 {
 	//インスタンスを取得
 	auto& sceneChange = SceneChanger::GetInstance();

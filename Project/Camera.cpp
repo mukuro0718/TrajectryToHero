@@ -1,7 +1,3 @@
-
-//=============================================================================
-// @brief  カメラクラス
-//=============================================================================
 #include "Camera.h"
 #include "Common.h"
 #include <math.h>
@@ -14,13 +10,10 @@ const VECTOR Camera::UP_VECTOR_Y = VGet(0.0f, 1.0f, 0.0f);
 /// コンストラクタ
 /// </summary>
 Camera::Camera()
+	:pos(ORIGIN_POS)
+	,cameraToPlayer(ORIGIN_POS)
+	,angleX(INIT_ANGLE)
 {
-	// 奥行0.1f～1000.0fまでをカメラの描画範囲とする
-	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
-	// ポジションの初期化
-	pos = ORIGIN_POS;
-	cameraToPlayer = ORIGIN_POS;
-	angleX = INIT_ANGLE;
 }
 /// <summary>
 /// デストラクタ
@@ -32,7 +25,7 @@ Camera::~Camera()
 /// <summary>
 /// 初期化
 /// </summary>
-void Camera::Init(VECTOR _playerPos)
+const void Camera::Init(VECTOR _playerPos)
 {
 	angleX = INIT_ANGLE;
 	ChangeRotate(_playerPos);
@@ -41,9 +34,12 @@ void Camera::Init(VECTOR _playerPos)
 /// 更新
 /// </summary>
 /// <param name="playerPos">注視点</param>
-void Camera::Update(VECTOR _playerPos)
+const void Camera::Update(VECTOR _playerPos)
 {
-	//// カメラの位置の設定
+	// 奥行0.1f～1000.0fまでをカメラの描画範囲とする
+	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
+
+	// カメラの位置の設定
 	ChangeRotate(_playerPos);
 	_playerPos.y += ADJUST_Y_POS;
 	SetCameraPositionAndTargetAndUpVec(pos,_playerPos, UP_VECTOR_Y);

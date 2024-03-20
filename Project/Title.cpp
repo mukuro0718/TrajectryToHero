@@ -64,7 +64,7 @@ Title::Title()
 /// <summary>
 /// 初期化
 /// </summary>
-void Title::Init()
+const void Title::Init()
 {
 	player->Init();
 	enemy->Init();
@@ -186,7 +186,7 @@ void Title::ChangeTitleAlphaValue()
 /// <summary>
 /// 更新
 /// </summary>
-void Title::Update()
+const void Title::Update()
 {
 	FragChanger();
 	//タイトル用のアルファ値を変更する（途中から使わない）
@@ -225,7 +225,7 @@ void Title::Update()
 	float atk = player->GetAtk();
 	if (atk != prevPlayerAtk && !player->GetIsShowStatusMenu())
 	{
-		enemy->OnIsDamage();
+		enemy->OffIsDamage();
 	}
 	if(!player->GetIsShowStatusMenu())
 	{
@@ -241,7 +241,7 @@ void Title::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void Title::Draw()
+const void Title::Draw()
 {
 	stage->Draw();
 	enemy->Draw(player->GetLv());

@@ -1,44 +1,25 @@
 #include "Skydome.h"
 #include"Load.h"
-#include"Star.h"
 #include"Common.h"
 #include "BloomEffect.h"
-const VECTOR Skydome::SCALE = VGet(1.5f,1.5f,1.5f);
-const COLOR_U8 Skydome::STAR_COLOR = GetColorU8(255, 255, 255, 255);
-const VERTEX3D Skydome::ORIGIN_VERTEX =
+const VECTOR Skydome::SCALE[] =
 {
-	ORIGIN_POS,	//座標
-	VGet(0.0f, 0.0f, -1.0f),	//法線
-	STAR_COLOR,			//ディフューズカラー
-	STAR_COLOR,			//スペキュラカラー
-	0.0f,		//テクスチャ座標
-	0.0f,		//テクスチャ座標
-	0.0f,		//補助テクスチャ座標
-	0.0f		//補助テクスチャ座標
+	VGet(1.5f, 1.5f, 1.5f),
+	VGet(1.5f, 1.5f, 1.5f),
 };
-
+const VECTOR Skydome::ADD_ROTATE[] =
+{
+	VGet(0.0f, 0.0f , 0.0f),
+	VGet(0.0f, 0.001f, 0.0f),
+};
 /// <summary>
 /// コンストラクタ
 /// </summary>
 Skydome::Skydome()
-	:vertexIndex(0)
-	, bloom(nullptr)
+	: bloom(nullptr)
 {
 	bloom = new BloomEffect();
 	Init();
-	//for (int i = 0; i < POLYGON_NUM * 3; i++)
-	//{
-	//	vertexPos[i] = ORIGIN_VERTEX;
-	//}
-	//for (int i = 0; i < POLYGON_NUM; i++)
-	//{
-	//	star[i] = new Star();
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		vertexPos[vertexIndex].pos = star[i]->GetVertex(j);
-	//		vertexIndex++;
-	//	}
-	//}
 	bloom->MakeBloomScreen();
 }
 /// <summary>
@@ -51,21 +32,43 @@ Skydome::~Skydome()
 /// <summary>
 /// 初期化
 /// </summary>
-void Skydome::Init()
+const void Skydome::Init()
 {
 	pos = ORIGIN_POS;
-	modelHandle = 0;
 	auto& load = Load::GetInstance();
 	load.GetSkydomeData(&modelHandle);
-	MV1SetPosition(modelHandle, pos);
-	MV1SetScale(modelHandle,SCALE);
+	for (int i = 0; i < MODEL_NUM; i++)
+	{
+		MV1SetPosition(modelHandle[i], pos);
+		MV1SetScale(modelHandle[i], SCALE[i]);
+	}
 }
 /// <summary>
 /// 描画
 /// </summary>
-void Skydome::Draw()
+const void Skydome::Draw()
 {
-	MV1DrawModel(modelHandle);
+	for (int i = 0; i < MODEL_NUM; i++)
+	{
+		rotate[i] = VAdd(rotate[i], ADD_ROTATE[i]);
+		MV1SetRotationXYZ(modelHandle[i],rotate[i]);
+	}
 
-	//DrawPolygon3D(vertexPos, POLYGON_NUM, DX_NONE_GRAPH, TRUE);
+	MV1DrawModel(modelHandle[0]);
+	bloom->GetImage();
+	MV1DrawModel(modelHandle[1]);
+
+}
+const void Skydome::SetDrawScreenType(const float _angleX)
+{
+	bloom->SetDrawScreenType();
+	// 画面をクリア
+	ClearDrawScreen();
+	
+}
+const void Skydome::BloomProg()
+{
+
+	bloom->DrawNormalGraph();
+	bloom->DrawGaussBlendGraph();
 }

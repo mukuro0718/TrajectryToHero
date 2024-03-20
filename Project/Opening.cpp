@@ -24,11 +24,12 @@ Opening::~Opening()
 	DeleteGraph(image[static_cast<int>(ImageType::MODEL_SITE)]);
 	DeleteGraph(image[static_cast<int>(ImageType::MUSIC_SITE)]);
 	DeleteGraph(image[static_cast<int>(ImageType::LANGUAGE)]);
+	image.clear();
 }
 /// <summary>
 /// 初期化
 /// </summary>
-void Opening::Init()
+const void Opening::Init()
 {
 	changeTimer   = FIRST_TIMER;
 	alpha		  = MIN_ALPHA;
@@ -39,7 +40,7 @@ void Opening::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void Opening::Update()
+const void Opening::Update()
 {
 	//カウントが必要な各変数のカウント処理を行う
 	CountProcess();
@@ -49,7 +50,7 @@ void Opening::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void Opening::Draw()
+const void Opening::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	if (nowShowImageType == static_cast<int>(ImageType::SE_SITE))
@@ -73,7 +74,7 @@ void Opening::Draw()
 /// <summary>
 /// カウント処理
 /// </summary>
-void Opening::CountProcess()
+const void Opening::CountProcess()
 {
 	//透明度の加算減算
 	if (isChangeAlpha)
@@ -117,7 +118,7 @@ void Opening::CountProcess()
 /// <summary>
 /// オープニング終了
 /// </summary>
-void Opening::EndOpening()
+const void Opening::EndOpening()
 {
 	int input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	//スペースが入力されたらエンドフラグON

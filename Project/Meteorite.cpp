@@ -28,7 +28,7 @@ Meteorite::~Meteorite()
 /// <summary>
 /// 更新
 /// </summary>
-void Meteorite::Update(const bool _isMeteo)
+const void Meteorite::Update(const bool _isMeteo)
 {
 	isDraw = _isMeteo;
 	if (isDraw)
@@ -56,7 +56,7 @@ void Meteorite::Update(const bool _isMeteo)
 /// <summary>
 /// 更新
 /// </summary>
-void Meteorite::Draw(const int _stageModelHandle)
+const void Meteorite::Draw(const int _stageModelHandle)
 {
 	if (isDraw)
 	{

@@ -11,18 +11,24 @@ using namespace std;
 class Collision
 {
 public:
-	Collision(const int _maxWeakEnemyNum,const int _maxStrongEnemyNum);//コンストラクタ
-	void Init();//初期化
-	~Collision();//デストラクタ
-	void Delete(int modelHandle);//削除
+	Collision(const int _maxWeakEnemyNum,const int _maxStrongEnemyNum);	//コンストラクタ
+	~Collision();														//デストラクタ
+	
+	const void Init();					//初期化
+	const void Delete(int modelHandle);	//削除
 	//プレイヤーとエネミーの攻撃時当たり判定
-	bool OnDamage(const bool _isDeath, const CapsuleInfo _capsuleInfo, const SphereInfo _sphereInfo);
+	const bool OnDamage(const bool _isDeath, const CapsuleInfo _capsuleInfo, const SphereInfo _sphereInfo);
+	//カプセル同士のめり込み判定
+	const VECTOR CapsuleToCapsuleCollision(const VECTOR _myMoveVec, const VECTOR _myVec, const VECTOR _otherVec, const float _myRadius, const float _otherRadius);
+	//線分と点の最近接点
+	const VECTOR NearestPointOfSegmentPointCalc(const VECTOR _startPos,const VECTOR _endPos,const VECTOR _targetPos);
+	//球とカプセルの当たり判定
+	const bool SphereCapsuleCalc(const VECTOR _capsuleStartPos, const VECTOR _capsuleEndPos, const float _capsuleRadius, const VECTOR _spherePos, const float sphereRadius);
+	//カプセル同士の当たり判定
+	const bool TwoCapsuleHitCollision(const VECTOR _topPos1, const VECTOR _underPos1, const float _radius1, const VECTOR _topPos2, const VECTOR _underPos2, const float _radius2);
 	
-	VECTOR CapsuleToCapsuleCollision(const VECTOR _myMoveVec, const VECTOR _myVec, const VECTOR _otherVec, const float _myRadius, const float _otherRadius);//カプセル同士のめり込み判定
-	VECTOR NearestPointOfSegmentPointCalc(const VECTOR _startPos,const VECTOR _endPos,const VECTOR _targetPos);//線分と点の最近接点
-	bool SphereCapsuleCalc(const VECTOR _capsuleStartPos, const VECTOR _capsuleEndPos, const float _capsuleRadius, const VECTOR _spherePos, const float sphereRadius);//球とカプセルの当たり判定
-	bool TwoCapsuleHitCollision(const VECTOR _topPos1, const VECTOR _underPos1, const float _radius1, const VECTOR _topPos2, const VECTOR _underPos2, const float _radius2);//カプセル同士の当たり判定
-	
+
+	/*getter/setter*/
 	const int GetHitNumPlayerForWeakEnemy(const int _enemyNum) { return playerHitNumForWeakEnemy[_enemyNum]; }
 	const int GetHitNumPlayerForStrongEnemy(const int _enemyNum) { return playerHitNumForStrongEnemy[_enemyNum]; }
 	const int GetHitNumPlayerForBossEnemy() { return playerHitNumForBossEnemy; }

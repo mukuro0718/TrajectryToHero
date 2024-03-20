@@ -20,7 +20,7 @@ CrackerParticle::CrackerParticle()
 		yellowParticle.push_back(new CrackerParticleBase(COLOR_YELLOW));
 	}
 }
-void CrackerParticle::Init(const bool _isDrawRed, const bool _isDrawBlue, const bool _isDrawYellow)
+const void CrackerParticle::Init(const bool _isDrawRed, const bool _isDrawBlue, const bool _isDrawYellow)
 {
 	if (_isDrawRed)
 	{
@@ -51,7 +51,7 @@ CrackerParticle::~CrackerParticle()
 	yellowParticle.clear();
 }
 
-void CrackerParticle::Update()
+const void CrackerParticle::Update()
 {
 	for (int i = 0; i < MAX_RED_PARTICLE_NUM; i++)
 	{
@@ -66,7 +66,7 @@ void CrackerParticle::Update()
 		yellowParticle[i]->Update();
 	}
 }
-void CrackerParticle::Draw()
+const void CrackerParticle::Draw()
 {
 	for (int i = 0; i < MAX_RED_PARTICLE_NUM; i++)
 	{
@@ -81,7 +81,7 @@ void CrackerParticle::Draw()
 		yellowParticle[i]->Draw();
 	}
 }
-void CrackerParticle::OffIsDraw()
+const void CrackerParticle::OffIsDraw()
 {
 	for (int i = 0; i < MAX_RED_PARTICLE_NUM; i++)
 	{

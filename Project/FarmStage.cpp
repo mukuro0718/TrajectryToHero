@@ -5,7 +5,6 @@
 #include"Common.h"
 const VECTOR FarmStage::SCALE = VGet(0.3f, 0.3f, 0.3f);
 const VECTOR FarmStage::INIT_STAGE_POS = VGet(0.0f, 0.0f, -150.0f);
-const VECTOR FarmStage::ROTATE_VILLAGE = VGet(0.0f, 180.0f * (DX_PI_F / 180.0f), 0.0f);
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -21,7 +20,7 @@ FarmStage::FarmStage(std::vector<int> _data)
 	}
 	Init();
 }
-void FarmStage::Init()
+const void FarmStage::Init()
 {
 	//座標の初期化
 	for (int i = 0; i < MODEL_NUM; i++)
@@ -52,7 +51,7 @@ FarmStage::~FarmStage()
 /// <summary>
 /// 最終処理
 /// </summary>
-void FarmStage::Delete()
+const void FarmStage::Delete()
 {
 	pos.clear();
 	model.clear();
@@ -64,7 +63,7 @@ void FarmStage::Delete()
 /// <summary>
 /// 描画
 /// </summary>
-void FarmStage::Update(const int _playerLv)
+const void FarmStage::Update(const int _playerLv)
 {
 	if (_playerLv > 5)
 	{
@@ -77,7 +76,7 @@ void FarmStage::Update(const int _playerLv)
 /// <summary>
 /// 描画
 /// </summary>
-void FarmStage::Draw(const bool _isFarm)
+const void FarmStage::Draw(const bool _isFarm)
 {
 	MV1DrawModel(model[static_cast<int>(FARM::GROUND)]);
 	if (_isFarm)

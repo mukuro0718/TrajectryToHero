@@ -28,7 +28,7 @@ OperationUI::~OperationUI()
 /// <summary>
 /// çXêV
 /// </summary>
-void OperationUI::Update(const bool _isMove)
+const void OperationUI::Update(const bool _isMove)
 {
 	if (!_isMove)
 	{
@@ -46,7 +46,7 @@ void OperationUI::Update(const bool _isMove)
 /// <summary>
 /// ï`âÊ
 /// </summary>
-void OperationUI::Draw(const VECTOR _bonfirePos, const VECTOR _playerPos)
+const void OperationUI::Draw(const VECTOR _bonfirePos, const VECTOR _playerPos)
 {
 	VECTOR bonfirePos = _bonfirePos;
 	bonfirePos.y = 0;

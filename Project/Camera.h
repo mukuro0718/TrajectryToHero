@@ -1,5 +1,6 @@
 //=============================================================================
 // @brief  カメラクラス
+// 水平方向のみの移動
 //=============================================================================
 #pragma once
 #include "DxLib.h"
@@ -15,9 +16,11 @@ public:
 	Camera();							// コンストラクタ
 	~Camera();							// デストラクタ
 
-	void Init  (VECTOR _playerPos);		//初期化
-	void Update(VECTOR _playerPos);		// 更新
-	const void SetFarmStageInitAngle() { angleX = 3.0f; }
+	const void Init  (const VECTOR _playerPos);			 //初期化
+	const void Update(const VECTOR _playerPos);			 // 更新
+	const void SetFarmStageInitAngle() { angleX = 3.0f; }//アングルの初期化
+
+	/*getter*/
 	const float  GetAngleX()		 { return angleX; };		//カメラアングルのgetter
 	const VECTOR GetCameraToPlayer() { return cameraToPlayer; }	//カメラからプレイヤーへのベクトルのgetter
 private:

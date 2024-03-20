@@ -1,30 +1,35 @@
+//====================================================
+// @brief 爆発魔法クラス
+//====================================================
 #pragma once
 #include<DxLib.h>
 #include "Common.h"
 class Explosion
 {
 public:
-	Explosion();//コンストラクタ
-	~Explosion();//デストラクタ
-	void Init();//初期化
-	void Update(const bool _isDraw, const VECTOR _targetPos);//更新
-	void Draw();//描画
-	const SphereInfo GetSphereInfo() { return sphereInfo; }
+	Explosion();	//コンストラクタ
+	~Explosion();	//デストラクタ
+
+	const void Init();												//初期化
+	const void Update(const bool _isDraw, const VECTOR _targetPos);	//更新
+	const void Draw();												//描画
+
+	/*getter*/
+	const SphereInfo GetSphereInfo()const { return sphere; }
 private:
 	/*静的定数*/
-	static constexpr float MAX_RADIUS_RANGE = 100.0f;//最大半径範囲
-	static constexpr float MIN_RADIUS_RANGE = 0.0f;//最小半径範囲
-	static constexpr float ADD_RADIUS_VALUE = 0.25f;//半径増加量
-	static constexpr int MAX_ALPHA_VALUE = 255;//最大アルファ値
-	static constexpr int MIN_ALPHA_VALUE = 0;//最小アルファ値
-	static constexpr int ADD_ALPHA_VALUE = 5;//アルファ増加量
-	static constexpr int DIV_NUM = 16;//球の分割数
-	static constexpr bool FILL_FLAG = true;//描画する球を塗りつぶすかどうか
-	static const int COLOR;
+	static constexpr float	MAX_RADIUS = 50.0f;	//爆発魔法最大半径
+	static constexpr float	MAX_SCALE  = 0.8f;	//最大拡大率
+	static constexpr float	ADD_SCALE  = 0.01f;	//拡大率増加量
+	static constexpr float	ADD_ROTATE = 0.1f;	//回転率増加量
+	/*内部処理関数*/
+	const void SetScale(const float _scale);	//拡大率の設定
+	const void SetRotate(const float _rotate);	//回転率の設定
 	/*メンバ変数*/
-	SphereInfo sphereInfo;
-	int alpha;//アルファ値
-	bool isDraw;//描画しているか
-	bool isInit;//初期化したか
+	VECTOR		rotate;		//回転率
+	VECTOR		scale;		//拡大率
+	bool		isDraw;		//描画しているか
+	int			modelHandle;//モデルハンドル
+	SphereInfo	sphere;		//球情報
 };
 

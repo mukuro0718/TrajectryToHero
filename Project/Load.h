@@ -43,7 +43,7 @@ public:
 	void GetStageData		 (vector<int>* _farmData);	//ステージデータのgetter
 	void GetCharacterStatusData(vector<int>* _data);	//メニューデータのgetter
 	void GetShadowData		 (int* _image);	//シャドウデータのgetter
-	void GetSkydomeData		 (int* _skydomeModel);	//スカイドームデータのgetter
+	void GetSkydomeData		 (vector<int>* _skydomeModel);	//スカイドームデータのgetter
 	void GetGameClearData	 (int* _image);//ゲームクリアデータのgetter
 	void GetGameOverData	 (int* _image);//ゲームクリアデータのgetter
 
@@ -71,6 +71,20 @@ private:
 	/// </summary>
 	/*静的定数*/
 	static constexpr int OPENING_IMAGE_NUM = 4;	//総オープニング画像数
+	enum class OPENING_DATA
+	{
+		IMAGE_1,	//クレジット１
+		IMAGE_2,	//クレジット２
+		IMAGE_3,	//クレジット３
+		IMAGE_4,	//クレジット４
+		NAME,		//ファイルネーム
+		MAX_TIMER,	//最大タイマー
+		INIT_TIMER,	//初期化タイマー
+		MAX_ALPHA,	//最大アルファ
+		INIT_ALPHA,	//初期化アルファ
+		ADD_ALPHA,	//追加アルファ
+		IMAGE_POS,	//画像の座標
+	};
 	/*メンバ変数*/
 	vector<int>openingImage;					//オープニング画像
 	/// <summary>
@@ -133,7 +147,7 @@ private:
 	/// <summary>
 	/// スカイドーム
 	/// </summary>
-	int skydomeModel;				//スカイドーム
+	vector<int> skydomeModel;				//スカイドーム
 	/// <summary>
 	/// UI
 	/// </summary>

@@ -1,7 +1,3 @@
-//===========================================================================
-//@brief ステージマネージャー/管理
-//===========================================================================
-
 #include"StageManager.h"
 #include"FarmStage.h"
 #include"Bonfire.h"
@@ -28,7 +24,7 @@ StageManager::~StageManager()
 /// <summary>
 /// 生成
 /// </summary>
-void StageManager::Create()
+const void StageManager::Create()
 {
 	//インスタンスの生成
 	farm = new FarmStage(farmStageData);
@@ -37,14 +33,14 @@ void StageManager::Create()
 /// <summary>
 /// 更新
 /// </summary>
-void StageManager::Update(const int _playerLv)
+const void StageManager::Update(const int _playerLv)
 {
 	farm->Update(_playerLv);
 }
 /// <summary>
 /// 管理するすべてのオブジェクトを描画
 /// </summary>
-void StageManager::Draw(const bool _isFarm)
+const void StageManager::Draw(const bool _isFarm)
 {
 	farm->Draw(_isFarm);
 	bonfire->Draw();
@@ -52,9 +48,13 @@ void StageManager::Draw(const bool _isFarm)
 /// <summary>
 /// 削除
 /// </summary>
-void StageManager::Delete()
+const void StageManager::Delete()
 {
-	delete(farm);//地面の削除
+	if (farm)
+	{
+		delete(farm);//地面の削除
+		farm = nullptr;
+	}
 }
 const int StageManager::GetModelHandle()const 
 {

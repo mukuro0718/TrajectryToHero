@@ -14,14 +14,14 @@ StrongerUI::~StrongerUI()
 {
 
 }
-void StrongerUI::Update(const VECTOR _enemyPos, const int _modelHandle,const int _frameNum)
+const void StrongerUI::Update(const VECTOR _enemyPos, const int _modelHandle,const int _frameNum)
 {
 	pos = MV1GetFramePosition(_modelHandle,_frameNum);
 	pos.y += 5.0f;
 }
-const void StrongerUI::Draw(const float playerLv,const float enemyLv) const
+const void StrongerUI::Draw(const float _playerLv,const float _enemyLv) const
 {
-	if (enemyLv > playerLv)
+	if (_enemyLv > _playerLv)
 	{
 		DrawBillboard3D(pos, 0.5f, 0.5f, size, angle, imageHandle, TRUE);
 	}

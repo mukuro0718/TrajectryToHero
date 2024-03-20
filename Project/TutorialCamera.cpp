@@ -31,7 +31,7 @@ TutorialCamera::~TutorialCamera()
 /// <summary>
 /// 初期化
 /// </summary>
-void TutorialCamera::Init(const VECTOR _playerPos)
+const void TutorialCamera::Init(const VECTOR _playerPos)
 {
 	angleX = INIT_ANGLE;
 	targetPos = _playerPos;
@@ -40,7 +40,7 @@ void TutorialCamera::Init(const VECTOR _playerPos)
 /// <summary>
 /// 更新
 /// </summary>
-void TutorialCamera::Update(const VECTOR _playerPos)
+const void TutorialCamera::Update(const VECTOR _playerPos)
 {
 	targetPos = _playerPos;
 	// カメラの位置の設定
@@ -58,18 +58,17 @@ void TutorialCamera::ChangeRotate(const VECTOR _playerPos)
 	//XBuf +:右 -:左  YBuf +:下 -:上
 	GetJoypadAnalogInputRight(&inputRightStick.XBuf, &inputRightStick.YBuf, DX_INPUT_PAD1);
 	//左右回転
-	if (inputRightStick.XBuf > NONE_INPUT_VALUE.XBuf || CheckHitKey(KEY_INPUT_D))
+	if (inputRightStick.XBuf > NONE_INPUT.XBuf || CheckHitKey(KEY_INPUT_D))
 	{
-		angleX -= ADD_ANGLE_VALUE;
+		angleX -= ADD_ANGLE;
 	}
-	if (inputRightStick.XBuf < NONE_INPUT_VALUE.XBuf || CheckHitKey(KEY_INPUT_A))
+	if (inputRightStick.XBuf < NONE_INPUT.XBuf || CheckHitKey(KEY_INPUT_A))
 	{
-		angleX += ADD_ANGLE_VALUE;
+		angleX += ADD_ANGLE;
 	}
 
 	cameraOffset.x = -OFFSET_VALUE * sinf(angleX);
 	cameraOffset.z = OFFSET_VALUE * cosf(angleX);
-	//printfDx("cameraOfset X:%f Y:%f Z:%f\n", cameraOfset.x, cameraOfset.y, cameraOfset.z);
 	pos = VAdd(_playerPos, cameraOffset);
 	cameraToPlayer = VNorm(VSub(_playerPos, pos));
 }

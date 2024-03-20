@@ -33,7 +33,7 @@ Load::~Load()
 	//ステージモデル
 	farmStageData.clear();
 	//スカイドームモデル
-	skydomeModel = 0;
+	skydomeModel.clear();
 	//ステージチェンジ画像
 	stageChangeImage.clear();
 	gateImage = 0;
@@ -122,8 +122,8 @@ void Load::LoadingData()
 	bonfireData.push_back(MV1LoadModel("Data/Model/Map/Campfire.mv1"));
 	bonfireData.push_back(LoadGraph("Data/Img/Game/Particle/Flame.png"));
 	//スカイドームモデル
-	skydomeModel = MV1LoadModel("Data/Model/Skydome/Skydome.mv1");
-	//skydomeModel = MV1LoadModel("Data/Model/Skydome/Test_Skydome.mv1");
+	skydomeModel.push_back(MV1LoadModel("Data/Model/Skydome/Skydome.mv1"));
+	skydomeModel.push_back(MV1LoadModel("Data/Model/Skydome/Dome_EE402.mv1"));
 	//メニュー画像
 	statusData.push_back(LoadGraph("Data/Img/Game/Menu/backGround.png"));
 	statusData.push_back(LoadGraph("Data/Img/Game/Menu/BonfireMenu.png"));
@@ -267,7 +267,7 @@ void Load::GetCharacterStatusData(vector<int>* _data)
 /// スカイドームデータのgetter
 /// </summary>
 /// <param name="skydomeModel"></param>
-void Load::GetSkydomeData(int* _skydomeModel)
+void Load::GetSkydomeData(vector<int>* _skydomeModel)
 {
 	*_skydomeModel = skydomeModel;
 }

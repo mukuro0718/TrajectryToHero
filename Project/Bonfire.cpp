@@ -35,7 +35,7 @@ Bonfire::~Bonfire()
 /// <summary>
 /// •`‰æ
 /// </summary>
-void Bonfire::Draw()
+const void Bonfire::Draw()
 {
 	MV1DrawModel(modelHandle);
 	for (int i = 0; i < FIRE_PARTICLE_NUM; i++)

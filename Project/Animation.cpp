@@ -8,16 +8,13 @@
 /// コンストラクタ
 /// </summary>
 Animation::Animation()
-	:nowPos(VGet(0.0f, 0.0f, 0.0f))
-	, prevPos(VGet(0.0f, 0.0f, 0.0f))
+	: animAttachIndex(0)
+	, prevAnim(0)
+	, nowAnim(0)
+	, animTotalTime(0.0f)
+	, animPlayTime(0.0f)
+	, isChangeAnim(false)
 {
-	animAttachIndex = 0;
-	animTotalTime = 0.0f;
-	animPlayTime = 0.0f;
-	prevAnim = 0;
-	nowAnim = 0;
-	isChangeAnim = false;
-
 }
 /// <summary>
 /// デストラクタ
@@ -74,16 +71,4 @@ void Animation::Play(int *_modelHandle,const float _addAnimPlayTime)
 		animPlayTime = 0.0f;
 		isChangeAnim = true;
 	}
-}
-const void Animation::SetNowPos(int* _modelHandle)
-{
-	// アニメーションで移動をしているフレームを無効にする
-	MV1SetFrameUserLocalMatrix(*_modelHandle, 0, MGetIdent());
-	MV1SetAttachAnimTime(*_modelHandle, animAttachIndex, animPlayTime);
-	nowPos = MV1GetAttachAnimFrameLocalPosition(*_modelHandle, animAttachIndex, 0);
-}
-const void Animation::SetPrevPos(int* _modelHandle)
-{
-	MV1SetAttachAnimTime(*_modelHandle, animAttachIndex, 0.0f);
-	nowPos = MV1GetAttachAnimFrameLocalPosition(*_modelHandle, animAttachIndex, 0);
 }

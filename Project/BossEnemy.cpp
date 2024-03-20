@@ -76,7 +76,7 @@ void BossEnemy::Create()
 /// <summary>
 /// 初期化
 /// </summary>
-void BossEnemy::Init()
+const void BossEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
 	rotateAttackLoopTime  ->Init(50);
@@ -104,7 +104,7 @@ void BossEnemy::Init()
 /// <summary>
 /// 最終処理
 /// </summary>
-void BossEnemy::Final()
+void BossEnemy::Delete()
 {
 	if (invincibleTimer)
 	{
@@ -131,9 +131,8 @@ void BossEnemy::Final()
 /// <summary>
 /// 更新
 /// </summary>
-void BossEnemy::Update()
+const void BossEnemy::Update()
 {
-	blood->UpdateGravity();
 	if (isInvincible)
 	{
 		blood->Init(bloodBaseDir, pos);
@@ -175,7 +174,7 @@ void BossEnemy::Update()
 	//アニメーション再生時間をセット
 	anim->Play(&modelHandle, animPlayTime[anim->GetAnim() ]);
 }
-void BossEnemy::Attack(const float _targetVecSize, const VECTOR _targetPos)
+const void BossEnemy::Attack(const float _targetVecSize, const VECTOR _targetPos)
 {
 	//攻撃をしていなかったら
 	if (!isAttack)
@@ -282,7 +281,7 @@ void BossEnemy::Attack(const float _targetVecSize, const VECTOR _targetPos)
 		}
 	}
 }
-void BossEnemy::Rest()
+const void BossEnemy::Rest()
 {
 	if (restTimeAfterAttack->CountTimer())
 	{
@@ -293,7 +292,7 @@ void BossEnemy::Rest()
 /// <summary>
 /// 移動
 /// </summary>
-void BossEnemy::Move(const VECTOR _playerPos)
+const void BossEnemy::Move(const VECTOR _playerPos)
 {
 	moveVec = ORIGIN_POS;
 	//目標までのベクトル
@@ -310,9 +309,6 @@ void BossEnemy::Move(const VECTOR _playerPos)
 	vectorSize = VSize(targetVec);
 	//目標までのベクトルを正規化する
 	normalizePos = VNorm(targetVec);
-	clsDx();
-	printfDx("pos.y %f", pos.y);
-	printfDx("vecSize %f",vectorSize);
 	//もし休憩していなければ攻撃する
 	if (!isRestTime)
 	{
@@ -445,16 +441,16 @@ void BossEnemy::ChangeAnim()
 /// <summary>
 ///	角度の変更
 /// </summary>
-float BossEnemy::ChangeRotate(VECTOR playerPos)
+float BossEnemy::ChangeRotate(const VECTOR _playerPos)
 {
 	//2点間のベクトルを出す(エネミーからプレイヤー)
-	VECTOR EP_Vector = VSub(pos, playerPos);
+	VECTOR EP_Vector = VSub(pos, _playerPos);
 	return static_cast<float>(atan2(static_cast<double>(EP_Vector.x), static_cast<double>(EP_Vector.z)));
 }
 /// <summary>
 /// UIの更新
 /// </summary>
-void BossEnemy::UpdateUI()
+const void BossEnemy::UpdateUI()
 {
 	//最大HPを求める
 	//現在のHPを求める
@@ -469,7 +465,7 @@ void BossEnemy::UpdateUI()
 /// <summary>
 /// UIの描画
 /// </summary>
-void BossEnemy::DrawUI()
+const void BossEnemy::DrawUI()
 {
 	//テキストの表示
 	DrawStringToHandle(50, 980, "HP", FONT_COLOR, font);

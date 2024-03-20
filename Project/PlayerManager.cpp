@@ -1,6 +1,3 @@
-//===========================================================================
-//@brief オブジェクトベースクラス / 基底
-//===========================================================================
 #include"PlayerManager.h"
 #include"SwordGirl.h"
 #include"Common.h"
@@ -31,7 +28,7 @@ PlayerManager::~PlayerManager()
 {
 	Final();
 }
-void PlayerManager::Init()
+const void PlayerManager::Init()
 {
 	//プレイヤーのステータスの設定
 	player->Init();
@@ -39,7 +36,7 @@ void PlayerManager::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void PlayerManager::Update()
+const void PlayerManager::Update()
 {
 	player->CountInvincibleTimer();
 	player->Update();
@@ -50,21 +47,21 @@ void PlayerManager::Update()
 /// <summary>
 /// 移動
 /// </summary>
-void PlayerManager::Move(const VECTOR _cameraToPlayer)
+const void PlayerManager::Move(const VECTOR _cameraToPlayer)
 {
 	player->Move(_cameraToPlayer);
 }
 /// <summary>
 /// 攻撃
 /// </summary>
-void PlayerManager::Attack()
+const void PlayerManager::Attack()
 {
 	player->Attack();
 }
 /// <summary>
 /// 描画
 /// </summary>
-void PlayerManager::Draw(const VECTOR _bonfirePos)
+const void PlayerManager::Draw(const VECTOR _bonfirePos)
 {
 	player->Draw();
 	player->DrawUI();
@@ -77,7 +74,7 @@ const void PlayerManager::DrawMenu()
 /// <summary>
 /// 削除
 /// </summary>
-void PlayerManager::Final()
+const void PlayerManager::Final()
 {
 	// ３Ｄモデルの描画
 	delete(player);
@@ -85,14 +82,14 @@ void PlayerManager::Final()
 /// <summary>
 /// 移動量補正
 /// </summary>
-void PlayerManager::FixMoveVec(const VECTOR _fixVec)
+const void PlayerManager::FixMoveVec(const VECTOR _fixVec)
 {
 	player->FixMoveVec(_fixVec);
 }
 /// <summary>
 /// HP計算
 /// </summary>
-void PlayerManager::CalcHP(const float _atk,const VECTOR _attackerPos)
+const void PlayerManager::CalcHP(const float _atk,const VECTOR _attackerPos)
 {
 	//HP計算
 	player->CalcHP(_atk,_attackerPos);
@@ -100,26 +97,26 @@ void PlayerManager::CalcHP(const float _atk,const VECTOR _attackerPos)
 /// <summary>
 /// レベルアップ処理
 /// </summary>
-void PlayerManager::CalcExp(const float _expToGive)
+const void PlayerManager::CalcExp(const float _expToGive)
 {
 	player->CalcExp(_expToGive);
 }
 /// <summary>
 /// ステータス更新
 /// </summary>
-void PlayerManager::StatusUpdate(const VECTOR _bonfirePos)
+const void PlayerManager::StatusUpdate(const VECTOR _bonfirePos)
 {
 	player->StatusUpdate(_bonfirePos);
 }
-void PlayerManager::DrawShadow(const int _stageModelHandle)
+const void PlayerManager::DrawShadow(const int _stageModelHandle)
 {
 	player->DrawShadow(_stageModelHandle,player->GetPos(),SHADOW_HEIGHT,SHADOW_SIZE);
 }
-void PlayerManager::ReSpawn()
+const void PlayerManager::ReSpawn()
 {
 	player->ReSpawn();
 }
-void PlayerManager::PhysicalRecovery()
+const void PlayerManager::PhysicalRecovery()
 {
 	player->PhysicalRecovery();
 }

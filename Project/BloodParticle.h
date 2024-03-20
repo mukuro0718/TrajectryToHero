@@ -11,19 +11,20 @@ class BloodParticleBase;
 class BloodParticle
 {
 public:
-	BloodParticle(const int _imageHandle);				//コンストラクタ
-	~BloodParticle();				//デストラクタ
-	void Init(const VECTOR _targetDir, const VECTOR _targetPos);//初期化
-	void Update(const int _maxFrameNum);//更新
-	void Draw();//描画
-	void UpdateGravity();
+	BloodParticle(const int _imageHandle);	//コンストラクタ
+	~BloodParticle();						//デストラクタ
+
+	const void Init(const VECTOR _targetDir, const VECTOR _targetPos);	//初期化
+	const void Update(const int _maxFrameNum);							//更新
+	const void Draw();													//描画
 private:
 	/*静的定数*/
 	static constexpr int PARTICLE_NUM = 100;//パーティクル数
 	/*メンバ変数*/
-	VECTOR initPos;	//初期描画座標
-	std::vector<BloodParticleBase*> particle;
-	int imageHandle;//画像ハンドル
-	int frameCount;//フレームカウント
-	bool isDraw;//描画しているか
+	std::vector<BloodParticleBase*> particle;//パーティクル
+
+	VECTOR	initPos;	//初期描画座標
+	bool	isDraw;		//描画しているか
+	int		imageHandle;//画像ハンドル
+	int		frameCount;	//フレームカウント
 };

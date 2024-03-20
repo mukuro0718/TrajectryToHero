@@ -26,7 +26,7 @@ CrackerParticleBase::~CrackerParticleBase()
 {
 
 }
-void CrackerParticleBase::Init(const VECTOR _initPos)
+const void CrackerParticleBase::Init(const VECTOR _initPos)
 {
 	if (!isDraw)
 	{
@@ -66,7 +66,7 @@ void CrackerParticleBase::Init(const VECTOR _initPos)
 /// <summary>
 /// çXêV
 /// </summary>
-void CrackerParticleBase::Update()
+const void CrackerParticleBase::Update()
 {
 	if (isDraw)
 	{
@@ -86,7 +86,7 @@ void CrackerParticleBase::Update()
 /// <summary>
 /// ï`âÊ
 /// </summary>
-void CrackerParticleBase::Draw()
+const void CrackerParticleBase::Draw()
 {
 	if (isDraw)
 	{

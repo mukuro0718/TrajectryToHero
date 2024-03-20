@@ -40,7 +40,7 @@ SwordTrail::~SwordTrail()
 /// <summary>
 /// 初期化
 /// </summary>
-void SwordTrail::Init()
+const void SwordTrail::Init()
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -51,7 +51,7 @@ void SwordTrail::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void SwordTrail::Update(const VECTOR _topPos, const VECTOR _underPos)
+const void SwordTrail::Update(const VECTOR _topPos, const VECTOR _underPos)
 {
 	if (drawTimer->getIsStartTimer())
 	{
@@ -59,7 +59,7 @@ void SwordTrail::Update(const VECTOR _topPos, const VECTOR _underPos)
 		{
 			drawTimer->EndTimer();
 			isDraw = false;
-			Final();
+			Delete();
 		}
 		else
 		{
@@ -86,7 +86,7 @@ void SwordTrail::Update(const VECTOR _topPos, const VECTOR _underPos)
 /// <summary>
 /// 頂点情報の設定
 /// </summary>
-VERTEX3D SwordTrail::SetVertexInfo(const VECTOR _pos)
+const VERTEX3D SwordTrail::SetVertexInfo(const VECTOR _pos)
 {
 	VERTEX3D vertex;
 	vertex.pos  = _pos			; //座標
@@ -102,7 +102,7 @@ VERTEX3D SwordTrail::SetVertexInfo(const VECTOR _pos)
 /// <summary>
 /// 使用する頂点の設定
 /// </summary>
-void SwordTrail::SetVertexAd()
+const void SwordTrail::SetVertexAd()
 {
 		//頂点が３つで一つのポリゴンが作れるため、３つをセットする
 		for (int i = 0; i < 3; i++)
@@ -121,7 +121,7 @@ void SwordTrail::SetVertexAd()
 /// <summary>
 /// 描画
 /// </summary>
-void SwordTrail::Draw()
+const void SwordTrail::Draw()
 {
 	if (isDraw)
 	{
@@ -131,7 +131,7 @@ void SwordTrail::Draw()
 /// <summary>
 /// 削除
 /// </summary>
-void SwordTrail::Final()
+const void SwordTrail::Delete()
 {
 	vertexInfo.clear();
 	vertexIndexAd.clear();
@@ -144,7 +144,7 @@ void SwordTrail::Final()
 /// <summary>
 /// タイマーのスタート
 /// </summary>
-void SwordTrail::StartTimer()
+const void SwordTrail::StartTimer()
 {
 	drawTimer->StartTimer();
 }
@@ -158,7 +158,7 @@ const bool SwordTrail::GetIsStartTimer()
 /// <summary>
 /// アルファ値の設定
 /// </summary>
-void SwordTrail::SetAlpha()
+const void SwordTrail::SetAlpha()
 {
 	for (int i = 0; i < holdVertexNum; i++)
 	{

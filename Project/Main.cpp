@@ -7,6 +7,7 @@
 #include"Common.h"
 #include"FPSController.h"
 #include"Load.h"
+#include"LoadScene.h"
 
 /// <summary>
 /// メイン関数
@@ -18,6 +19,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     //画面の作成
     SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, COLOR_BIT);
+    //フラグを立てることで非同期ロードが可能になる
+    SetUseASyncLoadFlag(TRUE);
     //ScreenFlipを実行しても垂直同期信号を待たない
     SetWaitVSyncFlag(FALSE);
     //描画先を裏画面にする
@@ -28,20 +31,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #else
     ChangeWindowMode(FALSE);
 #endif// _DEBUG
-
+    SetUseDirect3DVersion(DX_DIRECT3D_9EX);
+    //ロードシーンの作成
+    LoadScene* loadScene = new LoadScene();
     //ロードインスタンスの生成
     Load::CreateInstance();
     //シーンマネージャーの作成
     SceneManager* sceneManager = new SceneManager();
-
     //ゲーム本編
     while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
     {
-        sceneManager->mainGame();
+        if (GetASyncLoadNum() == 0)
+        {
+            sceneManager->mainGame();
+        }
+        else
+        {
+            loadScene->Update();
+            loadScene->Draw();
+        }
     }
     //シーン管理クラスの開放
-    delete(sceneManager);
-    sceneManager = NULL;
+    if (sceneManager)
+    {
+        delete(sceneManager);
+        sceneManager = nullptr;
+    }
+    if (loadScene)
+    {
+        delete(loadScene);
+        loadScene = nullptr;
+    }
 
     //DXライブラリの後始末
     DxLib_End();

@@ -16,12 +16,16 @@ MeteoriteBase::MeteoriteBase()
 /// </summary>
 MeteoriteBase::~MeteoriteBase()
 {
-
+	if (shadow)
+	{
+		delete(shadow);
+		shadow = nullptr;
+	}
 }
 /// <summary>
 /// 初期化
 /// </summary>
-void MeteoriteBase::Init()
+const void MeteoriteBase::Init()
 {
 	//中心座標をランダムで出す
 	VECTOR centerPos = ORIGIN_POS;
@@ -53,7 +57,7 @@ void MeteoriteBase::Init()
 /// <summary>
 /// 更新
 /// </summary>
-void MeteoriteBase::Update()
+const void MeteoriteBase::Update()
 {
 	sphereInfo.centerPos.y -= speed;
 	if (sphereInfo.centerPos.y <= 0.0f)
@@ -64,7 +68,7 @@ void MeteoriteBase::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void MeteoriteBase::Draw(const int _stageModelHandle)
+const void MeteoriteBase::Draw(const int _stageModelHandle)
 {
 	DrawSphere3D(sphereInfo.centerPos,sphereInfo.radius,sphereInfo.divNum,sphereInfo.difColor,sphereInfo.spcColor,sphereInfo.fillFlag);
 	shadow->Draw(_stageModelHandle,sphereInfo.centerPos,SHADOW_HEIGHT,SHADOW_SIZE);

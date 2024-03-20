@@ -1,6 +1,6 @@
 //===========================================================================
 //@brief オープニングクラス
-// 使用した言語、サイトなどの画像を描画
+// 使用した言語、サイトなどのクレジットを表示
 //===========================================================================
 #pragma once
 #include"DxLib.h"
@@ -14,14 +14,14 @@ public:
 	Opening();	//コンストラクタ
 	~Opening();	//デストラクタ
 
-	void Init();	//初期化
-	void Update();	//更新
-	void Draw();	//描画
+	const void Init();	//初期化
+	const void Update();	//更新
+	const void Draw();	//描画
 
 	// オープニング終了フラグの getter
-	const bool& GetIsEndOpening() const { return isEndOpening; }
+	const bool GetIsEndOpening() const { return isEndOpening; }
 private:
-	/*定数*/
+	/*静的定数*/
 	enum class ImageType//画像タイプ
 	{
 		SE_SITE,	//SEサイト
@@ -36,8 +36,8 @@ private:
 	static constexpr int   ALPHA_COUNT	= 5;		//アルファ値増加量
 	static constexpr VEC2D IMAGE_POS	= { 0,0 };	//画像描画座標
 	/*内部処理関数*/
-	void CountProcess();	//カウント処理
-	void EndOpening();		//オープニング終了
+	const void CountProcess();	//カウント処理
+	const void EndOpening();		//オープニング終了
 	/*メンバ変数*/
 	vector<int> image;				//画像ハンドル
 	int			nowShowImageType;	//描画する画像の種類

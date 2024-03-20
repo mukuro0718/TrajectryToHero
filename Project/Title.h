@@ -1,5 +1,7 @@
 //===========================================================================
 //@brief タイトルクラス
+// タイトル画面からシームレスにチュートリアルに移行するため、
+// タイトル兼チュートリアルとする
 //===========================================================================
 #pragma once
 #include"DxLib.h"
@@ -21,13 +23,12 @@ public:
 	Title();	//コンストラクタ
 	~Title();	//デストラクタ
 
-	void Init();	//初期化
-	void Update();	//更新
-	void Draw();	//描画
+	const void Init();	//初期化
+	const void Update();	//更新
+	const void Draw();	//描画
 	
-	//タイトル終了フラグのgetter
+	/*getter*/
 	const bool GetIsTitleEnd()const { return isTitleEnd; }
-	//シーン変更フラグのgetter
 	const bool GetIsChangeScene()const { return isChangeScene; }
 private:
 	struct Vec2d//2次元ベクトル構造体

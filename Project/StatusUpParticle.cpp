@@ -29,7 +29,7 @@ StatusUpParticle::~StatusUpParticle()
 
 }
 
-void StatusUpParticle::Update(const VECTOR _targetPos, const bool _isBonfireMenu,const float _playerLv)
+const void StatusUpParticle::Update(const VECTOR _targetPos, const bool _isBonfireMenu,const float _playerLv)
 {
 	targetPos = _targetPos;
 	if (_isBonfireMenu)
@@ -60,7 +60,7 @@ void StatusUpParticle::Update(const VECTOR _targetPos, const bool _isBonfireMenu
 	
 }
 
-void StatusUpParticle::Draw(const bool _isBonfireMenu)
+const void StatusUpParticle::Draw(const bool _isBonfireMenu)
 {
 	if (_isBonfireMenu)
 	{

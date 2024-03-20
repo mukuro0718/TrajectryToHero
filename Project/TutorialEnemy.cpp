@@ -40,7 +40,14 @@ TutorialEnemy::TutorialEnemy(const int _modelHandle)
 	int bloodParticle = 0;
 	auto& load = Load::GetInstance();
 	load.GetEnemyParticleData(&bloodParticle,&animModel);
-	blood = new BloodParticle(bloodParticle);
+	Create(bloodParticle);
+}
+/// <summary>
+/// 作成（Init関数で行えない処理も行う）
+/// </summary>
+const void TutorialEnemy::Create(const int _bloodImage)
+{
+	blood = new BloodParticle(_bloodImage);
 	status = new CharacterStatus();
 	anim = new Animation();
 	shadow = new Shadow();
@@ -51,17 +58,19 @@ TutorialEnemy::TutorialEnemy(const int _modelHandle)
 	MV1SetPosition(modelHandle, pos);
 	changeColorTimer->Init(2);
 	//アニメーションの追加
-	anim->Add(animModel, 1);			//待機アニメーション
-	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);		//死亡アニメーション
+	anim->Add(animModel, 1);												//待機アニメーション
+	anim->Add(MV1LoadModel("Data/Animation/Enemy/Weak/DeathAnim.mv1"), 1);	//死亡アニメーション
 	//アタッチするアニメーション
 	anim->SetAnim(static_cast<int>(AnimationType::IDLE));
 	//アニメーションのアタッチ
 	anim->Attach(&modelHandle);
 	SetUpCapsule();
-	//977272975
-	//945553430
 }
-void TutorialEnemy::Init()
+
+/// <summary>
+/// 初期化
+/// </summary>
+const void TutorialEnemy::Init()
 {
 	//必要なInitクラスの呼び出し
 	changeColorTimer->Init(2);
@@ -74,26 +83,50 @@ void TutorialEnemy::Init()
 	status->InitWeakEnemyStatus(1.0f);
 }
 /// <summary>
-/// デストラクタ
+/// 削除
 /// </summary>
-TutorialEnemy::~TutorialEnemy()
+const void TutorialEnemy::Delete()
 {
 	if (status)
 	{
 		delete(status);
 	}
+	if (blood)
+	{
+		delete(blood);
+	}
+	if (strongerUI)
+	{
+		delete(strongerUI);
+	}
 	if (anim)
 	{
 		delete(anim);
 	}
+
+	if (shadow)
+	{
+		delete(shadow);
+	}
+	if (changeColorTimer)
+	{
+		delete(changeColorTimer);
+	}
+
 	modelHandle = 0;
+}
+/// <summary>
+/// デストラクタ
+/// </summary>
+TutorialEnemy::~TutorialEnemy()
+{
+	Delete();
 }
 /// <summary>
 /// 更新
 /// </summary>
-void TutorialEnemy::Update()
+const void TutorialEnemy::Update()
 {
-	blood->UpdateGravity();
 	if (isInvincible)
 	{
 		blood->Init(bloodBaseDir, pos);
@@ -134,7 +167,7 @@ void TutorialEnemy::Update()
 /// <summary>
 /// 描画
 /// </summary>
-void TutorialEnemy::Draw(const float _playerLv)
+const void TutorialEnemy::Draw(const float _playerLv)
 {
 	MV1DrawModel(modelHandle);
 	if (isDamage)
@@ -153,7 +186,7 @@ const void TutorialEnemy::DrawShadow(const int _stageModelHandle)
 /// <summary>
 /// カプセル情報の構築
 /// </summary>
-void TutorialEnemy::SetUpCapsule()
+const void TutorialEnemy::SetUpCapsule()
 {
 	capsule.topPos = pos;
 	capsule.topPos.y += 30.0f;
@@ -167,7 +200,7 @@ void TutorialEnemy::SetUpCapsule()
 /// <summary>
 /// HPの計算
 /// </summary>
-float TutorialEnemy::CalcHP(const float _atk, const VECTOR _attackPos)
+const float TutorialEnemy::CalcHP(const float _atk, const VECTOR _attackPos)
 {
 	isInvincible = true;
 	bloodBaseDir = VSub(pos, _attackPos);
@@ -180,7 +213,7 @@ const void TutorialEnemy::InitExpToGive()
 /// <summary>
 ///	アニメーションの変更
 /// </summary>
-void TutorialEnemy::ChangeAnim()
+const void TutorialEnemy::ChangeAnim()
 {
 	//もしHPが0以下になったら
 	if (status->GetHp() <= 0)
@@ -195,7 +228,7 @@ void TutorialEnemy::ChangeAnim()
 /// <summary>
 /// 色の変更
 /// </summary>
-void TutorialEnemy::ChangeColor()
+const void TutorialEnemy::ChangeColor()
 {
 	if (isInvincible)
 	{

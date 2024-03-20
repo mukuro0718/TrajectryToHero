@@ -1,6 +1,3 @@
-//===========================================================================
-//@brief 当たり判定クラス
-//===========================================================================
 #include"Collision.h"
 /// <summary>
 /// コンストラクタ
@@ -30,14 +27,14 @@ Collision::~Collision()
 /// <summary>
 /// 初期化
 /// </summary>
-void Collision::Init()
+const void Collision::Init()
 {
 }
 /// <summary>
 /// 攻撃時当たり判定
 /// ダメージ判定を行う場合はtrue,そうでなければfalseを返す
 /// </summary>
-bool Collision::OnDamage(const bool _isDeath,const CapsuleInfo _capsuleInfo,const SphereInfo _sphereInfo)
+const bool Collision::OnDamage(const bool _isDeath,const CapsuleInfo _capsuleInfo,const SphereInfo _sphereInfo)
 {
 	if (!_isDeath)
 	{
@@ -55,7 +52,7 @@ bool Collision::OnDamage(const bool _isDeath,const CapsuleInfo _capsuleInfo,cons
  //カプセル同士の当たり判定（Y座標は考慮しないため、実際の判定は２Dになる）
  // ２点間の座標と半径の合計を比べる
  //</summary>
-VECTOR Collision::CapsuleToCapsuleCollision(const VECTOR _myMoveVec,const VECTOR _myPos,const VECTOR _otherPos,const float _myRadius,const float _otherRadius)
+const VECTOR Collision::CapsuleToCapsuleCollision(const VECTOR _myMoveVec,const VECTOR _myPos,const VECTOR _otherPos,const float _myRadius,const float _otherRadius)
 {
 	//もし移動していなければ移動量0を返す
 	if (_myMoveVec == ORIGIN_POS)
@@ -92,7 +89,7 @@ VECTOR Collision::CapsuleToCapsuleCollision(const VECTOR _myMoveVec,const VECTOR
 /// <summary>
 /// 線分と点の最近接点を返す
 /// </summary>
-VECTOR Collision::NearestPointOfSegmentPointCalc(const VECTOR _startPos,	const VECTOR _endPos,const VECTOR _targetPos)
+const VECTOR Collision::NearestPointOfSegmentPointCalc(const VECTOR _startPos,	const VECTOR _endPos,const VECTOR _targetPos)
 {
 	VECTOR targetPos = _targetPos;//最近接点を求めたい目標点
 	VECTOR startPos = _startPos;//最近接点を求めたい線分開始点
@@ -138,7 +135,7 @@ VECTOR Collision::NearestPointOfSegmentPointCalc(const VECTOR _startPos,	const V
 	}
 	return nearestPos;
 }
-bool Collision::SphereCapsuleCalc(const VECTOR _capsuleStartPos,const VECTOR _capsuleEndPos,const float _capsuleRadius,const VECTOR _spherePos,const float sphereRadius)
+const bool Collision::SphereCapsuleCalc(const VECTOR _capsuleStartPos,const VECTOR _capsuleEndPos,const float _capsuleRadius,const VECTOR _spherePos,const float sphereRadius)
 {
 	VECTOR nearestPos = ORIGIN_POS;
 
@@ -156,7 +153,7 @@ bool Collision::SphereCapsuleCalc(const VECTOR _capsuleStartPos,const VECTOR _ca
 /// <summary>
 /// カプセル同士の当たり判定
 /// </summary>
-bool Collision::TwoCapsuleHitCollision(const VECTOR _startPos1, const VECTOR _endPos1, const float _radius1, const VECTOR _startPos2, const VECTOR _endPos2, const float _radius2)
+const bool Collision::TwoCapsuleHitCollision(const VECTOR _startPos1, const VECTOR _endPos1, const float _radius1, const VECTOR _startPos2, const VECTOR _endPos2, const float _radius2)
 {
 	//２つのカプセルの線分を出し、最近点間の距離を得る
 	float minLength = Segment_Segment_MinLength(_startPos1,_startPos2,_endPos1,_endPos2);
