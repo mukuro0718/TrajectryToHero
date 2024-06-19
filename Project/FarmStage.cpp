@@ -56,9 +56,9 @@ const void FarmStage::Delete()
 	pos.clear();
 	model.clear();
 	// モデルのアンロード.
-	MV1DeleteModel(model[static_cast<int>(FARM::GROUND)]);
-	MV1DeleteModel(model[static_cast<int>(FARM::GATE)]);
-	MV1DeleteModel(model[static_cast<int>(FARM::PORTAL)]);
+	//MV1DeleteModel(model[static_cast<int>(FARM::GROUND)]);
+	//MV1DeleteModel(model[static_cast<int>(FARM::GATE)]);
+	//MV1DeleteModel(model[static_cast<int>(FARM::PORTAL)]);
 }
 /// <summary>
 /// 描画
